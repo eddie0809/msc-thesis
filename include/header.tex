@@ -1,0 +1,53 @@
+\usepackage{fontspec}
+\setmainfont{EB Garamond}
+\setsansfont{Libertinus Sans}
+
+\usepackage[
+    backend=biber,
+    sorting=none,
+    url=false,
+    doi=false
+]{biblatex}
+\addbibresource{msc.bib}
+
+% Farbdefinitionen
+%\definecolor{cadmiumgreen}{rgb}{0.0, 0.42, 0.24}
+%\definecolor{alizarin}{rgb}{0.82, 0.1, 0.26}
+%\definecolor{maroon}{rgb}{0.5, 0.0, 0.0}
+%
+\usepackage{enumitem}               % Ermöglicht verschiedene Aufzählungen (zb römisch)
+\usepackage{textcomp}               % Winkelgrad, Minuten und Sekunden
+% \usepackage[onehalfspacing]{setspace}
+\usepackage{tikz}
+\usepackage{graphicx}		        % Bilder
+\usepackage{float}                  % Bindet Bilder genau da ein wo sie hin sollen (mit der Option H)
+\usepackage[font={small}]{caption}  % Kleine Captions
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{listliketab}
+\usepackage{tabto}
+\usepackage{isotope} 
+\usepackage{extarrows}
+\usepackage{mathabx}
+
+\usepackage{capt-of}
+
+\usepackage{dsfont}
+\usepackage{physics}
+\usepackage{hyperref}
+\usepackage[nameinlink, english]{cleveref} 
+
+\usepackage{lipsum}
+
+\numberwithin{equation}{section} % Nummeriert die Gleichungen mit jeder section neu
+
+% Load thesis.sty
+\usepackage[consistency,dottedtoc,styledtoc]{./include/thesis}
+\chapterboxheight=15ex
+\chapterboxwidth=10em
+\usetikzlibrary{patterns,intersections,snakes}
+
+\title{Cross Entropy Thing}
+\author{Etienne Springer}
+

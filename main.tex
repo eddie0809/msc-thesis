@@ -1,0 +1,33 @@
+%! TeX program = lualatex
+\documentclass{scrbook}
+
+\input{include/header.tex}
+
+\includeonly{src/introduction.tex}
+
+\begin{document}
+  
+\maketitle
+
+\frontmatter
+
+\chapter{Acknowledgements}
+\epigraph{I am fascinated by Numbers}{\citeauthor{baron-cohen-aq} \cite{baron-cohen-aq}}
+\input{src/acknowledgements.tex}
+
+\tableofcontents
+
+\mainmatter
+
+\chapter{Introduction}
+\input{src/introduction.tex}
+
+\chapter{Theoretical Basics}
+\input{src/basics.tex}
+
+\backmatter
+
+\printbibliography
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\end{document}

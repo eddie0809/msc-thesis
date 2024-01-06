@@ -3,8 +3,6 @@
 
 \input{include/header.tex}
 
-\includeonly{src/introduction.tex}
-
 \begin{document}
   
 \maketitle
@@ -12,7 +10,7 @@
 \frontmatter
 
 \chapter{Acknowledgements}
-\epigraph{I am fascinated by Numbers}{\citeauthor{baron-cohen-aq} \cite{baron-cohen-aq}}
+\label{ch:ack}
 \input{src/acknowledgements.tex}
 
 \tableofcontents
@@ -20,9 +18,11 @@
 \mainmatter
 
 \chapter{Introduction}
+\label{ch:intro}
 \input{src/introduction.tex}
 
 \chapter{Theoretical Basics}
+\label{ch:basics}
 \input{src/basics.tex}
 
 \backmatter

@@ -1,7 +1,8 @@
 %! TeX program = lualatex
-\documentclass{scrbook}
+\documentclass[a4paper,11pt,DIV=8]{scrbook}
 
-\input{include/header.tex}
+\input{include/packages.tex}
+\input{include/settings.tex}
 
 \begin{document}
   
@@ -9,25 +10,21 @@
 
 \frontmatter
 
-\chapter{Acknowledgements}
-\label{ch:ack}
 \input{src/acknowledgements.tex}
 
 \tableofcontents
 
 \mainmatter
 
-\chapter{Introduction}
-\label{ch:intro}
 \input{src/introduction.tex}
 
-\chapter{Theoretical Basics}
-\label{ch:basics}
 \input{src/basics.tex}
+
+\input{src/ptim-placeholder.tex}
 
 \backmatter
 
-\printbibliography
 \addcontentsline{toc}{chapter}{Bibliography}
+{\footnotesize\printbibliography}
 
 \end{document}

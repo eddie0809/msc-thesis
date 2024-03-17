@@ -1,0 +1,230 @@
+% Thesis template based on the Master's thesis layout by Niklas Liebermann
+
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{msc-thesis}
+
+% % %
+% % % microtype declarations
+% % %
+
+\RequirePackage{microtype}
+
+\DeclareRobustCommand{\spacedlowsmallcaps}[1]{\textls{\textsc{\MakeLowercase{#1}}}}%
+\DeclareRobustCommand{\spacedallcaps}[1]{\textls{\MakeUppercase{#1}}}%
+
+\setlength{\headheight}{6em}
+
+% % %
+% % % Colors
+% % %
+
+\RequirePackage{xcolor}
+
+\definecolor{maincolor1}{HTML}{646F7A}
+\definecolor{maincolor4}{HTML}{CA001B}
+\definecolor{maincolor3}{HTML}{189300}
+\definecolor{maincolor2}{HTML}{018BCA}
+\definecolor{maincolor5}{HTML}{0A374B}
+
+% % %
+% % % Symbols
+% % %
+
+\RequirePackage{amssymb}
+
+
+% % %
+% % % Chapter and Section headings
+% % %
+
+\RequirePackage[explicit]{titlesec}
+
+%% Part
+\titleformat{\part}[display]
+    {\normalfont\centering\Huge}%
+    {\thispagestyle{empty}\huge\spacedallcaps{\partname~\thepart}}{1em}%
+    {\spacedallcaps}
+
+%% Chapter
+\titleformat{\chapter}%
+  [display]%
+  {\relax}%
+  {%
+    \hfill\rlap{\fontfamily{pplx}\fontsize{36}{0}\selectfont\quad\color{maincolor4}{\thechapter}}
+  }%
+  {0.5\baselineskip}%
+  {\LARGE\spacedallcaps}%
+
+\titlespacing*{\chapter}{0pt}{1\baselineskip}{2\baselineskip}
+
+%% Sections 
+   \titleformat{\section}
+   {\relax}{\llap{\textsc{\MakeLowercase{\Large\thesection\hspace{1em}}}}}{0em}{\raggedright\Large\spacedlowsmallcaps}
+
+\titlespacing*{\section}
+{0.5em}{1\baselineskip plus 1.5ex minus .4ex}{0.25\baselineskip plus .1ex}
+
+%% Subsections
+   \titleformat{\subsection}
+   {\relax}{\llap{\scshape\Large\thesubsection\hspace{1em}}}{0em}{\raggedright\large}
+
+\titlespacing*{\subsection}
+{0pt}{1\baselineskip plus 1.5ex minus .4ex}{0.25\baselineskip plus .1ex}
+
+%% Subsubsection
+\titleformat{\subsubsection}
+        {\relax}{%
+        \raisebox{0.5pt}{\color{maincolor1}{$\blacktriangleright$}}%
+        }{0.5em}{\raggedright\itshape}
+
+\titlespacing*{\subsubsection}
+{0pt}{1\baselineskip plus 1.5ex minus .4ex}{0.25\baselineskip plus .1ex}
+
+%% Paragraphs
+    \titleformat{\paragraph}[runin]
+        {\normalfont\normalsize}{\theparagraph}{0pt}{\spacedlowsmallcaps}    
+%% descriptionlabels
+        \renewcommand{\descriptionlabel}[1]{\hspace*{\labelsep}\spacedlowsmallcaps{#1}}
+% spacedlowsmallcaps textit textsc                  
+
+%    \titlespacing*{\subsection}{0pt}{1\baselineskip}{0.25\baselineskip}
+%    \titlespacing*{\subsubsection}{0pt}{1\baselineskip}{0.25\baselineskip}
+%    \titlespacing*{\paragraph}{0pt}{1\baselineskip}{1\baselineskip}
+    
+\renewcommand{\labelitemi}{\color{maincolor1}{$\bullet$}}    
+
+% % %
+% % % Headers
+% % %
+
+\let\footruleskip\undefined
+\usepackage{fancyhdr}
+\pagestyle{fancy}% muss vor \renewcommand{\sectionmark} stehen
+\fancyhf{}
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}{}}
+
+\fancyhead[EL]{\spacedlowsmallcaps{\llap{\textls[0]{\thepage\qquad}}\textcolor{maincolor1}{\leftmark}}}% gerade Seiten, rechts
+\fancyhead[OR]{\spacedlowsmallcaps{\textcolor{maincolor1}{\rightmark}}\normalfont\rlap{\qquad\thepage}}% ungerade Seiten, links
+
+\fancypagestyle{plain}{
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}}
+
+\renewcommand{\headrulewidth}{0pt}
+
+\defbibheading{bibliography}[\bibname]{%
+\chapter*{#1}%
+\markboth{#1}{}}
+
+
+% % %
+% % % Titlepage
+% % %
+
+\def\@date{\today}
+\newcommand\thesis@thesisname{Thesis}
+\newcommand\thesis@thesisimage{}
+\newcommand\thesis@supervisortext{Supervised by}
+\newcommand\thesis@secondarycorrectortext{Secondary Corrector}
+\newcommand\declarationtitle{Statutory Declaration}
+\newcommand\declarationbody{
+  I herewith formally declare that I have written the submitted thesis independently. I did not use any outside support except for the quoted literature and other sources mentioned in the paper.\\
+  I clearly marked and separately listed all of the literature and all of the other sources which I employed when producing this academic work, either literally or in content.
+}
+\newcommand\university[1]{\gdef\thesis@university{#1}}
+\newcommand\city[1]{\gdef\thesis@city{#1}}
+\newcommand\institute[1]{\gdef\thesis@institute{#1}}
+\newcommand\thesisname[1]{\gdef\thesis@thesisname{#1}}
+\newcommand\thesisimage[1]{\gdef\thesis@thesisimage{#1}}
+\newcommand\supervisor[2][Primary Examiner]{\gdef\thesis@supervisortext{#1}\gdef\thesis@supervisor{#2}}
+\newcommand\secondarycorrector[2][Secondary Examiner]{\gdef\thesis@secondarycorrectortext{#1}\gdef\thesis@secondarycorrector{#2}}
+
+\newcommand\makethesistitle{
+  \begin{titlepage}
+    \centering
+    \null\vfill
+    {\Large\textsc{\thesis@university}}\vskip 2ex
+    {\sffamily \thesis@institute}
+    \vfill
+    {\large\bfseries\thesis@thesisname}\vskip 3ex
+    {\LARGE \@title}\vskip 4ex
+    {\large \@author}
+    \vfill
+    \thesis@thesisimage
+    \vfill
+    {\@date}\vskip 1ex
+    {\small\thesis@supervisortext}\\
+    {\thesis@supervisor}\vskip 1ex
+    \ifx\thesis@secondarycorrector\undefined\else
+    {\small\thesis@secondarycorrectortext}\\
+    {\thesis@secondarycorrector}
+    \fi
+    \vfill
+  \end{titlepage}
+}
+
+\newcommand\declaration[1]{
+  \ifx#1*\relax\else
+    \cleardoublepage\thispagestyle{empty}
+  \fi
+  \null\vfill
+  \begingroup
+  \def\\{\par\vskip\baselineskip}
+  \parindent=0pt
+  \begin{center}
+    \bfseries\declarationtitle
+  \end{center}
+  \declarationbody
+  \par\vskip5\baselineskip
+  \thesis@city, \@date \hfill \@author
+  \endgroup
+  \null\vfill
+  \ifx#1*\relax\else
+    \cleardoublepage
+    #1%
+  \fi%
+}
+
+
+% % %
+% % % Table of Contents
+% % %
+
+\renewcommand{\printtoctitle}[1]{\Large\spacedallcaps #1}
+
+%% Chapters
+\renewcommand{\cftchapfont}{\color{secblock}\normalfont\bfseries}
+\renewcommand{\cftchappagefont}{\normalfont\bfseries}
+
+% Sections
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Subsections
+\renewcommand{\cftsubsecfont}{\normalfont}
+\renewcommand{\cftsubsecpagefont}{\normalfont}
+
+% Subsubsections
+\renewcommand{\cftsubsubsecfont}{\normalfont}
+\renewcommand{\cftsubsubsecpagefont}{\normalfont}
+
+
+% % %
+% % % Epigraphs
+% % %
+
+\RequirePackage{epigraph}
+\RequirePackage{csquotes}
+\let\thesis@epigraph=\epigraph
+\let\thesis@qitem=\qitem
+\renewcommand\epigraphsize{\footnotesize}
+\epigraphrule=0pt
+\epigraphwidth=70mm
+\beforeepigraphskip=0pt
+\afterepigraphskip=15mm
+\renewcommand\epigraph[2]{\thesis@epigraph{\itshape\enquote{#1}}{#2}}
+\renewcommand\qitem[2]{\thesis@qitem{\itshape\enquote{#1}}{#2}}

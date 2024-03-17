@@ -1,16 +1,16 @@
 %! TeX program = lualatex
-\documentclass[a4paper,11pt,DIV=8]{scrbook}
+\documentclass[a4paper,11pt,DIV=8,titlepage=firstiscover]{scrbook}
 
 \input{include/packages.tex}
 \input{include/settings.tex}
 
 \begin{document}
   
-\maketitle
+\KOMAoptions{twoside=false}
+\makethesistitle
+\KOMAoptions{twoside=true}
 
 \frontmatter
-
-\input{src/acknowledgements.tex}
 
 \tableofcontents
 
@@ -24,6 +24,9 @@
 
 \backmatter
 
+\input{src/acknowledgements.tex}
+
+\cleardoublepage
 \addcontentsline{toc}{chapter}{Bibliography}
 {\footnotesize\printbibliography}
 

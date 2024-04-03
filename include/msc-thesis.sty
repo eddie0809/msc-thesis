@@ -4,6 +4,19 @@
 
 \ProvidesPackage{msc-thesis}
 
+
+% % %
+% % % Set margins
+% % %
+
+\RequirePackage{geometry}
+\RequirePackage{calc}
+
+\setlength\voffset{20pt}
+\setlength\topmargin{25pt}
+\setlength\textheight{(\paperheight-\textheight
+-\headheight-\headsep-\footskip)/2 - 1in}
+
 % % %
 % % % microtype declarations
 % % %
@@ -13,19 +26,48 @@
 \DeclareRobustCommand{\spacedlowsmallcaps}[1]{\textls{\textsc{\MakeLowercase{#1}}}}%
 \DeclareRobustCommand{\spacedallcaps}[1]{\textls{\MakeUppercase{#1}}}%
 
-\setlength{\headheight}{8em}
-
 % % %
 % % % Colors
 % % %
 
 \RequirePackage{xcolor}
 
-\definecolor{maincolor1}{HTML}{646F7A}
-\definecolor{maincolor4}{HTML}{CA001B}
-\definecolor{maincolor3}{HTML}{189300}
-\definecolor{maincolor2}{HTML}{018BCA}
-\definecolor{maincolor5}{HTML}{0A374B}
+% Some colors from matplotlib's magma colormap for reference
+% the numbers in the colorname represent the percentage when calling
+% the colormap (i.e. magma-20 is colormaps['magma'](0.2))
+\definecolor{magma-10}{HTML}{140E36}
+\definecolor{magma-20}{HTML}{3B0F70}
+\definecolor{magma-25}{HTML}{51127C}
+\definecolor{magma-33}{HTML}{721F81}
+\definecolor{magma-40}{HTML}{8C2981}
+\definecolor{magma-50}{HTML}{B73779}
+\definecolor{magma-60}{HTML}{DE4968}
+\definecolor{magma-66}{HTML}{F1605D}
+\definecolor{magma-75}{HTML}{FC8961}
+\definecolor{magma-80}{HTML}{FE9F6D}
+\definecolor{magma-90}{HTML}{FECF92}
+% For more info:
+% https://matplotlib.org/stable/users/explain/colors/colormaps.html
+%
+% In the highly unlikely case that above link doesn't work, use the archived version:
+% https://web.archive.org/web/20240316214709/https://matplotlib.org/stable/users/explain/colors/colormaps.html
+
+% Some colors from Karo's (Niklassssss) original layout
+% Originally they were used for maincolor1-5 in this order.
+\definecolor{kw-lightgrey}{HTML}{646F7A} 
+\definecolor{kw-cyan}{HTML}{018BCA} 
+\definecolor{kw-olive}{HTML}{189300} 
+\definecolor{kw-winered}{HTML}{CA001B} 
+\definecolor{kw-darkblue}{HTML}{0A374B} 
+% I named them according to my understanding of color names, which could be
+% better. Double-check them maybe: https://htmlcolorcodes.com/
+
+% Change the following to your liking, 
+\definecolor{maincolor1}{HTML}{646F7A} % header color
+\definecolor{maincolor2}{HTML}{018BCA} % currently citecolor, looks nice
+\definecolor{maincolor3}{HTML}{189300} % currently url color
+\definecolor{maincolor4}{HTML}{CA001B} % big number at chapter start
+\definecolor{maincolor5}{HTML}{3B0F70} % linkcolor
 
 % % %
 % % % Symbols
@@ -59,14 +101,14 @@
 \titlespacing*{\chapter}{0pt}{1\baselineskip}{2\baselineskip}
 
 %% Sections 
-   \titleformat{\section}
+\titleformat{\section}
    {\relax}{\llap{\textsc{\MakeLowercase{\Large\thesection\hspace{1em}}}}}{0em}{\raggedright\Large\spacedlowsmallcaps}
 
 \titlespacing*{\section}
 {0.5em}{1\baselineskip plus 1.5ex minus .4ex}{0.25\baselineskip plus .1ex}
 
 %% Subsections
-   \titleformat{\subsection}
+\titleformat{\subsection}
    {\relax}{\llap{\scshape\Large\thesubsection\hspace{1em}}}{0em}{\raggedright\large}
 
 \titlespacing*{\subsection}
@@ -75,9 +117,11 @@
 %% Subsubsection
 \titleformat{\subsubsection}
         {\relax}{%
-        \raisebox{0.5pt}{\color{maincolor1}{$\blacktriangleright$}}%
+          {\llap{\color{maincolor1}{$\blacktriangleright$}}}%
         }{0.5em}{\raggedright\itshape}
 
+%{\relax}{\llap{\scshape\Large\thesubsection\hspace{1em}}}{0em}{\raggedright\large}
+% 
 \titlespacing*{\subsubsection}
 {0pt}{1\baselineskip plus 1.5ex minus .4ex}{0.25\baselineskip plus .1ex}
 

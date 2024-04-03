@@ -1,8 +1,10 @@
 \usepackage[english]{babel}
 
 \usepackage{fontspec}
-\setmainfont{EB Garamond}
-\setsansfont{Libertinus Sans}
+\usepackage{amsmath}
+%\usepackage{amssymb}
+\usepackage{unicode-math}
+\setmathfont{latinmodern-math.otf}
 
 %% Refs and Citations
 \usepackage[
@@ -35,21 +37,15 @@
 
 %% Math & Physics QoL packages
 \usepackage{amssymb}
-\usepackage{amsmath}
 \usepackage{bm}                 % access bold symbols in math mode
 \usepackage{dsfont}
 \usepackage{physics}
 \usepackage{siunitx}
 \usepackage{underoverlap}
-%\usepackage{mathabx}
 
 
-\usepackage{hyperref}
-\usepackage[nameinlink, english]{cleveref} 
-%\usepackage{doi}
-%\usepackage{cite}
-
-%\usepackage{circuittikz}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage[capitalize, noabbrev, nameinlink, english]{cleveref} 
 
 \usepackage{lipsum}
 
@@ -57,13 +53,9 @@
 
 \usepackage{titlesec}
 \usepackage{epigraph}
+\usepackage{geometry}
+\usepackage{calc}
+\usepackage{listings}
 % Load thesis.sty
 \usepackage{./include/msc-thesis}
-%\chapterboxheight=15ex
-%\chapterboxwidth=10em
-%\usetikzlibrary{patterns,intersections,snakes}
-
-
-%\input{include/karos-header.tex}
-
 

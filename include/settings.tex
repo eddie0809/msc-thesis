@@ -1,4 +1,8 @@
-\title{Cross Entropy Thing}
+\setmainfont{EB Garamond}
+\setsansfont{Libertinus Sans}
+\setmathfont[range=bfsfit/{greek,Greek,latin,Latin,num}]{EB Garamond}
+
+\title{Cross entropy measures for detecting entanglement transitions}
 \thesisname{Master's Thesis}
 \author{Etienne Maurice Springer}
 \university{Universität Stuttgart}
@@ -7,6 +11,45 @@
 \supervisor{Prof. Dr. Hans-Peter Büchler}
 \secondarycorrector{Prof. Esso R.}
 
+\hypersetup{
+  colorlinks=true,
+  linkcolor=maincolor5,
+  citecolor=maincolor2,
+  urlcolor=maincolor3,
+  linkbordercolor= {white},
+  pdfauthor={Etienne Maurice Springer},
+  pdfsubject={Master's Thesis},
+  pdfpagelabels=true,
+  breaklinks=true,
+  plainpages=false,
+  bookmarks, bookmarksnumbered=true
+}
 
 \graphicspath{{./fig/}}
 
+% The following is from NASA: https://nasa.github.io/nasa-latex-docs/html/examples/listing.html
+
+% Define a custom color
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+% Define a custom lst style
+\lstdefinestyle{myStyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    frame=single,
+    breaklines=true,                 
+    keepspaces=true,                 
+    numbers=left,       
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+}

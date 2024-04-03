@@ -1,8 +1,10 @@
 %! TeX program = lualatex
-\documentclass[a4paper,11pt,DIV=8,titlepage=firstiscover]{scrbook}
+\documentclass[a4paper,11pt,DIV=8]{scrbook}
 
 \input{include/packages.tex}
 \input{include/settings.tex}
+
+\usepackage{layout}
 
 \begin{document}
   
@@ -16,11 +18,20 @@
 
 \mainmatter
 
+%\input{src/showmargins.tex}
+
 \input{src/introduction.tex}
 
 \input{src/basics.tex}
 
+\input{src/lxe.tex}
+
 \input{src/ptim-placeholder.tex}
+
+
+\appendix
+
+\input{src/relevant-code.tex}
 
 \backmatter
 

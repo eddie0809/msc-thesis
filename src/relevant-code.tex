@@ -1,0 +1,25 @@
+\chapter{Relevant Code Snippets}
+\label{ch:apdx-code}
+
+\lstset{style=myStyle}
+
+\begin{lstlisting}[caption=Computation of the linear cross entropy for one
+  measurement history of a circuit, label={lst:lxe-cpp}, language=C++]
+bool success = true; 
+for (int t=0; t<t_max; t++) {
+    for (int s=0; s<L; s++) {
+        if (random_circuit_x[t][s] && success) {
+           success = P.project(X,s,measurements_x[t][s]);
+        }
+    }
+    for (int s=0; s<L-1; s++){
+        if (random_circuit_zz[t][s] && success) {
+           success = P.project(Z,s,Z,periodic(s+1,L),measurements_zz[t][s]);
+        }
+    }
+}
+if (success) {
+results.lxs.av++;
+results.lxs.se++;
+}
+\end{lstlisting}

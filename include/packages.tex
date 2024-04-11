@@ -1,10 +1,22 @@
 \usepackage[english]{babel}
 
 \usepackage{fontspec}
-\usepackage{amsmath}
 %\usepackage{amssymb}
-\usepackage{unicode-math}
-\setmathfont{latinmodern-math.otf}
+% \usepackage[cmintegrals,cmbraces]{newtxmath}
+% \usepackage{ebgaramond-maths}
+\usepackage{mathtools}
+\usepackage[math-style=ISO, bold-style=ISO]{unicode-math}
+\setmathfont{Garamond-Math.otf}[StylisticSet={4,9}]
+
+%\usepackage{mathastext}
+%\usepackage[
+%    subscriptcorrection,
+%    nofontinfo,
+%    mtphrd,
+%    mtpfrak,
+%    mtpcal,
+%    zswash
+%]{mtpro2}
 
 %% Refs and Citations
 \usepackage[
@@ -36,7 +48,9 @@
 \usepackage{capt-of}
 
 %% Math & Physics QoL packages
+\usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{bm}                 % access bold symbols in math mode
 \usepackage{dsfont}
 \usepackage{physics}

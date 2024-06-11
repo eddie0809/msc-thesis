@@ -1,7 +1,8 @@
 \chapter{Linear Cross Entropy}
 \label{ch:lxe}
-\epigraph{Check the circuit}{Spock to helmsman; Star Trek TOS 1x01
-\cite{butlerCage1988}}
+\epigraph{Check the circuit}{Spock to helmsman;
+  \citefield{butlerCage1988}{booktitle}
+--- \citefield{butlerCage1988}{number}}
 
 PTIM: \cite{langEntanglementTransitionProjective2020}
 
@@ -14,9 +15,7 @@ arXiv:2306.00058, LXE fürs PTIM, preprint \cite{tikhanovskayaUniversalityCrossE
 MIPT allgemein, hier leider eher weniger ahnung warum ich das in dieses Kapitel rein
 gemacht hab zum zitieren. \cite{baoTheoryPhaseTransition2020}
 
-%In \cite{baoSymmetryEnrichedPhases2021},
-%\citeauthor*{baoSymmetryEnrichedPhases2021} 
-%the two area-law phases of the PTIM
+Sampling stuff aus appendix von \cite{roserDecodingProjectiveTransverse2023}
 
 \section{WIP: Definition and properties}
 Before stating the definition of the linear cross entropy, we will first
@@ -27,102 +26,178 @@ stabilizer circuits or on a quantum simulator. The system is initially in some
 state $\rho$ and will subsequently be subjected to local projective $X$ and
 $ZZ$ measurements.  After having applied the circuit on $\rho$, we find
 ourselves with recorded measurement outcomes. We write $\mathbf{m}$ for the
-mathematical object representing this measurement record. It can either be
-thought of as a vector of all outcomes in order of recording, or in our
-particular case as a $T\times 2L$ matrix (for $L$ possible $X$ and $ZZ$
-measurements with $T$ timesteps) with $0$ if there was no measurement performed
-and $\pm 1$ for an outcome of $\pm 1$.\footnote{The latter method was used in
-the numerical implementation.  More on numerics in \cref{sec:lxe-numeric}} Any
-measurement we perfom either has a random or deterministic outcome, depending
-on the current state and the operator being measured.  As such, any full
+mathematical object representing this measurement record. It can be
+thought of as a vector of all outcomes in order of recording.
+Since quantum measurements are generally probabilistic, any full
 measurement record $\mathbf{m}$ might contain an arbitrary number of outcomes
-$m$ with non-trivial probability $0<p(m=\pm 1 | C, \rho)<1$. A given
+$m$ with probability $0\leq P(m=\pm 1 | C, \rho)\leq 1$. A given
 measurement pattern therefore has many possible records, each with some
 probability.  We write this probability of a measurement record $\mathbf{m}$
-given a measurement pattern $C$ and an initial state $\rho$ as $p(\mathbf{m}
+given a measurement pattern $C$ and an initial state $\rho$ as $P(\mathbf{m}
 \mid C, \rho)$. As we specifically investigate the PTIM, our measurement record
-$\mathbf{m}$ can equivalently be written as the intersection of two measurement
-records, $\mathbf{m}_X$ and $\mathbf{m}_{Z}$, which, by themselves, are also
-random variables. It is therefore also valid, and will later prove useful, to
+$\mathbf{m}$ can equivalently be written as the combination of two measurement
+records, $\mathbf{m}_X$ and $\mathbf{m}_{Z}$, e.g. as a sum of two vectors
+\[
+  \mathbf{m} = \begin{pmatrix} \mathbf{m}_X \\ \mathbf{m}_Z \end{pmatrix} 
+  = \begin{pmatrix} \mathbf{m}_X \\ 0 \end{pmatrix} + \begin{pmatrix}
+0 \\ \mathbf{m}_Z \end{pmatrix} 
+\]
+By themselves, $\mathbf{m}_{X/Z}$ are also random variables.
+It is therefore also valid, and will later prove useful, to
 write the probability of a measurement record as the joint probability of
-outcomes in $X$ and outcomes in $ZZ$, i.e.  $p\left(\mathbf{m} \mid C,
-\rho\right) = p\left(\mathbf{m}_X\cap \mathbf{m}_Z\mid C,\rho\right)$.
+outcomes in $X$ and outcomes in $ZZ$, i.e.  $P\left(\mathbf{m} \mid C,
+\rho\right) = P\left(\mathbf{m}_X\cap \mathbf{m}_Z\mid C,\rho\right)$.
 
 Employing the notation from above, the (normalized) linear cross entropy is
-then defined as
+then defined as \cite{liCrossEntropyBenchmark2023}
 \begin{align}\label{eq:lxe-c-def}
-  \chi_C = \sum_{\mathbf{m}} p(\mathbf{m} \mid C, \rho) \frac{p(\mathbf{m} \mid
-    C, \sigma)}{\sum_{\mathbf{m}'}\left(p(\mathbf{m}' \mid
+  \chi_C = \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
+    C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
     C, \sigma)\right)^2}
 ,\end{align}
 where the sums $\sum_\mathbf{m}$ go over measurement outcomes
-within the circuit $C$, and $\rho$ and $\sigma$ are two orthogonal initial
+within the circuit $C$, and $\rho$ and $\sigma$ are two initial
 states. In particular, we suppose $\rho$ to be the initial state of a quantum
 simulator, with which we realize $C$, and $\sigma$ to be the initial state of a
-classical --- e.g. stabilizer --- simulation, which also realizes $C$.
-The first sum in \cref{eq:lxe-c-def} is then a sum over many measurement
+classical --- e.g. stabilizer --- simulation, which also realizes $C$. The
+states will be chosen to be orthogonal in the logical basis 
+%$\left(\rho = \dyad{\mathrm{GHZ}+},\ \ \sigma = \dyad{\mathrm{GHZ}-}\right)$,
+but they need not necessarily be orthogonal. 
+The first sum in \cref{eq:lxe-c-def} is then a sum over all measurement
 histories recorded by the quantum simulation. The sum in the denominator is a
 normalizing factor, which will be further discussed in \cref{sec:lxe-numeric}.
 
 We can interpret $\chi_C$ as the measurement-averaged probability that the two
 initial states $\rho$ and $\sigma$ cannot be distinguished by the measurement
-pattern $C$. However, $\chi_C$ alone lets us make statements about one circuit
-$C$ only.  By averaging over many circuit realizations we can obtain a
-circuit-averaged $\chi$. This is especially useful for us, as we are primariliy
-interested in studying the behaviour of $\chi$ for random circuits.
+pattern $C$. That being said, $\chi_C$ alone lets us make statements about one circuit
+$C$ only.
+
+
 
 
 \subsection{Numerical implementation}
 \label{sec:lxe-numeric}
+\textcolor{red}{notiz an den autor: \"uberleg dir nochmal genauer, was wo hinpasst}
+
+\subsubsection{Sampling:}
+\begin{itemize}
+  \item From \cite{roserDecodingProjectiveTransverse2023}:
+    For any system, the sample average is
+    \begin{align}\label{eq:decoder}
+      \expval{\expval{f_D}} = \sum_{\mathcal{T} \in \{
+    \mathcal{T} \} } P\left(\mathcal{T}\right) \cdot
+    f\left(\mathcal{T} ; D(S)\right)
+    ,\end{align}
+  where $\mathcal{T}$ indicates a trajectory in the system and
+  $\{ \mathcal{T} \}$ is the set of all possible trajectories for a given
+  initial state.
+  \item Transferleistung time! Let's see if we can apply \cref{eq:decoder} to our
+    problem/our notational conventions:
+  \item A trajectory is defined as the circuit $C$, i.e. the measurement pattern,
+    and the outcomes of said measurements, $\mathbf{m}$, including the initial
+    state. 
+  \item The probability of a trajectory is
+    \begin{align}
+      P(\mathcal{T}) &=
+      p^{\abs{\mathbf{m}_X}}(1-p)^{LT-\abs{\mathbf{m}_X}}\cdot
+      p^{(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{\abs{\mathbf{m}_Z}}\cdot
+      2^{-N_\mathrm{rand}} \nonumber\\ &= 
+      p^{\abs{\mathbf{m}_X}+(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{LT-\abs{\mathbf{m}_X}+\abs{\mathbf{m}_Z}}\cdot2^{-N_\mathrm{rand}}
+    .\end{align}
+  \item \textcolor{kw-olive}{Kommentar Felix: \enquote{$2^{-N_\mathrm{rand}}$ hier noch
+    nicht definiert!}}
+  
+  \item In analogy to \cref{eq:decoder}, here we would have the quantity
+    \[
+      f(\mathbf{m}, C_p, \sigma) = \frac{P(\mathbf{m} |
+     C_p,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C_p,\sigma)\right)^2}
+    \]
+    for a PTIM with circuit $C_p$ with probability $p$ for $X$-measurements. This
+    lets us define a system-average for the PTIM with initial state $\rho$ and
+    probability $p$,
+    \begin{align}
+      \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p) \sum_\mathbf{m}
+      P(\mathbf{m} |C_p,\rho)\cdot f(\mathbf{m},C_p, \sigma)
+    .\end{align}
+  \item In principle, the sums over $C_p$ and $\mathbf{m}$, i.e. the sum over
+    $\mathcal{T}$, include \emph{all possible} circuits $C_p$ and
+    corresponding measurement outcomes $\mathbf{m}$.
+  \item With stabilizers, each $\mathbf{m}$ contributes the same factor of
+    $2^{-\abs{N_\mathrm{rand}}}$ to the total probability, it doesn't change
+    anything to sample over it. Thus, we can instead opt for generating random
+    circuits, applying it to $\rho$ once, and check for compatibility. 
+  \item That is, we technically compute the quantity
+    \begin{align}\label{eq:sample-f-C}
+      \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p)
+      \cdot f(\mathbf{m},C_p, \sigma)
+    ,\end{align}
+    when sampling for the linear cross entropy numerically.
+  \item We will, in the following, drop the index $_p$ from $C_p$. It is
+    nonetheless implied that $C$ is a circuit randomly generated from a probability
+    parameter $p$. However, for the current discussion it will be dropped as a
+    subscript for the sake of readability.
+\end{itemize}
+
+\subsubsection{"methods"}
 \begin{itemize} 
   \item The $\sigma$ circuit is simulated with stabilizers
-  \item As a consequence, the quantity \[ \frac{p(\mathbf{m} | C,
-    \sigma)}{\sum_{\mathbf{m}'} \left(p(\mathbf{m}' | C, \sigma \right)^2} \] is
+  \item As a consequence, the quantity
+      \begin{align}
+      f(\mathbf{m},C, \sigma) = \frac{P(\mathbf{m} | C,
+    \sigma)}{\sum_{\mathbf{m}'} \left(P(\mathbf{m}' | C, \sigma \right)^2} 
+      .\end{align}
+   is
     either 0 or 1, 0 if $\mathbf{m}$ is incompatible with $\sigma$ and 1 if it
     is compatible \item since for a given circuit it is fixed which
     measurements are deterministic and which are random, it is possible to
-    equivalently consider a reduced measurement pattern, consisting of random
-    measurements only.
-  \item For a circuit with $N_\mathrm{rand}$ random measurements, which all
-    have probability $\frac{1}{2}$ (stabilizers), there are
-    $2^{N_\mathrm{rand}}$ possible trajectories, each with probability
-    $2^{-N_\mathrm{rand}}$.  \item summing $p(\mathbf{m}' | C, \sigma)$ over all
-    measurement outcomes thus sums over all $2^{N_\mathrm{rand}}$ possible
-    random outcomes, each with above given probability.  \item the mathematical
-    argumentation is then as follows:\\
-    case 1, the given measurement record $\mathbf{m}$ contains an
-    incompatible outcome with $\sigma$:
-    \begin{align} \frac{p(\mathbf{m} | C,
-        \sigma)}{\sum_{\mathbf{m}'} \left(p(\mathbf{m}' | C, \sigma \right)^2} = 0
-    .\end{align} 
-    case 2, $\sigma$ complies with the given measurement record $\mathbf{m}$, i.e.
-    $\mathbf{m}$ is compatible with $C$ and $\sigma$
-      \begin{align} \frac{p(\mathbf{m} | C, \sigma)}{\sum_{\mathbf{m}'}
-            \left(p(\mathbf{m}' | C, \sigma \right)^2} &= \frac{
-            2^{-N_\mathrm{rand}}}{\sum_{\mathbf{m}'}\left(2^{-N_\mathrm{rand}}\right)^2}
-            \\ &= \frac{2^{-N_\mathrm{rand}}}{2^{N_\mathrm{rand}}
-        2^{-2N_\mathrm{rand}}} \\ &= 1 
+      equivalently consider a reduced measurement pattern, consisting of random
+      measurements only.
+    \item For an initial state $\rho$ undergoing a circuit $C$ with $N_\mathrm{rand}$ random measurements, whose
+      respective results have probability $\frac{1}{2}$ (stabilizers), there are
+      $2^{N_\mathrm{rand}}$ possible trajectories, each with probability
+      $2^{-N_\mathrm{rand}}$.  \item summing $P(\mathbf{m}' | C, \sigma)$ over all
+      measurement outcomes thus sums over all $2^{N_\mathrm{rand}}$ possible
+      random outcomes, each with above given probability.  \item the mathematical
+      argumentation is then as follows:\\
+      case 1, the given measurement record $\mathbf{m}$ contains an
+      incompatible outcome with $\sigma$:
+      \begin{align} \frac{P(\mathbf{m} | C,
+          \sigma)}{\sum_{\mathbf{m}'} \left(P(\mathbf{m}' | C, \sigma \right)^2} = 0
       .\end{align} 
-  \item To compute $\chi_C$ we then only project onto the measurement outcome,
-    and if it projects onto $0$, we don't add anything. only if it successfully
-    goes through do we add $1$.
-  \item NOTE: the $\rho$ circuit is also a stabilizer simulation.  As such, for
-    a given circuit $C$, the same argument holds, and we can forego doing
-    multiple runs of the same circuit. If a circuit is incompatible anywhere,
-    it won't be at a random measurement.  Because the 'class' of a measurement
-    is fixed with the circuit architecture, the same circuit will be
-    incompatible regardless of measurement history.
-\end{itemize}
+      case 2, $\sigma$ complies with the given measurement record $\mathbf{m}$, i.e.
+      $\mathbf{m}$ is compatible with $C$ and $\sigma$
+        \begin{align} \frac{P(\mathbf{m} | C, \sigma)}{\sum_{\mathbf{m}'}
+              \left(P(\mathbf{m}' | C, \sigma)\right)^2} &= \frac{
+              2^{-N_\mathrm{rand}}}{\sum_{\mathbf{m}'}\left(2^{-N_\mathrm{rand}}\right)^2}
+              \nonumber \\ &= \frac{2^{-N_\mathrm{rand}}}{2^{N_\mathrm{rand}}
+          2^{-2N_\mathrm{rand}}} \nonumber\\ &= 1 
+        .\end{align} 
+    \item To compute $\chi_C$ we then only project onto the measurement outcome,
+      and if it projects onto $0$, we don't add anything. only if we can
+      successfully project each measurement outcome onto $\sigma$ does 
+      $f(\mathbf{m},C_p, \sigma)$ go to $1$.
 
-This raises the question: what causes a record $\mathbf{m}$ to be incompatible
-with $C$ and $\sigma$?
-\begin{itemize}
-  \item Since $\rho$ and $\sigma$ are orthogonal GHZ states, their generators
-    differ only by a sign. That is, $S_\rho = \langle X\ldots X,
-    Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle$ and $S_\sigma = \langle -X\ldots X,
-    Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle$
-  \item The circuit-level LXE will be $0$ iff. there is a deterministic $X$
-    measurement, where the sign difference is noticed.
+    \item NOTE: the $\rho$ circuit is also a stabilizer simulation.  As such, for
+      a given circuit $C$, the same argument holds, and we can forego doing
+      multiple runs of the same circuit. If a circuit is incompatible anywhere,
+      it won't be at a random measurement.  Because the 'class' of a measurement
+      is fixed with the circuit architecture, the same circuit will be
+      incompatible regardless of measurement history.
+  \end{itemize}
+
+  This raises the question: what causes a record $\mathbf{m}$ to be incompatible
+  with $C$ and $\sigma$?
+  \begin{itemize}
+    \item Since $\rho$ and $\sigma$ are orthogonal GHZ states, their generators
+      differ only by a sign. That is, $S_\rho = \langle X\ldots X,
+      Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle$ and $S_\sigma = \langle -X\ldots X,
+      Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle$
+    \item The circuit-level LXE will be $0$ iff. there is a deterministic $X$
+      measurement, where the sign difference is noticed.
+
+    \item \textcolor{kw-olive}{Kommentar Felix: \enquote{see: initial cluster dies in
+      the CCM}}
+
   \item We will henceforth label this mechanism \textsf{A} to refer to this way of
     $\chi_C$ going to $0$.
 \end{itemize}
@@ -136,44 +211,45 @@ measurements
   \item We remind ourselves of the fact that in a given circuit, each
     measurement is either random or deterministic. The type of each measurement
     does not change with outcome.
-  \item A deterministic outcome has probability $1$, a random outcome has
+  \item A deterministic outcome has probability $1$ or $0$, a random outcome has
     probability $\frac{1}{2}$.
   \item Remember that the probability of a measurement record given a circuit
-    and an initial state $p(\mathbf{m} | C, \rho)$ can be expressed as the
-    intersection of the $X$ and $ZZ$ outcomes, i.e. $p(\mathbf{m}_X \cap
+    and an initial state $P(\mathbf{m} | C, \rho)$ can be expressed as the
+    intersection of the $X$ and $ZZ$ outcomes, i.e. $P(\mathbf{m}_X \cap
     \mathbf{m}_Z | C, \rho)$
   \item Since these are the probabilities of certain outcomes conditioned on
     the ciruit and initial state, and since the type does not change with the outcome
     of random measurements, $\mathbf{m}_X$ and $\mathbf{m}_Z$ are independent random
     variables
   \item Mathematically, this allows us to separate the probabilities, i.e. \[
-      p(\mathbf{m} | C, \rho) = p(\mathbf{m}_X \cap \mathbf{m}_Z | C, \rho) =
-    p(\mathbf{m}_X | C, \rho)\cdot p(\mathbf{m}_Z | C, \rho) \]
+      P(\mathbf{m} | C, \rho) = P(\mathbf{m}_X \cap \mathbf{m}_Z | C, \rho) =
+    P(\mathbf{m}_X | C, \rho)\cdot P(\mathbf{m}_Z | C, \rho) \]
   \item We can perform this separation for $\chi_C$ as well:
     \begin{align}
       \label{eq:lxe-subset}
-    \begin{split}
-      \chi_C &= \sum_{\mathbf{m}} p(\mathbf{m} \mid C, \rho) \frac{p(\mathbf{m} \mid
-      C, \sigma)}{\sum_{\mathbf{m}'}\left(p(\mathbf{m}' \mid
-      C, \sigma)\right)^2} \\
-      \\
-      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} p(\mathbf{m}_X \cap \mathbf{m}_Z |
-        C, \rho) \frac{p(\mathbf{m}_X \cap \mathbf{m}_Z| C,
-        \sigma)}{\sum_{\mathbf{m}_X \cap \mathbf{m}_Z} \left(p(\mathbf{m}_X \cap
-        \mathbf{m}_Z|C,\sigma)\right)^2}\\
-        \\
-      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} p(\mathbf{m}_X | C, \rho) p(
-        \mathbf{m}_Z | C, \rho) \frac{p(\mathbf{m}_X | C, \sigma) p( \mathbf{m}_Z|
-        C, \sigma)}{\sum_{\mathbf{m}_X \cap \mathbf{m}_Z} \left(p(\mathbf{m}_X | C,
-        \sigma) p( \mathbf{m}_Z|C,\sigma)\right)^2}\\
-        \\
-      &= \underbrace{\frac{\sum_{\mathbf{m}_Z} p(\mathbf{m}_Z | C, \rho)
-          p(\mathbf{m}_Z | C, \sigma)}{\sum_{\mathbf{m}_Z} \left(p(\mathbf{m}_Z |
+      \chi_C &= \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
+      C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
+      C, \sigma)\right)^2} \nonumber\\
+      \nonumber\\
+      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X \cap \mathbf{m}_Z |
+        C, \rho) \frac{P(\mathbf{m}_X \cap \mathbf{m}_Z| C,
+        \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'} \left(P(\mathbf{m}_X' \cap
+        \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
+        \nonumber\\
+      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X | C, \rho) P(
+        \mathbf{m}_Z | C, \rho) \frac{P(\mathbf{m}_X | C, \sigma) P( \mathbf{m}_Z|
+        C, \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'}
+          \left(P(\mathbf{m}_X' | C,
+        \sigma) P( \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
+        \nonumber\\
+      &= \underbrace{\frac{\sum_{\mathbf{m}_Z} P(\mathbf{m}_Z | C, \rho)
+          P(\mathbf{m}_Z | C, \sigma)}{\sum_{\mathbf{m}_Z'}
+          \left(P(\mathbf{m}_Z' |
           C, \sigma)\right)^2}}_{\text{Subset ZZ}}
-          \underbrace{\frac{\sum_{\mathbf{m}_X} p(\mathbf{m}_X | C, \rho)
-          p(\mathbf{m}_X | C, \sigma)}{\sum_{\mathbf{m}_X} \left(p(\mathbf{m}_X |
+          \underbrace{\frac{\sum_{\mathbf{m}_X} P(\mathbf{m}_X | C, \rho)
+          P(\mathbf{m}_X | C, \sigma)}{\sum_{\mathbf{m}_X'}
+          \left(P(\mathbf{m}_X' |
           C, \sigma)\right)^2}}_{\text{Subset X}}
-    \end{split}
     \end{align}
   \item Tracking only the outcomes of $X$ or $ZZ$ respectively practically
     amounts to considering only Subset X or ZZ in \cref{eq:lxe-subset} and
@@ -212,8 +288,6 @@ noise.
   \item For $X$ Errors, the entanglement cluster dies earlier, since we measure
     $X$ more often.\\
     For $ZZ$ Errors, the entanglement cluster dies later, analogous to $X$\\
-    For both combined, it should be about equal to the ideal case without
-    errors.
 \end{itemize}
 
 \par{What happens in the mathematics?}
@@ -226,19 +300,30 @@ noise.
   \item HOWEVER: Within $\tilde{C}$ and $C$ the same argument as in
     \cref{sec:lxe-indep} holds. The outcomes we track are still independent
     random variables, now only with a different circuit that produces them,
-    i.e. \[ p(\mathbf{m}_X \cap \mathbf{m}_Z | \tilde{C}, \rho) = 
-    p(\mathbf{m}_X | \tilde{C}, \rho)\cdot p(\mathbf{m}_Z | \tilde{C}, \rho) \]
+    i.e. \[ P(\mathbf{m}_X \cap \mathbf{m}_Z | \tilde{C}, \rho) = 
+    P(\mathbf{m}_X | \tilde{C}, \rho)\cdot P(\mathbf{m}_Z | \tilde{C}, \rho) \]
   \item Note that the types of the measurements might swap. What has been
     deterministic previously could now be random and vice versa. The only way
     this can be bypassed is if an error directly precedes or is directly preceeded by a
     measurement of the same observable natively contained in $C$. That way the
     error is not 'seen' by the measurement history, since then the error either
     does nothing or fixes an outcome of a measurement.
-  \item The fraction in \cref{eq:lxe-c-def} is still the same object as before;
+  \item The fraction in \cref{eq:lxe-c-def}, that is, $f(\mathbf{m}, C_p,
+    \sigma)$, is still the same object as before;
     we are still trying to find the compatibility between classical simulation
-    and 'quantum' experiment.  
-  \item Although it is the same mathematical object, we can now identify another
-    cause of it going to $0$: An error is not bypassed by the mechanism
+    $(C, \sigma)$ and 'quantum' experiment $(\tilde{C}, \rho)$.
+  \item However, $\expval{\expval{f}}_{p,\rho}$, i.e. \cref{eq:sample-f-C},
+    will alter slightly. As we are trying to realistically model errors, we
+    should be unaware of the location they happen in, but assume that they
+    happened. As such, $\tilde{C}$ is a random circuit with probability
+    parameters $p$ and $q$ for measurements we see and don't see respectively.
+    \Cref{eq:sample-f-C} then becomes a sum over $\tilde{C}_{p,q}$,
+    \begin{align} \label{eq:sample-f-Ctilde}
+      \expval{\expval{f}}_{p,q,\rho} = \sum_{\tilde{C}_{p,q}} P(\tilde{C}_{p,q})
+      \cdot f(\mathbf{m},C_p, \sigma)
+    .\end{align}
+  \item Although $f$ is the same mathematical object as before, we can now identify another
+    cause of $f$ going to $0$: An error is not bypassed by the mechanism
     described above, but is entrapped by the competing measurement.
   \item Take, for instance, the minimal example of two qubits with $X$-Errors.
     A valid measurement pattern would be $(Z_1Z_2, Z_1Z_2)$. Starting with a
@@ -251,6 +336,8 @@ noise.
     $X$ errors and $ZZ$ errors respectively.
 \end{itemize}
 
+
+
 what happens if we only track a subset of measurements?
 \subsection{Tracking only a subset of measurements}
 \label{sec:lxe-err-subset}
@@ -258,8 +345,34 @@ Despite the fact that $\rho$ and $\sigma$ are being subjected to physically
 different circuits, we can still separate the respective probabilities as we
 did before. We just need to be careful with the interpretation. That is, we can
 follow the derivation in \cref{eq:lxe-subset}, where we replace $C$ in the
-probabilities conditioned on initial state $\rho$ with $\tilde{C}$.
+probabilities conditioned on initial state $\rho$ with $\tilde{C}$:
 
+\begin{align}
+      \label{eq:lxe-subset-err}
+      \chi_{\tilde{C},C} &= \sum_{\mathbf{m}} P(\mathbf{m} \mid \tilde{C}, \rho) \frac{P(\mathbf{m} \mid
+      C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
+      C, \sigma)\right)^2} \nonumber\\
+      \nonumber\\
+      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X \cap \mathbf{m}_Z |
+        \tilde{C}, \rho) \frac{P(\mathbf{m}_X \cap \mathbf{m}_Z| C,
+        \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'} \left(P(\mathbf{m}_X' \cap
+        \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
+        \nonumber\\
+      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X | \tilde{C}, \rho) P(
+        \mathbf{m}_Z | \tilde{C}, \rho) \frac{P(\mathbf{m}_X | C, \sigma) P( \mathbf{m}_Z|
+        C, \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'}
+          \left(P(\mathbf{m}_X' | C,
+        \sigma) P( \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
+        \nonumber\\
+      &= \underbrace{\frac{\sum_{\mathbf{m}_Z} P(\mathbf{m}_Z | \tilde{C}, \rho)
+          P(\mathbf{m}_Z | C, \sigma)}{\sum_{\mathbf{m}_Z'}
+          \left(P(\mathbf{m}_Z' |
+          C, \sigma)\right)^2}}_{\text{Subset ZZ}}
+          \underbrace{\frac{\sum_{\mathbf{m}_X} P(\mathbf{m}_X | \tilde{C}, \rho)
+          P(\mathbf{m}_X | C, \sigma)}{\sum_{\mathbf{m}_X'}
+          \left(P(\mathbf{m}_X' |
+          C, \sigma)\right)^2}}_{\text{Subset X}}
+\end{align}
 It turns out that tracking $\mathcal{O}$ measurements only prevents us from
 seeing $\mathcal{O}$-errors. It is not hard to convince oneself that this needs to
 be true: If we do not care about the outcomes of the observable, where no errors

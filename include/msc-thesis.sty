@@ -66,7 +66,7 @@
 \definecolor{maincolor1}{HTML}{646F7A} % header color
 \definecolor{maincolor2}{HTML}{018BCA} % currently citecolor, looks nice
 \definecolor{maincolor3}{HTML}{189300} % currently url color
-\definecolor{maincolor4}{HTML}{CA001B} % big number at chapter start
+\definecolor{maincolor4}{HTML}{B73779} % big number at chapter start
 \definecolor{maincolor5}{HTML}{3B0F70} % linkcolor
 
 % % %
@@ -105,14 +105,14 @@
    {\relax}{\llap{\textsc{\MakeLowercase{\Large\thesection\hspace{1em}}}}}{0em}{\raggedright\Large\spacedlowsmallcaps}
 
 \titlespacing*{\section}
-{0.5em}{1\baselineskip plus 1.5ex minus .4ex}{0.25\baselineskip plus .1ex}
+{0.5em}{1\baselineskip plus 1.5ex minus .4ex}{0.5\baselineskip plus .1ex}
 
 %% Subsections
 \titleformat{\subsection}
    {\relax}{\llap{\scshape\Large\thesubsection\hspace{1em}}}{0em}{\raggedright\large}
 
 \titlespacing*{\subsection}
-{0pt}{1\baselineskip plus 1.5ex minus .4ex}{0.25\baselineskip plus .1ex}
+{0pt}{1\baselineskip plus 1.5ex minus .4ex}{0.5\baselineskip plus .1ex}
 
 %% Subsubsection
 \titleformat{\subsubsection}
@@ -136,7 +136,7 @@
 %    \titlespacing*{\subsubsection}{0pt}{1\baselineskip}{0.25\baselineskip}
 %    \titlespacing*{\paragraph}{0pt}{1\baselineskip}{1\baselineskip}
     
-\renewcommand{\labelitemi}{\color{maincolor1}{$\bullet$}}    
+\renewcommand{\labelitemi}{\color{kw-darkblue}{$\bullet$}}    
 
 % % %
 % % % Headers
@@ -150,8 +150,10 @@
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{#1}{}}
 
-\fancyhead[EL]{\spacedlowsmallcaps{\llap{\textls[0]{\thepage\qquad}}\textcolor{maincolor1}{\leftmark}}}% gerade Seiten, rechts
-\fancyhead[OR]{\spacedlowsmallcaps{\textcolor{maincolor1}{\rightmark}}\normalfont\rlap{\qquad\thepage}}% ungerade Seiten, links
+\fancyhead[EL]{\spacedlowsmallcaps{\textcolor{maincolor1}{\leftmark}}}% gerade Seiten, links
+\fancyfoot[EL]{\llap{\textls[0]{\thepage\qquad}}}
+\fancyhead[OR]{\spacedlowsmallcaps{\textcolor{maincolor1}{\rightmark}}}% ungerade Seiten, rechts
+\fancyfoot[OR]{\normalfont\rlap{\qquad\thepage}}
 
 \fancypagestyle{plain}{
 \fancyhf{}

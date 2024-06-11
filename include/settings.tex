@@ -9,13 +9,13 @@
 \city{Stuttgart}
 \institute{Institute for Theoretical Physics {III}}
 \supervisor{Prof. Dr. Hans-Peter Büchler}
-\secondarycorrector{Prof. Esso R.}
+\secondarycorrector{Prof. Dr. Maria Daghofer}
 
 \hypersetup{
   colorlinks=true,
   linkcolor=maincolor5,
   citecolor=maincolor2,
-  urlcolor=maincolor3,
+  urlcolor=magma-40,
   linkbordercolor= {white},
   pdfauthor={Etienne Maurice Springer},
   pdfsubject={Master's Thesis},
@@ -53,3 +53,22 @@
     showtabs=false,                  
     tabsize=2,
 }
+
+% The following \crefname declarations are needed only
+% if your cross-references contain plural items
+\crefname{thm}{Theorem}{Theorems}
+\crefname{defn}{Definition}{Definitions}
+\crefname{lem}{Lemma}{Lemmata} % or 'lemmata'?
+\crefname{cor}{Corollary}{Corollaries} 
+\crefname{conj}{Conjecture}{Conjectures}
+\crefname{prop}{Proposition}{Propositions}
+\crefname{alg}{Algorithm}{Algorithms}
+
+\theoremstyle{definition}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{alg}[thm]{Algorithm}

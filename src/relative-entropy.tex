@@ -1,0 +1,235 @@
+\chapter{Relative Entropy}
+\label{ch:rel-ent}
+
+In this chapter we investigate if Klein's Inequality can assist us in obtaining
+a sensible upper bound for the entanglement entropy and thus make the
+entanglement transition visible.
+
+Idea from Altman Paper:
+\citetitle{garrattProbingPostmeasurementEntanglement2023}
+\cite{garrattProbingPostmeasurementEntanglement2023}.
+\section{The Idea}
+In \cite{garrattProbingPostmeasurementEntanglement2023} they introduce a method to obtain an upper bound on the
+entanglement entropy through classical means. In particular, they apply Klein's
+inequality \cite{nielsenQuantumComputationQuantum2010}
+\begin{align}
+  \label{eq:kleins-ineq}
+  S(\rho \mid\mid \sigma) \geq 0 \Leftrightarrow -\Tr[\rho\log\sigma]\geq
+  S_\mathrm{E}
+\end{align}
+with the relative and entanglement entropy $S(\rho\mid\mid\sigma)$ and
+$S_\mathrm{E}$ respectively.
+Among other things, they make use of shadow tomography to circumvent the
+post-selection problem. 
+%However, they do MPS simulations, and not stabilizer. This, of course, calls
+%for an adaptation (oh well\ldots).
+
+%\subsubsection{Aside: On References}
+%I like how references are provided in physics: all those little numbers in
+%little brackets or as superscript above a claim to support it. It allows me to
+%follow the bibliography in parallel to the paper and check some pertinent
+%publications easily. This is, of course, very different in many other
+%disciplines, i.e. psychology or philosophy, where it is common-practice to give
+%your sources in alphabetical order sorted by the author's surname.
+%
+%I claim that physicists are not appreciative enough of this. It will never fail
+%to frustrate me if people cite some shit that has nothing at all to do with the
+%claim in question. This is especially so if the claim is better supported by
+%the results of other papers; papers that a lot of times make it into the
+%\texttt{.bib} file of at least one of the authors, or why else would they be
+%prominently cited in a section, where it doesnt make sense to do so.
+%Ultimately, the highest degree of frustration for me is if the references are
+%off by one, or cite a previous project by the same authors. This kind of
+%situation lies in the uncanny valley of "is it them or me?". And more often
+%than not, it should be \emph{me}, right? But then you go on and on, read the
+%cited papers thoroughly, try to understand the context in which it is
+%referenced in the work you originally went through, and now, multiple layers
+%deep in the reference rabbithole are you ultimately forced to realize that it's
+%not you, it's them. 
+
+\subsection{Shadow Tomography}
+these papers are cited in
+\cite{garrattProbingPostmeasurementEntanglement2023} for shadow tomography:
+\begin{itemize}
+  \item \citetitle{elbenRandomizedMeasurementToolbox2022}
+    \cite{elbenRandomizedMeasurementToolbox2022}
+
+    Review paper. Context: "It will be useful to first outline shadow
+    tomography \cite{elbenRandomizedMeasurementToolbox2022} in its simplest
+    incarnation for a single qubit"
+
+    It has indeed been useful, but I gotta admit, i didn't get my outline from
+    this one, but from:
+  \item \citetitle{huangPredictingManyProperties2020}
+    \cite{huangPredictingManyProperties2020} 
+
+    In this paper, shadow tomography is the main thing investigated. Context:
+    "Generalizing \ldots to multiple qubits is straightforward
+    \cite{huangPredictingManyProperties2020}: one possibility is to construct
+    $N$-qubit shadows as the tensor products of $N$ objects with the structure
+    \ldots"
+\end{itemize}
+
+Some more shadow tomography papers:
+\begin{itemize}
+  \item \cite{aaronsonShadowTomographyQuantum2018} shadow tomography defined
+    for the first time
+  \item IDK where i want to include this one, but i think it will be
+    interesting to study a bit more:
+    \cite{tothEntanglementDetectionStabilizer2005} Entanglement witness
+\end{itemize}
+
+This one is not on shadow tomography, but is cited in
+\cite{garrattProbingPostmeasurementEntanglement2023}, which got me hella
+frustrated, since I did not know what the hell they meant with "Our discussion
+in this section largely follows Ref.
+\cite{garrattMeasurementsConspireNonlocally2023}" if it does not really match
+the vibe of \emph{this section}.
+
+\section{Na\"ive approach}
+spoiler: it (sort of) doesn't work out (as expected).
+
+One property of $S(\rho\mid\mid\sigma)$ is
+\cite{leditzkyRelativeEntropiesTheir2016}
+\begin{align}\label{eq:inf-cond}
+  S(\rho\mid\mid\sigma) < \infty \Longleftrightarrow \mathrm{supp}(\rho) \subseteq
+  \mathrm{supp}(\sigma)
+,\end{align}
+where supp$(\bullet)\equiv\ $ker$(\bullet)^\perp$ is the support of a linear
+operator, which is defined as the orthogonal complement to the kernel.
+Alternatively, for diagonalizable matrices, it is the subspace spanned by
+eigenvectors with non-zero eigenvalues
+\cite{schumacherRelativeEntropyQuantum2000}.
+
+In this section we will provide and prove a necessary and sufficient condition
+for $S(\rho\mid\mid\sigma)<\infty$ when $\rho$ and $\sigma$ are stabilizer
+density matrices (\cref{prop:subgroup}). 
+To prove \cref{prop:subgroup} we will need an auxilliary lemma, which will
+be stated and proven in the following.
+\begin{lem}\label{lem:supp-is-vs}
+  Let $\rho$ be an $N$-qubit stabilizer density matrix with stabilizer group $S = \langle
+  g_1, \ldots, g_n \rangle$, and $0\leq n \leq N$.
+  Then \[ \mathrm{supp}(\rho) = V_{S}.\]
+\end{lem}
+\begin{proof}[Proof of \cref{lem:supp-is-vs}]
+  By definition (cf. \cref{ch:basics}) we take $V_{S}$ to be the vector space
+  stabilized by $S$.  Further, it is the intersection of subspaces fixed by
+  each operator in $S$, i.e. the eigenvalue one eigenspaces of elements of $S$
+  (cf.  \cref{ch:basics} and \cite{nielsenQuantumComputationQuantum2010}). More
+  formally we can write
+  \[ 
+    V_S = \bigcap_{g \in S}  \mathrm{span}\left\{\ket{\psi} \mid g\ket{\psi} =
+    \ket{\psi}\right\} = \mathrm{span}\left\{\ket{\psi} \mid g\ket{\psi} =
+    \ket{\psi} \forall g \in S\right\}.
+  \]
+  This subspace is projected onto by
+  \[ P_S \equiv \frac{1}{2^n} \prod_{g\in S} \left(\mathds{1} + g\right).\]
+  Note that $\rho$ can be constructed from a product of projectors
+  \cite{gottesmanStabilizerCodesQuantum1997}
+  \[ \rho = \frac{1}{2^N} \prod_{g \in S} \left(\mathds{1} + g\right) = 2^{N-n} P_S \]
+  We thus have
+  \[ \mathrm{supp}(\rho) = \mathrm{supp}(P_S) = V_S. \]
+\end{proof}
+
+\begin{prop}\label{prop:subgroup}
+  Let $\rho$ and $\sigma$ be $N$-qubit stabilizer density matrices with
+  respective stabilizer groups $S_\rho$ and $S_\sigma$. Then
+  \[ \mathrm{supp}(\rho)\subseteq \mathrm{supp}(\sigma) \Longleftrightarrow
+  S_\sigma \leq S_\rho. \]
+  That is, with \cref{eq:inf-cond}, $S(\rho\mid\mid\sigma)$ takes on finite values iff. $S_\sigma$ is a
+  subgroup of $S_\rho$.
+\end{prop}
+
+\begin{proof}[Proof of \cref{prop:subgroup}]
+  We will prove implication from both directions to prove equivalence.
+
+  \enquote{$\Leftarrow$} Let $S_\sigma \leq S_\rho$. Then
+  \begin{align*}
+    \mathrm{supp}(\rho) = V_{S,\rho} &= \bigcap_{g\in S_\rho} \mathrm{span}\left\{ \ket{\psi} \mid
+    g\ket{\psi} = \ket{\psi} \right\} \\
+        &\overset{S_\sigma \leq S_\rho}{=} \underbrace{\bigcap_{g\in S_\sigma}
+        \mathrm{span}\left\{\ket{\psi} \mid g \ket{\psi} =
+        \ket{\psi}\right\}}_{V_{S,\sigma}}\ \ \ \cap \bigcap_{g \in S_\rho \setminus
+        S_\sigma} \mathrm{span}\left\{\ket{\psi} \mid g \ket{\psi} =
+        \ket{\psi}\right\}\\
+        &= V_{S,\sigma} \cap \bigcap_{g \in S_\rho \setminus
+        S_\sigma} \mathrm{span}\left\{\ket{\psi} \mid g \ket{\psi} =
+        \ket{\psi}\right\}\\
+        &\subseteq V_{S,\sigma} = \mathrm{supp}(\sigma)
+  .\end{align*}
+  which finishes the proof of this direction.
+
+  \enquote{$\Rightarrow$} Let $V_{S,\rho} = \mathrm{supp}(\rho) \subseteq
+  \mathrm{supp}(\sigma) = V_{S,\sigma}$ and let
+  $\ket{\psi} \in \mathcal{B}\left(V_{S,\rho}\right)$ and $\ket{\phi} \in
+  \mathcal{B}\left(V_{S,\sigma}\right) \setminus
+  \mathcal{B}\left(V_{S,\rho}\right)$. Since the stabilizer group is the
+  symmetry group of $V_S$, we can rewrite $S_\sigma$ as
+  \[ 
+    S_\sigma = \left\{ g \in G_N \mid g \ket{\psi} = \ket{\psi} \wedge g\ket{\phi} =
+  \ket{\phi} \right\},
+  \]
+  (where $G_N$ is the $N$-qubit Pauli group) 
+  as we want $S_\sigma$ to stabilize both $V_{S,\sigma}$ and its subset
+  $V_{S,\rho}$. We can then split up the condition into the intersection of two
+  sets, i.e.
+  \begin{align*}
+    S_\sigma &= \left\{ g \in G_N \mid g \ket{\psi} = \ket{\psi} \wedge g\ket{\phi} =
+  \ket{\phi} \right\}\\
+             &= \underbrace{\left\{ g \in G_N \mid g\ket{\psi}= \ket{\psi}
+             \right\}}_{S_\rho} \cap \left\{ g \in G_N \mid g\ket{\phi} = \ket{\phi} \right\} \\
+             &= S_\rho \cap \left\{ g \in G_N \mid g\ket{\phi} = \ket{\phi} \right\} \\
+               &\leq S_\rho 
+  .\end{align*}
+  This concludes the proof.
+\end{proof}
+
+\subsection{\enquote{Failure} of the na\"ive approach}
+\begin{itemize}
+  \item subgroup condition requires errors to be detected (and dealt with in
+    some way)
+  \item errors which are not succeeded by a measurement will lead to a change
+    in the group structure of $S_\rho$ such that $S_\sigma$ \enquote{never has
+    the chance to adapt}
+  \item maybe we should also implement some ideas from the shadow tomography
+    dings, such that errors are circumvented
+  \item Undetectable change in group structure happens if an error happens on a
+    qubit in a state stabilized by an orthogonal operator, e.g. an $X$-error if
+    the qubit is stabilized by $Z$.
+  \item The probability of any error happening in the last layer (i.e. after
+    all measurements in the circuit happenend) is $1-$ the probability of no
+    error, which is given by the binomial distribution
+    \[ P(\#\mathrm{err}>0) = 1-\binom{N}{0} (1-q)^N=1-(1-q)^N. \]
+  \item For $q=\num{0.01}$ we have $P\simeq .275$
+  \item Of course, this probability says nothing about the actual simulation
+    (except for $p=0$) as it could be an error which was preceeded by an $X$
+    measurement.
+  \item That being said, you could technically compute this probability
+    analytically, by going through each layer and multiplying the probabilites
+    for $X$ and not $ZZ$ happening to get the actual probability of failure
+   \item This is way too complicated, just to get an estimate on how many
+     simulations will end in $\infty$ for \cref{eq:kleins-ineq}. 
+\end{itemize}
+\clearpage
+\section{some relevant references}
+\begin{enumerate}
+  \item \citetitle{veitchResourceTheoryStabilizer2014}, entropic quantities of
+    magic states; quantifying non-stabilizerness. This paper is with gottesman
+    himself, so i thought it might be interesting to study. 
+  \item \citetitle{niekampEntropicUncertaintyRelations2012}, more or less what
+    it says. No regularization scheme or whatever. I think stabilizers are
+    mentioned tangentially, thats why i found it.
+  \item \citetitle{lashkariRelativeEntropiesConformal2014}, $\leftarrow$ me
+    grasping for straws.
+  \item \citetitle{leonePhaseTransitionStabilizer2024}, very recent, not too
+    particularily relevant to our stuff as far as i can tell.
+  \item \citetitle{wuEntanglementUpperBound2011} idfk\ldots
+  \item \citetitle{vedralEntanglementMeasuresPurification1998} one of the more
+    promising papers i've come across. probably helpful in proving the failure
+    of the na\"ive approach. However, it was published in 1998. It most likely
+    has nothing to do with stabilizers.
+  \item \citetitle{lindenQuantumEntropyCone2013}, probably some interesting
+    stuff in there, but not the thing i want.
+  \item \citetitle{buExtremalityStabilizerStates2024}, this paper is where most
+    of my confusions come from. 
+\end{enumerate}

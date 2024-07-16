@@ -118,8 +118,8 @@ be stated and proven in the following.
   (cf.  \cref{ch:basics} and \cite{nielsenQuantumComputationQuantum2010}). More
   formally we can write
   \[ 
-    V_S = \bigcap_{g \in S}  \mathrm{span}\left\{\ket{\psi} \mid g\ket{\psi} =
-    \ket{\psi}\right\} = \mathrm{span}\left\{\ket{\psi} \mid g\ket{\psi} =
+    V_S = \bigcap_{g \in S}  \left\{\ket{\psi} \mid g\ket{\psi} =
+    \ket{\psi}\right\} = \left\{\ket{\psi} \mid g\ket{\psi} =
     \ket{\psi} \forall g \in S\right\}.
   \]
   This subspace is projected onto by
@@ -145,15 +145,15 @@ be stated and proven in the following.
 
   \enquote{$\Leftarrow$} Let $S_\sigma \leq S_\rho$. Then
   \begin{align*}
-    \mathrm{supp}(\rho) = V_{S,\rho} &= \bigcap_{g\in S_\rho} \mathrm{span}\left\{ \ket{\psi} \mid
+    \mathrm{supp}(\rho) = V_{S,\rho} &= \bigcap_{g\in S_\rho} \left\{ \ket{\psi} \mid
     g\ket{\psi} = \ket{\psi} \right\} \\
         &\overset{S_\sigma \leq S_\rho}{=} \underbrace{\bigcap_{g\in S_\sigma}
-        \mathrm{span}\left\{\ket{\psi} \mid g \ket{\psi} =
+        \left\{\ket{\psi} \mid g \ket{\psi} =
         \ket{\psi}\right\}}_{V_{S,\sigma}}\ \ \ \cap \bigcap_{g \in S_\rho \setminus
-        S_\sigma} \mathrm{span}\left\{\ket{\psi} \mid g \ket{\psi} =
+        S_\sigma} \left\{\ket{\psi} \mid g \ket{\psi} =
         \ket{\psi}\right\}\\
         &= V_{S,\sigma} \cap \bigcap_{g \in S_\rho \setminus
-        S_\sigma} \mathrm{span}\left\{\ket{\psi} \mid g \ket{\psi} =
+        S_\sigma} \left\{\ket{\psi} \mid g \ket{\psi} =
         \ket{\psi}\right\}\\
         &\subseteq V_{S,\sigma} = \mathrm{supp}(\sigma)
   .\end{align*}
@@ -161,9 +161,9 @@ be stated and proven in the following.
 
   \enquote{$\Rightarrow$} Let $V_{S,\rho} = \mathrm{supp}(\rho) \subseteq
   \mathrm{supp}(\sigma) = V_{S,\sigma}$ and let
-  $\ket{\psi} \in \mathcal{B}\left(V_{S,\rho}\right)$ and $\ket{\phi} \in
-  \mathcal{B}\left(V_{S,\sigma}\right) \setminus
-  \mathcal{B}\left(V_{S,\rho}\right)$. Since the stabilizer group is the
+  $\ket{\psi} \in V_{S,\rho}$ and $\ket{\phi} \in
+  V_{S,\sigma} \setminus
+  V_{S,\rho}$. \"o Since the stabilizer group is the
   symmetry group of $V_S$, we can rewrite $S_\sigma$ as
   \[ 
     S_\sigma = \left\{ g \in G_N \mid g \ket{\psi} = \ket{\psi} \wedge g\ket{\phi} =
@@ -183,7 +183,62 @@ be stated and proven in the following.
   .\end{align*}
   This concludes the proof.
 \end{proof}
+This begs the question: Can we derive a simple expression for relative entropy
+in the case of $\rho$ and $\sigma$ being stabilizer density matrices?
+It turns out that we can.
 
+\begin{itemize}
+  \item $\rho$ and $\sigma$ are both stabilizer density matrices
+  \item We have a finite cross entropy iff. $S_\sigma \leq S_\rho$
+  \item Stabilizer density matrices can be written as a product of projectors
+    onto their generators, i.e.
+    \begin{align}
+    \rho = \frac{1}{2^r}\prod_{i=1}^r \left(\mathds{1} + g_i\right)
+    ,\end{align}
+    with $r\leq N$.
+  \item Since $S_\sigma \leq S_\rho$, we can construct a generating set
+    $G_\sigma$ of $S_\sigma$, where each element of $G_\sigma$ commutes with
+    the generating set of $G_\rho$.
+  \item Since the respective density matrices are constructed from the group
+    generators, it follows that
+    \begin{align}
+      \left[\rho, \sigma\right] = 0
+    .\end{align}
+  \item It is a well-known fact from linear algebra that matrices that commute
+    can be diagonalized simultaneously. A less-known fact is that the matrix
+    log of a diagonalizable matrix is $\log\sigma = U \log D_\sigma U^{-1}$. We
+    thus get
+    \begin{align}
+      -\Tr[\rho \log\sigma] = -\Tr[U D_\rho U^{-1} U \log D_\sigma U^{-1}] =
+      -\Tr[D_\rho \log D_\sigma] 
+    .\end{align}
+  \item With $D_\rho$ and $D_\sigma$ diagonal we can write the trace as
+    \begin{align}
+      -\Tr[D_\rho \log D_\sigma] = -\sum_i \lambda_i \log \mu_i
+    .\end{align}
+  \item $\lambda_i$ will be uniformly distributed ($\rho$ stabilizer), and thus
+    $\lambda_i = 2^{r-N}$ for $i=1,\ldots,2^{N-r}$ and $0$ otherwise.
+  \item Each non-zero entry in $D_\rho$ corresponds to a non-zero entry in
+    $D_\sigma$. 
+  \item The sum then becomes
+    \begin{align}
+      -\sum_i 2^{r-N} \log 2^{r'-N} \mathds{1} =
+      -2^{N-r}2^{r-N}\left(r'-N\right)= N-r'
+    .\end{align}
+  \item As a corollary we have a form for relative entropy in the stabilizer
+    formalism
+    \begin{align}
+      S(\rho \mid\mid \sigma) = r - r'
+    ,\end{align}
+    where $r$ is the rank of $S_\rho$ and $r'$ is the rank of $S_\sigma$.
+  \item The pertinent inequality for our problem, \cref{eq:kleins-ineq}, now
+    becomes
+    \begin{align}
+      S_E \leq N-r'
+    .\end{align}
+\end{itemize}
+
+\clearpage
 \subsection{\enquote{Failure} of the na\"ive approach}
 \begin{itemize}
   \item subgroup condition requires errors to be detected (and dealt with in
@@ -200,19 +255,52 @@ be stated and proven in the following.
     all measurements in the circuit happenend) is $1-$ the probability of no
     error, which is given by the binomial distribution
     \[ P(\#\mathrm{err}>0) = 1-\binom{N}{0} (1-q)^N=1-(1-q)^N. \]
-  \item For $q=\num{0.01}$ we have $P\simeq .275$
+  \item For $q=\num{0.01}$ and $N=32$ we have $P\simeq .275$
   \item Of course, this probability says nothing about the actual simulation
     (except for $p=0$) as it could be an error which was preceeded by an $X$
     measurement.
   \item That being said, you could technically compute this probability
     analytically, by going through each layer and multiplying the probabilites
-    for $X$ and not $ZZ$ happening to get the actual probability of failure
+    for \(X\) and not $ZZ$ happening to get the actual probability of failure
    \item This is way too complicated, just to get an estimate on how many
      simulations will end in $\infty$ for \cref{eq:kleins-ineq}. 
 \end{itemize}
 \clearpage
+\section{The Algorithm}
+\begin{itemize}
+  \item We would like to compare $\rho$, which is the \enquote{experiment}
+    (i.e. a quantum simulator), with $\sigma$, which is the classical
+    simulation.
+  \item The algorithm follows a similar structure to
+    \cite{liCrossEntropyBenchmark2023}, wherein we project the measurement
+    outcomes from $\rho$ onto $\sigma$ where it is possible. The difference
+    being that we do not start with orthogonal GHZ states, but with identical
+    GHZ states. That way, there will be no incompatible measurement as long as
+    there are no errors
+  \item but what if there are errors?
+  \item consider the case that an $X$-error occurred after a $ZZ$-measurement.
+  \item Half of the time we will get an incompatible projection, which would
+    project onto the zero-vector.
+  \item In those cases, we replace the stabilizer by $\mathds{1}$, where the
+    incompatibility was detected, instead of replacing it by the measurement
+    outcome or the projection.
+  \item This ensures that the subgroup condition still holds \emph{and} that
+    subsequent measurements on the same site cannot be interfered with, i.e.
+    that this qubits stabilizer is $\mathds{1}$ until it gets measured again.
+  %\item However, we rolled a nat20 on a sleight of hand skill check: in the
+  %  cases, where we \emph{would} get $\infty$, we replace $\sigma$ (whatever
+  %  it may be at this point) by $2^{-N} \mathds{1}$
+  %\item This is also in line with the general philosophy of the density
+  %  matrix. We do not know where the error occurred, and are therefore in a
+  %  mixture of all possible quantum states
+\end{itemize}
+
+\clearpage
 \section{some relevant references}
 \begin{enumerate}
+  \item \textcolor{red}{\citetitle{aaronsonImprovedSimulationStabilizer2004}
+      fuck why didn't i read it in its entirety earlier: section 7 does the
+    job\ldots}
   \item \citetitle{veitchResourceTheoryStabilizer2014}, entropic quantities of
     magic states; quantifying non-stabilizerness. This paper is with gottesman
     himself, so i thought it might be interesting to study. 

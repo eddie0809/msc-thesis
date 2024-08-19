@@ -21,31 +21,31 @@ with the relative and entanglement entropy $S(\rho\mid\mid\sigma)$ and
 $S_\mathrm{E}$ respectively.
 Among other things, they make use of shadow tomography to circumvent the
 post-selection problem. 
-%However, they do MPS simulations, and not stabilizer. This, of course, calls
-%for an adaptation (oh well\ldots).
+However, they do MPS simulations, and not stabilizer. This, of course, calls
+for an adaptation (oh well\ldots).
 
-%\subsubsection{Aside: On References}
-%I like how references are provided in physics: all those little numbers in
-%little brackets or as superscript above a claim to support it. It allows me to
-%follow the bibliography in parallel to the paper and check some pertinent
-%publications easily. This is, of course, very different in many other
-%disciplines, i.e. psychology or philosophy, where it is common-practice to give
-%your sources in alphabetical order sorted by the author's surname.
-%
-%I claim that physicists are not appreciative enough of this. It will never fail
-%to frustrate me if people cite some shit that has nothing at all to do with the
-%claim in question. This is especially so if the claim is better supported by
-%the results of other papers; papers that a lot of times make it into the
-%\texttt{.bib} file of at least one of the authors, or why else would they be
-%prominently cited in a section, where it doesnt make sense to do so.
-%Ultimately, the highest degree of frustration for me is if the references are
-%off by one, or cite a previous project by the same authors. This kind of
-%situation lies in the uncanny valley of "is it them or me?". And more often
-%than not, it should be \emph{me}, right? But then you go on and on, read the
-%cited papers thoroughly, try to understand the context in which it is
-%referenced in the work you originally went through, and now, multiple layers
-%deep in the reference rabbithole are you ultimately forced to realize that it's
-%not you, it's them. 
+\subsubsection{Aside: On References}
+I like how references are provided in physics: all those little numbers in
+little brackets or as superscript above a claim to support it. It allows me to
+follow the bibliography in parallel to the paper and check some pertinent
+publications easily. This is, of course, very different in many other
+disciplines, i.e. psychology or philosophy, where it is common-practice to give
+your sources in alphabetical order sorted by the author's surname.
+
+I claim that physicists are not appreciative enough of this. It will never fail
+to frustrate me if people cite some shit that has nothing at all to do with the
+claim in question. This is especially so if the claim is better supported by
+the results of other papers; papers that a lot of times make it into the
+\texttt{.bib} file of at least one of the authors, or why else would they be
+prominently cited in a section, where it doesnt make sense to do so.
+Ultimately, the highest degree of frustration for me is if the references are
+off by one, or cite a previous project by the same authors. This kind of
+situation lies in the uncanny valley of "is it them or me?". And more often
+than not, it should be \emph{me}, right? But then you go on and on, read the
+cited papers thoroughly, try to understand the context in which it is
+referenced in the work you originally went through, and now, multiple layers
+deep in the reference rabbithole are you ultimately forced to realize that it's
+not you, it's them. 
 
 \subsection{Shadow Tomography}
 these papers are cited in
@@ -126,7 +126,7 @@ be stated and proven in the following.
   \[ P_S \equiv \frac{1}{2^n} \prod_{g\in S} \left(\mathds{1} + g\right).\]
   Note that $\rho$ can be constructed from a product of projectors
   \cite{gottesmanStabilizerCodesQuantum1997}
-  \[ \rho = \frac{1}{2^N} \prod_{g \in S} \left(\mathds{1} + g\right) = 2^{N-n} P_S \]
+  \[ \rho = \frac{1}{2^N} \prod_{g \in S} \left(\mathds{1} + g\right) = 2^{n-N} P_S \]
   We thus have
   \[ \mathrm{supp}(\rho) = \mathrm{supp}(P_S) = V_S. \]
 \end{proof}
@@ -160,27 +160,39 @@ be stated and proven in the following.
   which finishes the proof of this direction.
 
   \enquote{$\Rightarrow$} Let $V_{S,\rho} = \mathrm{supp}(\rho) \subseteq
-  \mathrm{supp}(\sigma) = V_{S,\sigma}$ and let
-  $\ket{\psi} \in V_{S,\rho}$ and $\ket{\phi} \in
-  V_{S,\sigma} \setminus
-  V_{S,\rho}$. \"o Since the stabilizer group is the
-  symmetry group of $V_S$, we can rewrite $S_\sigma$ as
-  \[ 
-    S_\sigma = \left\{ g \in G_N \mid g \ket{\psi} = \ket{\psi} \wedge g\ket{\phi} =
-  \ket{\phi} \right\},
-  \]
-  (where $G_N$ is the $N$-qubit Pauli group) 
-  as we want $S_\sigma$ to stabilize both $V_{S,\sigma}$ and its subset
-  $V_{S,\rho}$. We can then split up the condition into the intersection of two
-  sets, i.e.
-  \begin{align*}
-    S_\sigma &= \left\{ g \in G_N \mid g \ket{\psi} = \ket{\psi} \wedge g\ket{\phi} =
-  \ket{\phi} \right\}\\
-             &= \underbrace{\left\{ g \in G_N \mid g\ket{\psi}= \ket{\psi}
-             \right\}}_{S_\rho} \cap \left\{ g \in G_N \mid g\ket{\phi} = \ket{\phi} \right\} \\
-             &= S_\rho \cap \left\{ g \in G_N \mid g\ket{\phi} = \ket{\phi} \right\} \\
-               &\leq S_\rho 
-  .\end{align*}
+  \mathrm{supp}(\sigma) = V_{S,\sigma}$. 
+
+  \begin{tikzpicture}
+  \matrix (m) [matrix of math nodes,row sep=3em,column sep=4em,minimum width=2em]
+  {
+    H^{\otimes N} & V_\rho \\
+     V_\sigma &  \\};
+  \path[-stealth]
+    (m-1-1) edge node [left] {$P_\sigma$} (m-2-1)
+            edge node [above] {$P_\rho$} (m-1-2)
+    (m-2-1) edge node [below] {$P_\rho$} (m-1-2);
+  \end{tikzpicture}
+
+%  $\ket{\psi} \in V_{S,\rho}$ and $\ket{\phi} \in
+%  V_{S,\sigma} \setminus
+%  V_{S,\rho}$. \"o Since the stabilizer group is the
+%  symmetry group of $V_S$, we can rewrite $S_\sigma$ as
+%  \[ 
+%    S_\sigma = \left\{ g \in G_N \mid g \ket{\psi} = \ket{\psi} \wedge g\ket{\phi} =
+%  \ket{\phi} \right\},
+%  \]
+%  (where $G_N$ is the $N$-qubit Pauli group) 
+%  as we want $S_\sigma$ to stabilize both $V_{S,\sigma}$ and its subset
+%  $V_{S,\rho}$. We can then split up the condition into the intersection of two
+%  sets, i.e.
+%  \begin{align*}
+%    S_\sigma &= \left\{ g \in G_N \mid g \ket{\psi} = \ket{\psi} \wedge g\ket{\phi} =
+%  \ket{\phi} \right\}\\
+%             &= \underbrace{\left\{ g \in G_N \mid g\ket{\psi}= \ket{\psi}
+%             \right\}}_{S_\rho} \cap \left\{ g \in G_N \mid g\ket{\phi} = \ket{\phi} \right\} \\
+%             &= S_\rho \cap \left\{ g \in G_N \mid g\ket{\phi} = \ket{\phi} \right\} \\
+%               &\leq S_\rho 
+%  .\end{align*}
   This concludes the proof.
 \end{proof}
 This begs the question: Can we derive a simple expression for relative entropy
@@ -193,7 +205,7 @@ It turns out that we can.
   \item Stabilizer density matrices can be written as a product of projectors
     onto their generators, i.e.
     \begin{align}
-    \rho = \frac{1}{2^r}\prod_{i=1}^r \left(\mathds{1} + g_i\right)
+    \rho = \frac{1}{2^N}\prod_{i=1}^r \left(\mathds{1} + g_i\right)
     ,\end{align}
     with $r\leq N$.
   \item Since $S_\sigma \leq S_\rho$, we can construct a generating set

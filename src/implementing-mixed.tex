@@ -1,0 +1,44 @@
+\chapter{Implementing mixed states}
+\label{ch:mixed}
+\epigraph{Always programming a new type of antidote in your perimeter}{
+\citeauthor{quasimotoDiscipline99Pt2000}
+%on \citefield{quasimotoDiscipline99Pt2000}{title}
+}
+
+Ref. \cite{aaronsonImprovedSimulationStabilizer2004} will need to do some heavy
+lifting in giving primers on stabilizer simulation.
+
+It will later prove useful to implement mixed states into the existing
+stabilizer simulator. As of yet, this does not exist.
+
+In this paper \cite{audenaertEntanglementMixedStabilizer2005} they present an
+algorithm to perform a partial trace on a stabilizer state. They need an
+auxilliary algorithm, the Reduced row echelon form algorithm. I think this is a
+promising approach, but needs implementation of the RREF and the ptrace
+algorithm. From what I've seen, the first one is going to take longer than the
+second to implement. Maybe look for this kind of alg in the existing codebase?
+
+Note from 10 minutes later: its basically what we already had, only a bit more
+formalized. 
+
+Lecture notes on stabilizers: \cite{arabLectureNotesQuantum2024}
+
+\section{Expanding the Tableau algorithm}
+Tableau algorithm: \cite{aaronsonImprovedSimulationStabilizer2004}
+
+\section{The algorithms}
+\textcolor{red}{Hier w\"are es ganz nice f\"ur die ganzen algs so flowcharts
+dabei zu haben, u.a. auch um listings aus dem weg zu gehen. Alg als flowchart
+ist generischer als der (evtl unsauber geschriebene) \texttt{C++} code}
+
+\subsection{\texttt{rowreduce}}
+
+\subsection{\texttt{get\_state\_type}}
+
+\subsection{\texttt{ptrace}}
+
+\subsection{\texttt{is\_subgroup\_of}}
+
+\subsection{\texttt{project\_or\_mix}}
+
+\subsection{\texttt{force\_projection}}

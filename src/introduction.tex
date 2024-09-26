@@ -1,28 +1,67 @@
 \chapter{Introduction}
-\label{ch:intro}
+\label{ch:basics}
+\epigraph{I am fascinated by numbers}{
+\citeauthor{baron-cohenAutismSpectrumQuotientAQ2001}}
+%\cite{baron-cohenAutismSpectrumQuotientAQ2001}}
 
-Random assortment of MIPT Paper (incomplete):
-\begin{itemize}
-  \item PTIM paper: \citetitle{langEntanglementTransitionProjective2020}
-    \cite{langEntanglementTransitionProjective2020}
-  \item Fisher paper, das ich mir als allererstes mal durchgelesen hab
-    (\citetitle{liMeasurementdrivenEntanglementTransition2019}):
-    \cite{liMeasurementdrivenEntanglementTransition2019}
-  \item MIPT general, war in \cref{ch:lxe}, aber leider keine ahnung mehr
-    warum\ldots (\citetitle{baoTheoryPhaseTransition2020}) \cite{baoTheoryPhaseTransition2020}
-  \item Why not: Measurement induced synchronization von Finn
-    (\citetitle{schmolkeMeasurementinducedQuantumSynchronization2023}):
-    \cite{schmolkeMeasurementinducedQuantumSynchronization2023}
-  \item 2017 WR for quantum state tomography (10 qubits):
-    (\citetitle{song10QubitEntanglementParallel2017})
-    \cite{song10QubitEntanglementParallel2017}
-  \item LXE: Definition: \cite{liCrossEntropyBenchmark2023}; PTIM:
-    \cite{tikhanovskayaUniversalityCrossEntropy2023}
-  \item Garratt/Altman Paper:
-    (\citetitle{garrattProbingPostmeasurementEntanglement2023}) \cite{garrattProbingPostmeasurementEntanglement2023}
-  \item self-cite for clout:
-    (\citetitle{schmolkeBoostingInformationTransfer2024})
-    \cite{schmolkeBoostingInformationTransfer2024}
-\end{itemize}
+Was hier useful werden kann:
 
-\lipsum[0-1]
+Nielsen: \cite{nielsenQuantumComputationQuantum2010}
+
+Stabilizer Formalism, Gottesman PhD thesis: \cite{gottesmanStabilizerCodesQuantum1997}
+
+Entanglement with Stabilizers: \cite{fattalEntanglementStabilizerFormalism2004}
+
+Algorithm for simulating stabilizer circuits:
+\cite{aaronsonImprovedSimulationStabilizer2004}
+
+
+This chapter serves to familiarize the reader with the core concepts relevant
+to this thesis. We will first introduce the stabilizer formalism, as it will
+later enable us to perform efficient numerical experiments on a classical
+computer. We then provide a general introduction to the field of entanglement
+transitions and go over some important examples. 
+\section{The Stabilizer Formalism}\label{sec:stab-basics}
+In this section we review the most important concepts of the stabilizer
+formalism. 
+
+Section adapted from \cite{nielsenQuantumComputationQuantum2010} and
+\cite{gottesmanStabilizerCodesQuantum1997}
+\subsection{Basic notions of group theory}
+blabla
+
+\begin{defn}\label{defn:fixpointgroup}
+  Let $G$ be a group acting on a set $M$. Let $a\in M$. We then call the
+  subgroup
+  \[ H = \left\{ h \in G \mid ha = a \right\} \leq G \]
+  \emph{symmetry group} or \emph{fixpoint group} of $a$.
+\end{defn}
+
+
+Consider the 2-qubit Bell state
+\begin{align}
+  \ket{\psi} = \frac{\ket{00} + \ket{11}}{\sqrt{2}} 
+.\end{align}
+
+Note that the unitary operations $X_1 X_2$ and $Z_1 Z_2$ both have $\ket{\psi}$
+as eigenstate with eigenvalue $+1$.
+
+
+\begin{defn}
+  Let $S\leq G_n$. We define $V_S$ as the set of $n$ qubit states stabilized by
+  $S$.
+\end{defn}
+
+\section{Entanglement Transitions}\label{sec:ent-trans}
+
+\subsection{Phenomenology}
+
+\section{The Projective Transverse-Field Ising Model}
+
+\section{Sampling Problem}\label{sec:sampling}
+
+\subsection{Fisher: Linear Cross Entropy}
+\cite{liCrossEntropyBenchmark2023}
+
+\subsection{Altman: Upper Bound}
+\cite{garrattProbingPostmeasurementEntanglement2024}

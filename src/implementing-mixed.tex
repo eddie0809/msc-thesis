@@ -23,19 +23,64 @@ formalized.
 
 Lecture notes on stabilizers: \cite{arabLectureNotesQuantum2024}
 
+This chapter serves as a primer on the nitty-gritty details of simulating a
+stabilizer circuit on a classical computer. As already touched on in
+\cref{ch:basics}, according to the \emph{Gottesman-Knill Theorem} we can
+perform efficient classical simulations of quantum circuits using only clifford
+gates. In the following sections we will introduce the so-called tableau
+algorithm, which allows simulations in ploynomial time, and expand it to
+properly deal with mixed states. We assume the reader to be familiar with
+the relevant sections in \cref{sec:stab-basics}
+
+\section{The Tableau Algorithm}\label{sec:tableau}
+In this section we give a brief introduction to the tableau algorithm. It can
+be seen as the sequel to \cref{sec:stab-basics}. Note that this section is
+based on the work of \citeauthor{aaronsonImprovedSimulationStabilizer2004} in
+\cite{aaronsonImprovedSimulationStabilizer2004}.
+
+We already know that we do not need the full stabilizer group to describe our
+state. We rather specify the set, which generates the group. This reduces the
+number of operators that need to be saved to $n=\log_{2}2^n$. Since stabilizer
+groups are built from Pauli matrices, we need $2n+1$ bits to specify 
+
+The name of the algorithm stems from the fact that a state is represented by a
+\emph{tableau}. This tableau is a binary $2n\times2n+1$ matrix. 
+
+One subroutine of major importance to the tableau algorithm is \texttt{rowsum}.
+
+\subsection{\texttt{rowsum}}\label{sec:rowsum}
+
 \section{Expanding the Tableau algorithm}
 Tableau algorithm: \cite{aaronsonImprovedSimulationStabilizer2004}
 
-\section{The algorithms}
 \textcolor{red}{Hier w\"are es ganz nice f\"ur die ganzen algs so flowcharts
 dabei zu haben, u.a. auch um listings aus dem weg zu gehen. Alg als flowchart
 ist generischer als der (evtl unsauber geschriebene) \texttt{C++} code}
 
+The tableau algorithm as outlined in \cref{sec:tableau} is only able to
+simulate stabilizer circuits on pure states. This however, neglects the most
+general class of quantum states, namely, mixed states. It will become apparent
+in \cref{ch:rel-ent} why this extension is necessary for our purposes. 
+
 \subsection{\texttt{rowreduce}}
+The first subroutine we expand the simulator with is \texttt{rowreduce}. 
+
+%\begin{figure}[h]
+%  \centering
+%  \input{fig/tikz/rowreduce.tex}
+%  \caption{flowchart for rowreduce algorithm}
+%  \label{fig:rowreduce-diag}
+%\end{figure}
 
 \subsection{\texttt{get\_state\_type}}
 
 \subsection{\texttt{ptrace}}
+\begin{figure}[h]
+  \centering
+  \input{fig/tikz/ptrace.tex}
+  \caption{flowchart for ptrace algorithm}
+  \label{fig:ptrace-dig}
+\end{figure}
 
 \subsection{\texttt{is\_subgroup\_of}}
 

@@ -17,7 +17,35 @@ gemacht hab zum zitieren. \cite{baoTheoryPhaseTransition2020}
 
 Sampling stuff aus appendix von \cite{roserDecodingProjectiveTransverse2023}
 
-\section{WIP: Definition and properties}
+As already touched upon in \cref{sec:sampling}, entanglement transitions elude
+any measurement we could perform in an experiment. In this chapter we will
+investigate a measure proposed by \citeauthor{liCrossEntropyBenchmark2023} and
+specifically apply it to the projective transverse-field Ising model (PTIM). We
+will first go over the definition and some properties before moving on to the
+computation of the linear cross entropy and the numerical implementation. We
+further discuss some interesting features
+\section{Linear Cross Entropy \& Stabilizer}
+In this section we provide a definition for the linear cross entropy (LXE)
+$\chi$ and a detailed derivation for its computation in Clifford circuits.
+
+Hier Definition und die ganze algebra/mathematik. dann den part zu LXE in
+stabilizer (mit dieser projection und so)
+
+Auch verschiedene Trackings?
+
+\section{Numerik \& Methoden}
+\label{sec:lxe-numeric}
+Hier numerische Implementierung der LXE (also die project funktion. evtl
+flowchart für algorithmus). Besser beschreiben als die in ihrem appendix.
+
+Tracking hier genauer beschreiben, i guess?
+\section{Auswertung PTIM \& Fehler}
+\subsection{Keine Fehler}
+\subsection{Fehler}
+
+\section{Summary}
+
+\section{old stuff}
 Before stating the definition of the linear cross entropy, we will first
 introduce some notational conventions.
 
@@ -76,7 +104,6 @@ $C$ only.
 
 
 \subsection{Numerical implementation}
-\label{sec:lxe-numeric}
 \textcolor{red}{notiz an den autor: \"uberleg dir nochmal genauer, was wo hinpasst}
 
 \subsubsection{Sampling:}
@@ -335,6 +362,13 @@ noise.
     get noticed will henceforth be denoted with \textsf{B1} and \textsf{B2} for
     $X$ errors and $ZZ$ errors respectively.
 \end{itemize}
+Mechanism \textsf{B1} tikz figure
+\begin{figure}[h]
+  \centering
+  \input{fig/tikz/mechanism_b1.tex}
+  \caption{mechanism \textsf{B1}}
+  \label{fig:mech-b1-lxe}
+\end{figure}
 
 
 

@@ -8,10 +8,84 @@ entanglement transition visible.
 Idea from Altman Paper:
 \citetitle{garrattProbingPostmeasurementEntanglement2023}
 \cite{garrattProbingPostmeasurementEntanglement2023}.
-\section{The Idea}
-In \cite{garrattProbingPostmeasurementEntanglement2023} they introduce a method to obtain an upper bound on the
-entanglement entropy through classical means. In particular, they apply Klein's
-inequality \cite{nielsenQuantumComputationQuantum2010}
+
+\section{The Idea \& Stabilizers}
+Hier Klein's Inequality (mit Herleitung), Interpretation von KL-Divergence und
+Cross Entropy.
+
+In this section we will introduce the upper bound on entanglement entropy,
+provide an information theoretic interpretation and derive an expression for
+the quantity of interest in case of stabilizer states. First however, we will
+freshen up on definitions of some important quantities.
+\subsubsection{Entropy of entanglement}
+The main quantity of interest in the whole field of entanglement transitions is
+the entropy of entanglement. It is a measure how entangled one subsystem of a
+bipartite state $\ket{\psi}_{AB}$ is with the other. We recall from
+\cref{sec:ent-trans} that its definition can be stated as follows
+\cite{fattalEntanglementStabilizerFormalism2004}.
+\begin{defn}\label{defn:entanglement-entropy}
+  Given a bipartite pure state $\ket{\psi}$ with subsystems $A$ and $B$,
+  the entropy of entanglement is defined as
+  \begin{align}
+    S_\mathrm{E}\left(\ket{\psi}\right) \equiv - \Tr[\rho_B \log \rho_B],
+  \end{align}
+  where $\rho_B = \Tr_A[\dyad{\psi}]$ is the reduced density matrix of subsystem
+  $B$. Conventionally, one uses the logarithm of base 2.
+\end{defn}
+This quantity can be efficiently computed in clifford circuits via the
+stabilizer formalism. It is important to note that the density matrix of the
+whole system $\rho = \dyad{\psi}$ describes a pure state. For a more universal
+measure of entropy, where the entropy of entanglement is a special case, we
+need to consider the more general \emph{Von Neumann entropy}.
+\subsubsection{Von Neumann entropy}
+Similar in appearance, but nonetheless quite different is the Von Neumann
+entropy. It was originally introduced as an extension of the classical Shannon
+entropy to quantum systems, as density matrices serve as extension of the
+classical notion of (discrete) probability distributions
+\cite{vonneumannMathematischeGrundlagenQuantenmechanik1968}.\footnote{Shannon
+  entropy is a measure of the average information of probabilistic events.
+  Since Information is defined as $I=-\log p_x$ for some event $x$ with
+  probability $p_x$, we can write down an average, $S = \expval{-\log p_x}_x =
+  -\sum_x p_x \log p_x$, which defines the Shannon entropy
+\cite{shannonMathematicalTheoryCommunication1948}.}
+Consequently, we can write down a definition of the Von Neumann entropy.
+\begin{defn}\label{defn:vonneumann}
+Given a general (i.e. possibly mixed) quantum state described by the density matrix
+$\rho$, the Von Neumann entropy can be defined as
+\begin{align}\label{eq:entropy-vn}
+  S\left(\rho\right) \equiv \expval{-\log \rho} = -\Tr[\rho\log\rho]
+.\end{align}
+\end{defn}
+For diagonalizable matrices (as we expect density matrices to be) we can also
+express \cref{eq:entropy-vn} as a sum over eigenvalues $\lambda_k$, i.e.
+\begin{align}
+  S\left(\rho\right) = -\sum_k \lambda_k \log \lambda_k
+.\end{align}
+One property we want to emphasize in particular is that $S(\rho)$ is bounded
+from above and below; it is $0$ for a pure state and $\log d$ for a maximally
+mixed state in a $d$-dimensional Hilbert space.
+\subsubsection{Quantum relative entropy}
+Lastly, we want to introduce the quantum relative entropy. The same way we
+motivated the Von Neumann entropy, we want to define a quantum mechanical
+analogue to the classical relative entropy. 
+
+\begin{defn}\label{defn:rel-ent}
+  Given two density matrices $\rho$ and $\sigma$, 
+
+  $S: H^{\otimes N} \times H^{\otimes N} \to \mathbb{R}^+_0 \cup \{\infty\}$
+
+  \begin{align}
+    S\left(\rho\mid\mid\sigma\right) \equiv \Tr[\rho\log\rho] -
+    \Tr[\rho\log\sigma] = -S(\rho) - \Tr[\rho\log\sigma]
+  .\end{align}
+\end{defn}
+
+
+\subsection{Klein's Inequality}
+In \cite{garrattProbingPostmeasurementEntanglement2023} they introduce a method
+to obtain an upper bound on the entanglement entropy through classical means.
+In particular, they apply Klein's inequality
+\cite{nielsenQuantumComputationQuantum2010}
 \begin{align}
   \label{eq:kleins-ineq}
   S(\rho \mid\mid \sigma) \geq 0 \Leftrightarrow -\Tr[\rho\log\sigma]\geq
@@ -23,6 +97,7 @@ Among other things, they make use of shadow tomography to circumvent the
 post-selection problem. 
 However, they do MPS simulations, and not stabilizer. This, of course, calls
 for an adaptation (oh well\ldots).
+\subsection{Stabilizers}
 
 \subsubsection{Aside: On References}
 I like how references are provided in physics: all those little numbers in
@@ -47,45 +122,45 @@ referenced in the work you originally went through, and now, multiple layers
 deep in the reference rabbithole are you ultimately forced to realize that it's
 not you, it's them. 
 
-\subsection{Shadow Tomography}
-these papers are cited in
-\cite{garrattProbingPostmeasurementEntanglement2023} for shadow tomography:
-\begin{itemize}
-  \item \citetitle{elbenRandomizedMeasurementToolbox2022}
-    \cite{elbenRandomizedMeasurementToolbox2022}
-
-    Review paper. Context: "It will be useful to first outline shadow
-    tomography \cite{elbenRandomizedMeasurementToolbox2022} in its simplest
-    incarnation for a single qubit"
-
-    It has indeed been useful, but I gotta admit, i didn't get my outline from
-    this one, but from:
-  \item \citetitle{huangPredictingManyProperties2020}
-    \cite{huangPredictingManyProperties2020} 
-
-    In this paper, shadow tomography is the main thing investigated. Context:
-    "Generalizing \ldots to multiple qubits is straightforward
-    \cite{huangPredictingManyProperties2020}: one possibility is to construct
-    $N$-qubit shadows as the tensor products of $N$ objects with the structure
-    \ldots"
-\end{itemize}
-
-Some more shadow tomography papers:
-\begin{itemize}
-  \item \cite{aaronsonShadowTomographyQuantum2018} shadow tomography defined
-    for the first time
-  \item IDK where i want to include this one, but i think it will be
-    interesting to study a bit more:
-    \cite{tothEntanglementDetectionStabilizer2005} Entanglement witness
-\end{itemize}
-
-This one is not on shadow tomography, but is cited in
-\cite{garrattProbingPostmeasurementEntanglement2023}, which got me hella
-frustrated, since I did not know what the hell they meant with "Our discussion
-in this section largely follows Ref.
-\cite{garrattMeasurementsConspireNonlocally2023}" if it does not really match
-the vibe of \emph{this section}.
-
+%\subsection{Shadow Tomography}
+%these papers are cited in
+%\cite{garrattProbingPostmeasurementEntanglement2023} for shadow tomography:
+%\begin{itemize}
+%  \item \citetitle{elbenRandomizedMeasurementToolbox2022}
+%    \cite{elbenRandomizedMeasurementToolbox2022}
+%
+%    Review paper. Context: "It will be useful to first outline shadow
+%    tomography \cite{elbenRandomizedMeasurementToolbox2022} in its simplest
+%    incarnation for a single qubit"
+%
+%    It has indeed been useful, but I gotta admit, i didn't get my outline from
+%    this one, but from:
+%  \item \citetitle{huangPredictingManyProperties2020}
+%    \cite{huangPredictingManyProperties2020} 
+%
+%    In this paper, shadow tomography is the main thing investigated. Context:
+%    "Generalizing \ldots to multiple qubits is straightforward
+%    \cite{huangPredictingManyProperties2020}: one possibility is to construct
+%    $N$-qubit shadows as the tensor products of $N$ objects with the structure
+%    \ldots"
+%\end{itemize}
+%
+%Some more shadow tomography papers:
+%\begin{itemize}
+%  \item \cite{aaronsonShadowTomographyQuantum2018} shadow tomography defined
+%    for the first time
+%  \item IDK where i want to include this one, but i think it will be
+%    interesting to study a bit more:
+%    \cite{tothEntanglementDetectionStabilizer2005} Entanglement witness
+%\end{itemize}
+%
+%This one is not on shadow tomography, but is cited in
+%\cite{garrattProbingPostmeasurementEntanglement2023}, which got me hella
+%frustrated, since I did not know what the hell they meant with "Our discussion
+%in this section largely follows Ref.
+%\cite{garrattMeasurementsConspireNonlocally2023}" if it does not really match
+%the vibe of \emph{this section}.
+%
 \section{Na\"ive approach}
 spoiler: it (sort of) doesn't work out (as expected).
 
@@ -173,6 +248,26 @@ be stated and proven in the following.
     (m-2-1) edge node [below] {$P_\rho$} (m-1-2);
   \end{tikzpicture}
 
+  We can read above diagram as follows: From the $N$-qubit Hilbert space we can
+  project onto the vector space stabilized by $S_\sigma$, $V_\sigma$, by means of a
+  projection operator. Likewise we can do the same for $V_\rho$. Since we
+  require $V_{S,\rho} \subseteq V_{S,\sigma}$, the same projection that takes
+  us from $H^{\otimes N}$ to $V_{S,\rho}$ will take us from $V_{S,\sigma}$ to
+  $V_{S,\rho}$. It follows that $P_\sigma P_\rho = P_\rho$.
+
+  Let $\ket{\psi} \in V_\rho$. We thus have
+  \[
+    \ket{\psi} = P_\rho \ket{\psi} = P_\sigma P_\rho \ket{\psi} = P_\sigma
+    \ket{\psi}.
+  \]
+  Since $\ket{\psi}$ was an arbirtary element from $V_{S,\rho}$ and $P_\sigma =
+  \frac{1}{2^n} \prod_{i=1}^n \left(\mathds{1} + h_i\right)$ with $h_i \in
+  S_\sigma$ it follows that all stabilizers of $\sigma$ also stabilize $\rho$
+  and thus
+  \[
+    S_\sigma \leq S_\rho.
+  \]
+
 %  $\ket{\psi} \in V_{S,\rho}$ and $\ket{\phi} \in
 %  V_{S,\sigma} \setminus
 %  V_{S,\rho}$. \"o Since the stabilizer group is the
@@ -252,6 +347,7 @@ It turns out that we can.
 
 \clearpage
 \subsection{\enquote{Failure} of the na\"ive approach}
+Hier auch auf jeden Fall n Plot mit dem naive approach drin
 \begin{itemize}
   \item subgroup condition requires errors to be detected (and dealt with in
     some way)
@@ -278,7 +374,9 @@ It turns out that we can.
      simulations will end in $\infty$ for \cref{eq:kleins-ineq}. 
 \end{itemize}
 \clearpage
-\section{The Algorithm}
+\section{Other Approaches}
+\subsection{Algorithm \#1}
+\subsection{Algorithm \#2}
 \begin{itemize}
   \item We would like to compare $\rho$, which is the \enquote{experiment}
     (i.e. a quantum simulator), with $\sigma$, which is the classical
@@ -306,6 +404,8 @@ It turns out that we can.
   %  matrix. We do not know where the error occurred, and are therefore in a
   %  mixture of all possible quantum states
 \end{itemize}
+\section{Results}
+\section{Summary}
 
 \clearpage
 \section{some relevant references}

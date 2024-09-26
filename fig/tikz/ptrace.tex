@@ -1,0 +1,28 @@
+\begin{tikzpicture}[node distance=2cm]
+
+    % Nodes
+    \node (start) [startstop] {Start};
+    \node (assertions) [process, below of=start] {Check assertions (q, N)};
+    
+    \node (init_helper) [process, below of=assertions] {Init helper\_tab, last\_stab, last\_anti};
+    
+    \node (move_qubit_loop) [process, below of=init_helper] {Loop: Move qubit q to the end};
+    
+    \node (update_mix) [process, below of=move_qubit_loop] {Update mix};
+    
+    \node (rowreduce) [process, below of=update_mix] {Call rowreduce(N-1)};
+    
+    \node (decrement_n) [process, below of=rowreduce] {Decrement N};
+    
+    \node (end) [startstop, below of=decrement_n] {End};
+
+    % Arrows
+    \draw [arrow] (start) -- (assertions);
+    \draw [arrow] (assertions) -- (init_helper);
+    \draw [arrow] (init_helper) -- (move_qubit_loop);
+    \draw [arrow] (move_qubit_loop) -- (update_mix);
+    \draw [arrow] (update_mix) -- (rowreduce);
+    \draw [arrow] (rowreduce) -- (decrement_n);
+    \draw [arrow] (decrement_n) -- (end);
+
+\end{tikzpicture}

@@ -1,7 +1,6 @@
 #!/bin/bash
 
 BUILD_DIR="build"
-PROJECT=$1
 
 function exit_with_error {
   echo "Error: $1"
@@ -17,8 +16,9 @@ if [ ! -d $BUILD_DIR ]; then
 fi
 
 if [ ! -e .latexmkrc ]; then
-  exit_with_error "No latexmkrc file."
+  exit_with_error "No latexmkrc file found"
 fi
 
+# -f enables what i call the "overleaf mode"
 exec latexmk -auxdir=$BUILD_DIR -pvc -f
 

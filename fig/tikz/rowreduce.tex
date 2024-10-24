@@ -1,57 +1,93 @@
-\begin{tikzpicture}[node distance=2cm]
+\begin{tikzpicture}[node distance=2cm, auto]
 
     % Nodes
-    \node (start) [startstop] {Start};
-    \node (init) [process, right of=start, xshift=2cm] {Init Variables};
-    
-    \node (x_loop) [process, below of=init] {Loop: j=0 to 2N, step 2 (x)};
-    \node (check_first_x) [decision, below of=x_loop, yshift=-1cm] {First x found?};
-    \node (set_first_x) [process, right of=check_first_x, xshift=3cm] {Set first\_x,\\ inc num\_x};
-    
-    \node (check_other_x) [decision, below of=check_first_x, yshift=-1cm] {Other x found?};
-    \node (rowsum_x) [process, right of=check_other_x, xshift=3cm] {rowsum(x)};
+  \node [startstop] (start) {Start};
+  \node [block, below of=start] (init) {\verb|first_x| = $-1$, \verb|first_z| =
+  $-1$};
+  \node [process, below of=init] (xloop) {Loop over stabilizers $g_i,\ i\leq N$};
+  \node [decision, below of=xloop] (checkx) {$X_{ia} = 1$?};
+  \node [decision, below of=checkx] (checkfirstx) {\verb|first_x| = $-1$?};
+  \node [decision, left of=checkx, xshift=-.5cm] (loopend) {End of loop?};
+  \node [process, right of=checkfirstx, xshift=2cm] (rowsumx)
+  {\verb|rowsum(i,first_x)|};
+  \node [block, left of=checkfirstx, xshift=-1.5cm] (setfirstx) {\verb|first_x|
+$=i$};
+  \node [decision, left of=setfirstx, yshift=-3cm] (xswap)
+  {$-1 < \verb|first| < 2N$?};
+  \node [block, right of=xswap, xshift=2cm] (swap) {swap \verb|first_x| to
+  bottom};
+  \node [process, below of=xswap, yshift=-.5cm] (repeat) {repeat loop with $Z$};
+   
+    %\node (start) [startstop] {Start};
+    %\node (init) [process, right of=start, xshift=1cm] {Init variables};
+    %
+    %\node (x_loop) [process, right of=init, xshift=1.5cm] {Loop over qubit $a$};
+    %\node (check_first_x) [decision, below of=x_loop] {$X_{ia}=1$?};
+    %\node (set_first_x) [process, right of=check_first_x, xshift=2.5cm] {Set first\_x, inc num\_x};
 
-    \node (cond_x_swap) [decision, below of=check_other_x, yshift=-1cm] {Swap x needed?};
-    \node (rowswap_x) [process, right of=cond_x_swap, xshift=3cm] {rowswap(x)};
+    %\node (check_other_x) [decision, below of=check_first_x, yshift=-2cm] {Other x stabilizer?};
+    %\node (rowsum_x) [process, right of=check_other_x, xshift=2.5cm] {rowsum};
 
-    \node (z_loop) [process, below of=cond_x_swap, yshift=-1cm] {Loop: j=0 to 2N, step 2 (z)};
-    \node (check_first_z) [decision, below of=z_loop, yshift=-1cm] {First z found?};
-    \node (set_first_z) [process, right of=check_first_z, xshift=3cm] {Set first\_z,\\ inc num\_z};
+    %\node (cond_x_swap) [decision, below of=check_other_x, yshift=-1cm] {x swap needed?};
+    %\node (rowswap_x) [process, right of=cond_x_swap, xshift=2.5cm] {rowswap};
 
-    \node (check_other_z) [decision, below of=check_first_z, yshift=-1cm] {Other z found?};
-    \node (rowsum_z) [process, right of=check_other_z, xshift=3cm] {rowsum(z)};
+    %\node (z_loop) [process, below of=cond_x_swap, yshift=-1cm] {Loop over z stabilizers};
+    %\node (check_first_z) [decision, below of=z_loop] {First z stabilizer?};
+    %\node (set_first_z) [process, right of=check_first_z, xshift=2.5cm] {Set first\_z, inc num\_z};
 
-    \node (cond_z_swap) [decision, below of=check_other_z, yshift=-1cm] {Swap z needed?};
-    \node (rowswap_z) [process, right of=cond_z_swap, xshift=3cm] {rowswap(z)};
+    %\node (check_other_z) [decision, below of=check_first_z, yshift=-1cm] {Other z stabilizer?};
+    %\node (rowsum_z) [process, right of=check_other_z, xshift=2.5cm] {rowsum};
 
-    \node (end) [startstop, below of=cond_z_swap, yshift=-1cm] {End};
+    %\node (cond_z_swap) [decision, below of=check_other_z, yshift=-1cm] {z swap needed?};
+    %\node (rowswap_z) [process, right of=cond_z_swap, xshift=2.5cm] {rowswap};
+
+    %\node (end) [startstop, below of=cond_z_swap, yshift=-1cm] {End};
 
     % Arrows
     \draw [arrow] (start) -- (init);
-    \draw [arrow] (init) -- (x_loop);
-    \draw [arrow] (x_loop) -- (check_first_x);
-    \draw [arrow] (check_first_x) -- node[anchor=south] {yes} (set_first_x);
-    \draw [arrow] (check_first_x) -- node[anchor=east] {no} (check_other_x);
-    \draw [arrow] (check_other_x) -- node[anchor=south] {yes} (rowsum_x);
-    \draw [arrow] (check_other_x) -- node[anchor=east] {no} (cond_x_swap);
-    \draw [arrow] (cond_x_swap) -- node[anchor=south] {yes} (rowswap_x);
-    \draw [arrow] (cond_x_swap) -- node[anchor=east] {no} (z_loop);
+    \draw [arrow] (init) -- (xloop);
+    \draw [arrow] (xloop) -- (checkx);
+    
+    \draw [arrow] (checkx) -- node[anchor=west] {yes} (checkfirstx);
+    \draw [arrow] (checkx) -- node[anchor=south] {no} (loopend);
+    
+    \draw [arrow] (checkfirstx) -- node[anchor=south] {yes} (setfirstx);
+    \draw [arrow] (checkfirstx) -- node[anchor=south] {no} (rowsumx);
+    \draw [line,dashed,gray] (rowsumx) -- (loopend);
+    \draw [arrow] (setfirstx) -- (loopend);
+    
+    \draw [arrow] (loopend) |- node[anchor=east] {no} (loop);
+    \draw [arrow] (loopend) -| node[anchor=east] {yes} (xswap);
+    
+    \draw [arrow] (xswap) -- node[anchor=south] {yes} (swap);
+    \draw [arrow] (xswap) -- node[anchor=east] {no} (repeat);
+    \draw [arrow] (swap) |- (repeat);
+    
+    %\path [line] (start) -- (init);
+    %\path [line] (init) -- (x_loop);
+    %\path [line] (x_loop) -- (check_first_x);
+    %\path [line] (check_first_x) -- node[anchor=south] {yes} (set_first_x);
+    %\path [line] (check_first_x) |- node[anchor=east] {no} (x_loop);
+    %\path [line] (check_other_x) -- node[anchor=south] {yes} (rowsum_x);
+    %\path [line] (check_other_x) -- node[anchor=east] {no} (cond_x_swap);
+    %\path [line] (cond_x_swap) -- node[anchor=south] {yes} (rowswap_x);
+    %\path [line] (cond_x_swap) -- node[anchor=east] {no} (z_loop);
 
-    \draw [arrow] (z_loop) -- (check_first_z);
-    \draw [arrow] (check_first_z) -- node[anchor=south] {yes} (set_first_z);
-    \draw [arrow] (check_first_z) -- node[anchor=east] {no} (check_other_z);
-    \draw [arrow] (check_other_z) -- node[anchor=south] {yes} (rowsum_z);
-    \draw [arrow] (check_other_z) -- node[anchor=east] {no} (cond_z_swap);
-    \draw [arrow] (cond_z_swap) -- node[anchor=south] {yes} (rowswap_z);
-    \draw [arrow] (cond_z_swap) -- node[anchor=east] {no} (end);
+    %\path [line] (z_loop) -- (check_first_z);
+    %\path [line] (check_first_z) -- node[anchor=south] {yes} (set_first_z);
+    %\path [line] (check_first_z) -- node[anchor=east] {no} (check_other_z);
+    %\path [line] (check_other_z) -- node[anchor=south] {yes} (rowsum_z);
+    %\path [line] (check_other_z) -- node[anchor=east] {no} (cond_z_swap);
+    %\path [line] (cond_z_swap) -- node[anchor=south] {yes} (rowswap_z);
+    %\path [line] (cond_z_swap) -- node[anchor=east] {no} (end);
 
-    \draw [arrow] (set_first_x) |- (check_other_x);
-    \draw [arrow] (rowsum_x) |- (cond_x_swap);
+    %\path [line] (set_first_x) |- (check_other_x);
+    %\path [line] (rowsum_x) |- (cond_x_swap);
 
-    \draw [arrow] (set_first_z) |- (check_other_z);
-    \draw [arrow] (rowsum_z) |- (cond_z_swap);
+    %\path [line] (set_first_z) |- (check_other_z);
+    %\path [line] (rowsum_z) |- (cond_z_swap);
 
-    \draw [arrow] (rowswap_x) |- (z_loop);
-    \draw [arrow] (rowswap_z) -- (end);
+    %\path [line] (rowswap_x) |- (z_loop);
+    %\path [line] (rowswap_z) -- (end);
 
 \end{tikzpicture}

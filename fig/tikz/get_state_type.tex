@@ -1,0 +1,59 @@
+\begin{tikzpicture}[node distance=2cm, auto]
+
+    % Nodes
+  \node [startstop] (start) {Start};
+  \node [block, below of=start] (init) {\verb|dummy| = 0};
+  \node [process, below of=init] (loop) {Loop over stabilizers $i<(N-\verb|mix|)$};
+  \node [decision, below of=loop] (valnot0) {$2X_{ia} + Z_{ia}
+  \neq 0$?};
+  \node [decision, below of=valnot0, yshift=-.5cm] (dummy0)
+  {\verb|dummy| $=0$?};
+  \node [decision, left of=valnot0, xshift=-.5cm] (loopend) {End of loop?};
+  \node [return, right of=dummy0, xshift=1cm] (return1) {return 1};
+  \node [block, left of=dummy0, xshift=-1.5cm] (setdummy) {\verb|dummy| $=2X_{ia} +
+  Z_{ia}$};
+  \node [decision, left of=setdummy, yshift=-3cm] (dummynot0)
+  {\verb|dummy| $\neq 0$?};
+  \node [return, right of=dummynot0, xshift=1cm] (ret0) {return 0};
+  \node [return, below of=dummynot0, yshift=-.5cm] (ret-) {return $-1$};
+
+    %\node (start) [startstop] {Start};
+    %\node (init) [process, right of=start] {Init dummy, val = 0};
+    %
+    %\node (loop) [process, below of=init] {Loop: i = 0 to 2(N-mix)};
+    %
+    %\node (calc_val) [process, below of=loop] {Calculate val};
+    %
+    %\node (check_dummy_0) [decision, below of=calc_val] {val != 0 \& dummy == 0?};
+    %\node (set_dummy) [process, right of=check_dummy_0, xshift=3cm] {Set dummy = val};
+    %
+    %\node (check_val_dummy) [decision, below of=check_dummy_0, yshift=-1cm] {val != 0 \& val != dummy?};
+    %\node (return_1) [process, right of=check_val_dummy, xshift=3cm] {Return 1};
+    %
+    %\node (check_loop_end) [decision, below of=check_val_dummy, yshift=-1cm] {End of loop?};
+    %
+    %\node (check_dummy) [decision, below of=check_loop_end, yshift=-1cm] {dummy != 0?};
+    %\node (return_0) [process, right of=check_dummy, xshift=3cm] {Return 0};
+    %\node (return_neg1) [process, below of=check_dummy, yshift=-1cm] {Return -1};
+
+    %\node (end) [startstop, below of=return_neg1, yshift=-1cm] {End};
+
+    % Arrows
+    \draw [arrow] (start) -- (init);
+    \draw [arrow] (init) -- (loop);
+    \draw [arrow] (loop) -- (valnot0);
+    
+    \draw [arrow] (valnot0) -- node[anchor=west] {yes} (dummy0);
+    \draw [arrow] (valnot0) -- node[anchor=south] {no} (loopend);
+    
+    \draw [arrow] (dummy0) -- node[anchor=south] {yes} (setdummy);
+    \draw [arrow] (dummy0) -- node[anchor=south] {no} (return1);
+    \draw [arrow] (setdummy) -- (loopend);
+    
+    \draw [arrow] (loopend) |- node[anchor=east] {no} (loop);
+    \draw [arrow] (loopend) -| node[anchor=east] {yes} (dummynot0);
+    
+    \draw [arrow] (dummynot0) -- node[anchor=south] {yes} (ret0);
+    \draw [arrow] (dummynot0) -- node[anchor=east] {no} (ret-);
+
+\end{tikzpicture}

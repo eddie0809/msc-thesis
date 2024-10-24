@@ -81,14 +81,57 @@
 %%%%%%%%%%%%%%%%%%%
 % AMSTHM SETTINGS %
 %%%%%%%%%%%%%%%%%%%
+% Define a Style for tcolorbox Theorems and Definitions
+\tcolorboxenvironment{thm}{
+    colframe=black,
+    colback=white!85!gray,
+    boxrule=0.3mm,
+    enhanced,
+    borderline west={1mm}{0pt}{black},
+    sharp corners,
+}
+\tcolorboxenvironment{defn}{
+    colframe=black,
+    colback=white!85!gray,
+    boxrule=0.3mm,
+    enhanced,
+    borderline west={1mm}{0pt}{gray},
+    sharp corners,
+}
+\tcolorboxenvironment{prop}{
+    colframe=black,
+    colback=white!85!gray,
+    boxrule=0.3mm,
+    enhanced,
+    borderline west={1mm}{0pt}{gray},
+    sharp corners,
+}
+\tcolorboxenvironment{lem}{
+    colframe=black,
+    colback=white!85!gray,
+    boxrule=0.3mm,
+    enhanced,
+    borderline west={1mm}{0pt}{blue},
+    sharp corners,
+}
+\tcolorboxenvironment{cor}{
+    colframe=black,
+    colback=white!85!gray,
+    boxrule=0.3mm,
+    enhanced,
+    borderline west={1mm}{0pt}{red},
+    sharp corners,
+}
 \theoremstyle{definition}
-\newtheorem{thm}{Theorem}[section]
+\newtheorem{thm}{Theorem}[chapter]
 \newtheorem{defn}[thm]{Definition}
 \newtheorem{lem}[thm]{Lemma}
 \newtheorem{cor}[thm]{Corollary}
 \newtheorem{conj}[thm]{Conjecture}
 \newtheorem{prop}[thm]{Proposition}
 \newtheorem{alg}[thm]{Algorithm}
+
+
 
 %%%%%%%%%%%%%%%%%%
 % TIKZ LIBRARIES %
@@ -98,21 +141,41 @@
 \usetikzlibrary{matrix}
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{arrows}
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=fig/tikz/cache/]
+%\tikzexternalenable
 
+\tikzstyle{init} = [rectangle, minimum width=1cm, minimum height=.5cm, text
+centered, text width=2.5cm, draw=black, fill=gray!20, font=\footnotesize]
+\tikzstyle{timestep} = [gray, dashed]
 \tikzstyle{measzz} = [rectangle, rounded corners, minimum width=3cm, minimum
 height=1cm,text centered, draw=black, fill=blue!20]
+\tikzstyle{errzz} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text
+centered, draw=red, fill=red!30]
 \tikzstyle{projzzsucc} = [rectangle, rounded corners, minimum width=3cm, minimum
 height=1cm,text centered, draw=black, fill=green!15]
 \tikzstyle{projzzfail} = [rectangle, rounded corners, minimum width=3cm, minimum
 height=1cm,text centered, draw=black, fill=purple!15]
-\tikzstyle{init} = [rectangle, minimum width=1cm, minimum height=.5cm, text
-centered, draw=black, fill=gray!20, font=\footnotesize]
-\tikzstyle{measx} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm,text centered, draw=black]
+\tikzstyle{measx} = [rectangle, rounded corners, minimum width=1cm, minimum
+height=1cm,text centered, draw=black, fill=blue!20]
 \tikzstyle{errx} = [circle, minimum size=.1cm, text centered, draw=red, fill=red!30]
+\tikzstyle{projxsucc} = [rectangle, rounded corners, minimum width=1cm, minimum
+height=1cm,text centered, draw=black, fill=green!15]
+\tikzstyle{projxfail} = [rectangle, rounded corners, minimum width=1cm, minimum
+height=1cm,text centered, draw=black, fill=purple!15]
 
-% for flowcharts
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
-\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+% for flowcharts (gepetto)
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=2cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{return} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{process} = [rectangle, text width=8em, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+%\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=green!30]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
+% for flowcharts (latex forum)
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=6em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=8em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em]

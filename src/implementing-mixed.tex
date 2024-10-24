@@ -23,34 +23,203 @@ formalized.
 
 Lecture notes on stabilizers: \cite{arabLectureNotesQuantum2024}
 
-This chapter serves as a primer on the nitty-gritty details of simulating a
-stabilizer circuit on a classical computer. As already touched on in
+This chapter serves as a primer on the nitty-gritty details of simulating
+stabilizer circuits on a classical computer. As already touched on in
 \cref{ch:basics}, according to the \emph{Gottesman-Knill Theorem} we can
-perform efficient classical simulations of quantum circuits using only clifford
+perform efficient classical simulations of quantum circuits using only Clifford
 gates. In the following sections we will introduce the so-called tableau
-algorithm, which allows simulations in ploynomial time, and expand it to
-properly deal with mixed states. We assume the reader to be familiar with
-the relevant sections in \cref{sec:stab-basics}
+algorithm, which allows simulations in polynomial time, and expand it to
+properly deal with mixed states. We assume the reader to be familiar with the
+corresponding sections in \cref{sec:stab-basics}.
 
-\section{The Tableau Algorithm}\label{sec:tableau}
-In this section we give a brief introduction to the tableau algorithm. It can
-be seen as the sequel to \cref{sec:stab-basics}. Note that this section is
-based on the work of \citeauthor{aaronsonImprovedSimulationStabilizer2004} in
-\cite{aaronsonImprovedSimulationStabilizer2004}.
+\subsubsection*{A complexity theory primer}
+%%% WAS HIER URSPRÜNGLICH MAL STAND:
+% This chapter addresses classical computation and algorithms, focussing on the
+% simulation of a particular class of quantum circuits using classical computers.
+% As such, it will necessarily feature terminology commonly associated with the
+% field of computer science. While this thesis as a whole is a work on natural
+% science – i.e. theoretical physics – our focus lies more on simulations as a
+% tool rather than as the primary object of study. Nonetheless, to ensure
+% clarity, we will briefly introduce key terminology from computer science.
+%%%
+This chapter is something of an outlier compared to the other chapters. While
+the previous part of this work pertains to \emph{natural} science -- namely,
+theoretical physics -- where simulations served us as a tool rather than as the
+primary object of study, a substantial portion of this thesis has been
+dedicated to expanding an existing stabilizer simulator to deal with new
+problems (cf.  \cref{sec:lxe-numeric,sec:rel-ent-stab}). As a result, our
+discussion thereof will necessarily feature
+%cursed language devised by the utterly deranged: computer scientists. To
+%prepare for this, we will introduce some of its vocabulary here.
+terminology commonly associated with the field of \emph{computer} science.
+To ensure clarity, we will briefly
+introduce key computer science concepts relevant to our discussion.  
 
-We already know that we do not need the full stabilizer group to describe our
-state. We rather specify the set, which generates the group. This reduces the
-number of operators that need to be saved to $n=\log_{2}2^n$. Since stabilizer
-groups are built from Pauli matrices, we need $2n+1$ bits to specify 
+The first concept we introduce is asymptotic behavior, along with the so-called
+\emph{Big O} notation. It is not exclusive to computer science as such, as we
+often deal with asymptotic behavior in physics as well.  In computer science,
+the Big O notation is used to describe the space (i.e. data storage) and
+time requirements of algorithms with increasing input size. The notation is
+defined precisely in \cref{defn:bigo-theta}.
+\begin{defn}[$\Theta$ and $\mathcal{O}$ notation
+  \cite{cormenIntroductionAlgorithms2009}]\label{defn:bigo-theta}
+  Let $g(n)$ be a positive function. Then $\Theta(g(n))$ is the set of
+  functions 
+  \begin{align*}
+    \Theta(g(n)) = \left\{ \ f(n) \mid \liminf_{n\to\infty} \frac{f(n)}{g(n)} > 0 \
+    \wedge \ \limsup_{n\to\infty} \frac{f(n)}{g(n)} < \infty \ \right\}
+  .\end{align*}
+  Similarly, $\mathcal{O}(g(n))$ is the set of functions 
+  \begin{align*}
+    \mathcal{O}(g(n)) = \left\{ \ f(n) \mid 
+    \limsup_{n\to\infty} \frac{f(n)}{g(n)} < \infty \ \right\}
+  .\end{align*}
+\end{defn}
+We will later see some examples of this notation in use. For now it suffices to
+note that different problems and the algorithms we use to solve them (or verify
+the validity of a solution) are grouped into a variety of \emph{complexity
+classes}. For instance, an algorithm is said to scale polynomially (in time) if
+its asymptotic behavior is $\mathcal{O}(n^\alpha)$ with $\alpha \geq 1$, and
+exponentially if it is $\mathcal{O}(2^n)$. These classes constitute an
+important subset in the field of theoretical computer science, in the form of
+complexity theory, where numerous classes exist.\footnote{A continuously
+updated list can be found in \cite{ComplexityZoo}.} The two examples from above
+fall in the classes \textsf{P} (polynomial time) and \textsf{EXP} (exponential
+time) respectively.  While there are lots of caveats to this highly simplified
+explanation, a deeper examination of complexity theory lies beyond the scope of
+this thesis. However, the key takeaway is summarized in
+\cref{defn:efficient-alg}.
+\begin{defn}[Algorithmic efficiency \cite{ComplexityZoo}]\label{defn:efficient-alg}
+  A problem is considered efficiently solvable on a classical computer if it
+  belongs to the complexity class \textsf{P}.
+\end{defn}
+Having laid out these foundational concepts, we can now delve deeper into the
+subtleties of stabilizers and the problem of simulating stabilizer
+circuits, potentially gaining a new appreciation for their intricacies.
 
+\section{Classical simulation of stabilizer circuits}\label{sec:sim-stab}
+In this section we explore the implications of \cref{thm:gottesman-knill} and
+provide a proper introduction to the simulation algorithm that forms the
+foundation for the numerical experiments in this thesis.  In particular, we
+present the \emph{tableau algorithm}, as proposed by Aaronson and Gottesman in
+\cite{aaronsonImprovedSimulationStabilizer2004}.  Consequently, this section
+draws largely from outside sources, namely refs.
+\cite{aaronsonImprovedSimulationStabilizer2004, arabLectureNotesQuantum2024,
+gottesmanStabilizerCodesQuantum1997,
+gottesmanHeisenbergRepresentationQuantum1998}. As it serves an introductory
+purpose, this section can (and should) be read as a sequel to
+\cref{sec:stab-basics}.
+%This section provides an introduction to the tableau algorithm. It can (and
+%should)
+%be read as the sequel to \cref{sec:stab-basics}. Note that this section is
+%based on the work of \citeauthor{aaronsonImprovedSimulationStabilizer2004} in
+%\cite{aaronsonImprovedSimulationStabilizer2004}.
+
+We begin by recalling that the stabilizer group does not need to be stored in
+full to unambiguously describe the state. Since the stabilizer group is finite,
+its structure can be fully encapsulated by storing only its \emph{generators}
+in memory. This reduces the amount of data to be stored to memory from $2^n$
+to $n$, owing to the well-known fact from group theory that a finite group $G$
+has a generating set of size $\log \abs{G}$. That is, an $n$-qubit pure state
+$\ket{\phi}$ with stabilizer group $S\left(\ket{\phi}\right)$ has a generating
+set of size $\log 2^n = n$.
+
+To determine the actual memory requirements we examine the generators
+themselves.  Each generator consists of an array of $n$ Pauli matrices and a
+sign. Since there are $4$ Pauli matrices (including the identity), we require 2
+bits to encode each of them, along with an additional bit for the sign.
+Consequently, the memory requirements for encoding a pure state in the
+stabilizer formalism is $n(2n+1)$. In other words, storing only the stabilizer
+generators reduces the space complexity of stabilizer simulations from
+$\mathcal{O}\left( 2^n \right)$ to $\mathcal{O}\left( n^2 \right)$.
+
+At this point, we have merely stored the state in memory. However,
+\cref{thm:gottesman-knill} implies that simulations of stabilizer cicruits can
+also be done efficiently on a classical computer. As stated in
+\cref{defn:efficient-alg}, for an algorithm to be
+considered \enquote{efficient}, it must have polynomial time complexity.
+Thus, the Gottesman-Knill theorem can be rephrased to state that the bits encoding
+$\ket{\phi}$ can be updated in polynomial time after a Hadamard gate, phase
+gate, controlled-\verb|NOT| gate, Pauli gate or Pauli measurement gate is
+applied to $\ket{\phi}$.
+\begin{thm}[Simulating stabilizer gates]\label{thm:sim-stab-comp}
+  Simulating a Clifford gate on an $n$-qubit stabilizer state requires $\Theta(n)$
+  time, while a measurement gate is simulated in $O(n^2)$ or $O(n^3)$ time for
+  random and deterministic outcomes respectively.
+\end{thm}
+\begin{proof}
+  An $n$-qubit stabilizer state $\ket{\phi}$ can be represented as an
+  $n\times(2n+1)$ bit matrix $M$, where the rows are the $n$ generators in the
+  afforementioned $(2n+1)$-bit representation. Any computational basis state can
+  thus be represented by
+  \[
+    M = \mqty( 
+    01 & 00 & 00 & \ldots & 00 & \pm \\
+    00 & 01 & 00 & \ldots & 00 & \pm \\
+    00 & 00 & 01 & \ldots & 00 & \pm \\
+    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+    00 & 00 & 00 & \ldots & 01 & \pm \\
+    ),
+  \]
+  where $Z$ and $I$ are encoded as $01$ and $00$ respectively, and $\pm$ is a
+  placeholder for either $0$ or $1$ depending on the sign. Simulating a
+  Clifford gate $U$ on $\ket{\phi}$ maps $g_i$, that is, the $i$-th row of $M$,
+  to $U g_i U$. This operation updates at most two columns, since Clifford
+  gates act on at most two qubits at once. Therefore, simulating $U$ takes $\Theta(n)$
+  time.
+
+  To show the scaling behavior of measurements we consider computational basis
+  measurements without loss of generality. Each qubit in $\ket{\phi}$ is either
+  in a computational basis state $\ket{0}$ or $\ket{1}$, where we have a
+  deterministic outcome, or in a superposition
+  of both states with equal amplitude, where either outcome is random with
+  probability $p=1 / 2$. Recall from \cref{sec:stab-basics} that the process of
+  determining the type of outcome (random or deterministic) is done by checking
+  the commutation relations between the measurement operator and the generators
+  of $\ket{\phi}$. If some generator anti-commutes the outcome is random,
+  otherwise it is deterministic (this implies a scaling of $\mathcal{O}(n)$
+  already, since we go through the entire matrix in the worst case). Suppose
+  there is a generator $g_i$ that anticommutes with $Z_i$, implying a random outcome. As the
+  outcome, we randomly choose $x\in\{0,1\}$. We then multiply any subsequent
+  rows that anticommute with $Z_i$ by $g_i$ in order for them to commute with
+  $Z_i$. We then replace $g_i$ by $\pm Z_i$ depending on the random outcome.
+  Since this algorithm takes up to $n$ row multiplications, the runtime scales
+  with $\mathcal{O}(n^2)$.
+
+  If the outcome is deterministic, the 
+\end{proof}
+%But as it turns out, this improvement in space complexity is also accompanied
+%by 
+%
+%
+%We already know that we do not need the full stabilizer group to describe our
+%state,
+%This reduces the
+%number of operators that need to be saved to $n=\log2^n$.
+%Since stabilizer
+%groups are built from Pauli matrices, we need $2n+1$ bits to specify 
+
+\subsection{The Tableau Algorithm}\label{sec:tableau}
 The name of the algorithm stems from the fact that a state is represented by a
 \emph{tableau}. This tableau is a binary $2n\times2n+1$ matrix. 
+
+\begin{prop}[Invariants of the tableau algorithm]\label{prop:comm-tab}
+  The following are invariant under operations of the tableau algorithm
+  \begin{enumerate}
+    \item $R_{n+1},\ldots,R_{2n}$ generate $S(\ket{\phi})$, and $R_1, \ldots,
+      R_{2n}$ generate $\mathcal{P}_n$.
+    \item $R_1, \ldots, R_n$ commute.
+    \item $\forall h \in \{1,\ldots,n\}, \ \{R_h, R_{h+n}\} = 0$
+    \item $\forall i,h \in \{1,\ldots,n\}, \ \text{with } i\neq h, \ [R_i, R_{h+n}] = 0$
+  \end{enumerate}
+  
+\end{prop}
 
 One subroutine of major importance to the tableau algorithm is \texttt{rowsum}.
 
 \subsection{\texttt{rowsum}}\label{sec:rowsum}
 
-\section{Expanding the Tableau algorithm}
+\section{Expanding the Tableau algorithm}\label{sec:expanding}
 Tableau algorithm: \cite{aaronsonImprovedSimulationStabilizer2004}
 
 \textcolor{red}{Hier w\"are es ganz nice f\"ur die ganzen algs so flowcharts
@@ -61,20 +230,248 @@ The tableau algorithm as outlined in \cref{sec:tableau} is only able to
 simulate stabilizer circuits on pure states. This however, neglects the most
 general class of quantum states, namely, mixed states. It will become apparent
 in \cref{ch:rel-ent} why this extension is necessary for our purposes. 
-
-\subsection{\texttt{rowreduce}}
-The first subroutine we expand the simulator with is \texttt{rowreduce}. 
-
-%\begin{figure}[h]
+%
+%\subsection{sample flowchart!}
+%delete this subsection later!
+%\begin{figure}[H]
 %  \centering
-%  \input{fig/tikz/rowreduce.tex}
-%  \caption{flowchart for rowreduce algorithm}
-%  \label{fig:rowreduce-diag}
+%  \input{fig/tikz/example.tex}
+%  \caption{dings}
+%  \label{fig:asdf}
 %\end{figure}
 
-\subsection{\texttt{get\_state\_type}}
+\subsection{The \texttt{mix} attribute}
+Each instance of \texttt{Qubit} now comes with a new attribute called
+\texttt{mix}! Its like a buy one get one free deal!
 
-\subsection{\texttt{ptrace}}
+\subsection{\texttt{get\_state\_type}}
+The first algorithm we want to introduce is an auxilliary subroutine needed for
+the \texttt{ptrace} algorithm, which we call \texttt{get\_state\_type}. It
+takes a qubit position $a$ as input and outputs the number of unique stabilizer
+generators minus one on that qubit. The name of the function stems from the
+fact that we can have $3$ different state types: entangled, product and mixed.
+A qubit with two unique stabilizer generators, i.e. $g_{ia} = Z$ and $g_{ja} =
+X$ with $i\neq j$, will be in an entangled state with another qubit $b\neq a$.
+If there is only one unique stabilizer generator, we have qubit $a$ in a
+product state, where the state is the state stabilized by the generator.
+Finally, no stabilizers correspond to a mixed state, since the empty set
+generates the trivial group, which corresponds to a mixed state in the
+stabilizer formalism. The algorithm works by checking the $q$-th column for
+each stabilizer in the tableau. This is then decoded the same way we encoded
+the Pauli matrices in the tableau algorithm ($00 \equiv I$, $01\equiv Z$, $10
+\equiv X$, $11 \equiv Y$) and (in case of a non-zero value) stored into a
+variable \texttt{dummy}. If we have two differing non-zero values for our Pauli
+encoding, we know our qubit to be in an entangled state with at least one other
+qubit, and we return $1$. If there are no other generators, we return $0$ and
+if \texttt{dummy} is $0$, qubit $a$ is in a mixed state. This algorithm is
+represented as pseudocode in \cref{alg:get_state_type} and as a flowchart in
+\cref{fig:statetype-diag}.
+
+\begin{algorithm}[H]
+\caption{Determine State Type for Qubits}
+\label{alg:get_state_type}
+\begin{algorithmic}[1]
+\REQUIRE qubit $a$, total number of qubits $N$, tableau $\mathcal{T}$
+\ENSURE Returns 1, 0, or -1 based on the conditions
+\STATE $\verb|dummy| \leftarrow 0$
+\STATE $\verb|pauli| \leftarrow 0$
+\FOR{$i \leftarrow 0$ \TO $(N - mix)$}
+  \STATE $\verb|pauli| \leftarrow 2\cdot X_{ia} + Z_{ia}$
+  \IF{$\texttt{pauli} \neq 0$ \AND $\texttt{dummy} = 0$}
+        \STATE $\texttt{dummy} \leftarrow \texttt{pauli}$
+        \ELSIF{$\texttt{pauli} \neq 0$ \AND $\texttt{pauli} \neq \texttt{dummy}$}
+        \RETURN 1
+    \ENDIF
+\ENDFOR
+\IF{$\texttt{dummy} \neq 0$}
+    \RETURN 0
+\ELSE
+    \RETURN -1
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[H]
+  \centering
+  \input{fig/tikz/get_state_type.tex}
+  \caption{flowchart for the \texttt{get\_state\_type} algorithm for qubit $a$.}
+  \label{fig:statetype-diag}
+\end{figure}
+
+\subsection{\texttt{rowreduce}}
+The next subroutine we expand the simulator with is \texttt{rowreduce}, which
+is also vital to the \verb|ptrace| algorithm. Remember that the tableau
+algorithm is based on the stabilizer generators and we already know that adding
+two rows together, i.e. multiplying two generators, leaves the commutation
+relations invariant. This means that we can perform row reduction to row
+echelon form on our tableau without effect on the described state. However,
+some subtleties need to be taken into account. In principle it is possible to
+row reduce the entire tableau. But it turns out that we need only to reduce the
+columns associated with one particular qubit, when epmloyed as subroutine to
+\verb|ptrace|. Next, we need to pay attention to the fact that our stabilizer
+tableau has dimensions $n\times 2n$. Ideally, \verb|rowreduce| should modify
+our stabilizers in a way that there are at most one of $X$ or $Z$ stabilizers
+for our qubit. A natural first step would then be to treat the respective $X$
+and $Z$ column separately. This is where one needs to be careful. Although the $X$
+and $Z$ stabilizers are in separate columns, they share the rows, e.g. in the
+case where $X_{ia}=Z_{ia}=1\equiv Y_{ia}$, meaning that
+a reduction of $X$ will influence the $Z$ column and vice versa. One way to
+reconcile this is to reduce the $X$ stabilizers first, swapping the row
+containing $X$ to the bottom if necessary, then doing $Z$ stabilizers. That way
+we ensure that we do not introduce $X$ stabilizers when adding rows together
+to get rid of $Z$ stabilizers. This already hints to the next subtlety we need
+to take into account. A priori, one would probably perform gaussian
+elimination to obtain an upper triangular form. The algorithm thereof is widely
+studied and the plight of many computer science first year students. It would
+thus be natural to assume that we want to have the reduced rows as first rows
+of the matrix. Nevertheless, our case is different; since we exclusively call
+\verb|rowreduce| to trace out a qubit, it will later prove convenient to have
+the reduced rows on the \emph{bottom} of the tableau. This way, we can later
+simply set \verb| N=N-1;|. We refer to \cref{sec:ptrace} for a more in-depth
+explanation why this is done. The last subtlety we want to highlight is the
+fact that with each modification of the stabilizer generators, we need an
+appropriate modification of the \emph{anti}stabilizers to keep the commutation
+relations of \cref{prop:comm-tab} intact. Although we do not technially need to
+modify the antistabilizers for our purposes, it is still necessary if we want
+to continue applying the tableau algorithm on the rowreduced tableau. To this
+end, cf. \cref{prop:comm-tab-2}, where this statement is formalized and proven.
+\begin{prop}\label{prop:comm-tab-2}
+  Let $\mathcal{T}$ be a tableau with stabilizer and antistabilizer generators
+  $S=\langle g_1, \ldots, g_n \rangle$ and $A=\langle h_1, \ldots, h_n \rangle$
+  respectively, where the generators fulfil the commutation relations of
+  \cref{prop:comm-tab}. Modifying $S$ by multiplication of two generators $g_i$
+  and $g_j$ needs to be accompanied by an appropriate modification of $A$
+\end{prop}
+\begin{proof}
+  We will conduct the proof by showing that each point in \cref{prop:comm-tab}
+  still holds.
+  \begin{enumerate}
+    \item Since we merely multiplied generators, this holds by group theoretic
+      arguments
+    \item All of the antistabilizers did commute previously, therefore, their
+      product commutes as well
+    \item There are only two relations of relevance for this point
+      \[
+        \{h_i h_j, g_i\} \overset{\text{!}}{=} 0 \quad{\text{and}} \quad 
+        \{h_j, g_i g_j\} \overset{\text{!}}{=} 0, 
+      \]
+      since all the other generators are left as they were.
+      To show this anticommutation relation we employ the well-known identity
+      \[ \{AB,C\} = A[B,C] + \{A,C\}B \]
+      to obtain
+      \begin{align*}
+        \{h_i h_j, g_i \} &= h_i \underbrace{[h_j, g_i]}_{=0} +
+        \underbrace{\{h_i, g_i\}}_{=0} h_j = 0 \qquad{\text{and}} \\
+        \{h_j, g_i g_j \} &= \{g_i g_j, h_j\} = g_i \underbrace{[g_j, h_i]}_{=0} +
+        \underbrace{\{g_i, h_i\}}_{=0} g_j = 0
+      .\end{align*}
+    \item As we started from a valid tableau, fulfilling the commutation
+      relations, we need to verify this point only for one of the combinations,
+      namely \[ [\tilde{g}_j, \tilde{h}_i] = [ g_i g_j, h_i h_j]. \]
+      This is done with another commutator identiy,
+      \[
+        [AB,CD] = A[B,C]D + [A,C]BD + CA[B,D] + C[A,D]B.
+      \]
+      We thus have
+      \begin{align*}
+        [g_i g_j, h_i h_j] &=
+          g_i \underbrace{[g_j, h_i]}_{=0} h_j + [g_i, h_i] g_j h_j + h_i g_i
+          [g_j, h_j] + h_i \underbrace{[g_i, h_j]}_{=0} g_j \\
+           &= (g_i h_i - h_i g_i)g_j h_j + h_i g_i (g_j h_j - h_j g_j) \\
+           &= g_i h_i g_j h_j - h_i g_i g_j h_j + h_i g_i g_j h_j - h_i g_i h_j
+           g_j \\
+           &= \underbrace{\{g_i, h_i\}}_{=0} g_j h_j - h_i g_i
+           \underbrace{\{g_j, h_j\}}_{=0} \\
+           &= 0
+      .\end{align*}
+  \end{enumerate}
+\end{proof}
+
+With all the subtleties accounted for, we can begin to construct
+\verb|rowreduce|. It should take a qubit position as input, and return
+\verb|void|, since it merely modifies the matrix. We start by looping through
+the $X$ stabilizers. The first time where $X_{ia}=1$, the row number $i$ is
+stored in a variable \verb|first_x = i|. For each subsequent row with $X_{ka}=1$
+we call \verb|rowsum(k,first_x)| and \verb|rowsum(first_x+1,k+1)|, where
+\verb|h+1| is the associated antistabilizer to stabilizer \verb|h|. After
+looping through the $X$ stabilizers, we move row \verb|first_x| to the bottom
+if necessary. We then repeat the previous procedure with the $Z$ stabilizers,
+also moving \verb|first_z| to the bottom if necessary. A pseudocode
+representation of this algorithm is provided in \cref{alg:rowreduce}.
+
+\begin{algorithm}[H]
+\caption{Rowreduce stabilizers for qubit $a$}
+\label{alg:rowreduce}
+\begin{algorithmic}[1]
+\REQUIRE qubit $a$, total number of qubits $N$, tableau $\mathcal{T}$
+\STATE $\verb|first_x| \leftarrow -1$
+\FOR{$i \leftarrow 0$ \TO $2N$ \textbf{step} 2}
+\IF{$X_{ia} = 1$ \AND $\texttt{first\_x} = -1$}
+    \STATE $\verb|first_x| \leftarrow i$
+    \ELSIF{$X_{ia} = 1$ \AND $\texttt{first\_x} > -1$}
+    \STATE \verb|rowsum(i, first_x)|
+    \STATE \verb|rowsum(first_x+1, i+1)|
+  \ENDIF
+\ENDFOR
+\IF{ $-1 < \texttt{first\_x} < 2N$}
+  \FOR{$i \leftarrow$ \texttt{first\_x} \TO $2N$}
+    \STATE \verb|rowswap(i, i+2)|
+  \ENDFOR
+\ENDIF
+\STATE $\verb|first_z| \leftarrow -1$
+\FOR{$i \leftarrow 0$ \TO $2N$ \textbf{step} 2}
+\IF{$X_{ia} = 1$ \AND $\texttt{first\_z} = -1$}
+    \STATE $\verb|first_z| \leftarrow i$
+    \ELSIF{$X_{ia} = 1$ \AND $\texttt{first\_z} > -1$}
+    \STATE \verb|rowsum(i, first_z)|
+    \STATE \verb|rowsum(first_z+1, i+1)|
+  \ENDIF
+\ENDFOR
+\IF{ $-1 < \texttt{first\_z} < 2N$ \OR \texttt{first\_x} = $-1$}
+  \FOR{$i \leftarrow$ \texttt{first\_z} \TO $2N$}
+    \STATE \verb|rowswap(i, i+2)|
+  \ENDFOR
+\ENDIF
+%\STATE $\verb|first_z| \leftarrow -1$
+%\FOR{$i \leftarrow 0$ \TO $2N$ \STEP 2}
+%  \IF{$X_{ia} = 1$ \AND \verb|first_z| = $-1$}
+%    \STATE $\verb|first_x| \gets i$
+%  \ELSIF{$X_{ia} = 1$ \AND \verb|first_z| > $-1$}
+%    \STATE \verb|rowsum(i, first_z)|
+%    \STATE \verb|rowsum(first_z+1, i+1)|
+%  \ENDIF
+%\ENDFOR
+%\IF{$-1 < \verb|first_z| < 2N$ \OR \verb|first_x| = $-1$}
+%  \FOR{$i \gets \verb|first_z| \TO 2N$}
+%    \STATE \verb|rowswap(i, i+2)|
+%  \ENDFOR
+%\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[H]
+  \centering
+  \input{fig/tikz/rowreduce.tex}
+  \caption{flowchart for rowreduce algorithm}
+  \label{fig:rowreduce-diag}
+\end{figure}
+
+\subsection{\texttt{ptrace}}\label{sec:ptrace}
+We now combine the two previous subroutines to the \verb|ptrace| algorithm.
+The algorithm traces out one qubit and modifies the remaining stabilizers
+accordingly. For instance, tracing out a qubit in a product state will just
+remove this qubit, since it doesn't correlate with any other qubit. If we do
+have correlations in the form of entanglement, the algorithm will modify the
+remaining stabilizers in a way that increases the mixedness. 
+Consider the paradigmatic example of the two-qubit Bell state
+\[
+  \ket{\phi} = \frac{\ket{00} + \ket{11}}{\sqrt{2}} \quad{\text{with density
+  matrix}} \quad \rho = \dyad{\phi}.
+\]
+After tracing out any of the two qubits we are left with a mixed state, namely
+$$\rho_i = \frac{1}{2} \left[\dyad{0}_i + \dyad{1}_i\right].$$
+
+
 \begin{figure}[h]
   \centering
   \input{fig/tikz/ptrace.tex}

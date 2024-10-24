@@ -1,4 +1,4 @@
-\chapter{Relative Entropy}
+\chapter{Upper Bound}
 \label{ch:rel-ent}
 
 In this chapter we investigate if Klein's Inequality can assist us in obtaining
@@ -8,6 +8,9 @@ entanglement transition visible.
 Idea from Altman Paper:
 \citetitle{garrattProbingPostmeasurementEntanglement2023}
 \cite{garrattProbingPostmeasurementEntanglement2023}.
+In \cite{garrattProbingPostmeasurementEntanglement2023} they introduce a method
+to obtain an upper bound on the entanglement entropy via classical
+post-processing.
 
 \section{The Idea \& Stabilizers}
 Hier Klein's Inequality (mit Herleitung), Interpretation von KL-Divergence und
@@ -20,152 +23,99 @@ freshen up on definitions of some important quantities.
 \subsubsection{Entropy of entanglement}
 The main quantity of interest in the whole field of entanglement transitions is
 the entropy of entanglement. It is a measure how entangled one subsystem of a
-bipartite state $\ket{\psi}_{AB}$ is with the other. We recall from
+bipartite state $\ket{\phi}_{AB}$ is with the other. We recall from
 \cref{sec:ent-trans} that its definition can be stated as follows
 \cite{fattalEntanglementStabilizerFormalism2004}.
-\begin{defn}\label{defn:entanglement-entropy}
-  Given a bipartite pure state $\ket{\psi}$ with subsystems $A$ and $B$,
-  the entropy of entanglement is defined as
+\begin{defn}[Entanglement entropy]\label{defn:entanglement-entropy}
+  Let $\ket{\phi}\in H^{\otimes N}$ be a bipartite pure state with subsystems
+  $A$ and $B$. The entropy of entanglement of $\ket{\phi}$ then reads
   \begin{align}
-    S_\mathrm{E}\left(\ket{\psi}\right) \equiv - \Tr[\rho_B \log \rho_B],
+    %&S_E : H^{\otimes N} \to [0, N/2]\nonumber\\
+    S_\mathrm{E}\left(\ket{\phi}\right) \equiv - \Tr[\rho_B \log \rho_B],
   \end{align}
-  where $\rho_B = \Tr_A[\dyad{\psi}]$ is the reduced density matrix of subsystem
+  where $\rho_B = \Tr_A[\dyad{\phi}]$ is the reduced density matrix of subsystem
   $B$. Conventionally, one uses the logarithm of base 2.
 \end{defn}
 This quantity can be efficiently computed in clifford circuits via the
 stabilizer formalism. It is important to note that the density matrix of the
-whole system $\rho = \dyad{\psi}$ describes a pure state. For a more universal
+whole system $\rho = \dyad{\phi}$ describes a pure state. For a more universal
 measure of entropy, where the entropy of entanglement is a special case, we
 need to consider the more general \emph{Von Neumann entropy}.
 \subsubsection{Von Neumann entropy}
 Similar in appearance, but nonetheless quite different is the Von Neumann
-entropy. It was originally introduced as an extension of the classical Shannon
-entropy to quantum systems, as density matrices serve as extension of the
-classical notion of (discrete) probability distributions
+entropy. It lets us quantify the average information content in a mixture of
+quantum states. Originally, Von Neumann introduced it as an extension of the
+classical Shannon entropy to quantum systems, as density matrices serve as
+extension of the classical notion of (discrete) probability distributions
 \cite{vonneumannMathematischeGrundlagenQuantenmechanik1968}.\footnote{Shannon
   entropy is a measure of the average information of probabilistic events.
   Since Information is defined as $I=-\log p_x$ for some event $x$ with
   probability $p_x$, we can write down an average, $S = \expval{-\log p_x}_x =
   -\sum_x p_x \log p_x$, which defines the Shannon entropy
-\cite{shannonMathematicalTheoryCommunication1948}.}
+\cite{shannonMathematicalTheoryCommunication1948}.} 
 Consequently, we can write down a definition of the Von Neumann entropy.
-\begin{defn}\label{defn:vonneumann}
-Given a general (i.e. possibly mixed) quantum state described by the density matrix
-$\rho$, the Von Neumann entropy can be defined as
-\begin{align}\label{eq:entropy-vn}
-  S\left(\rho\right) \equiv \expval{-\log \rho} = -\Tr[\rho\log\rho]
-.\end{align}
-\end{defn}
-For diagonalizable matrices (as we expect density matrices to be) we can also
-express \cref{eq:entropy-vn} as a sum over eigenvalues $\lambda_k$, i.e.
-\begin{align}
-  S\left(\rho\right) = -\sum_k \lambda_k \log \lambda_k
-.\end{align}
-One property we want to emphasize in particular is that $S(\rho)$ is bounded
-from above and below; it is $0$ for a pure state and $\log d$ for a maximally
-mixed state in a $d$-dimensional Hilbert space.
-\subsubsection{Quantum relative entropy}
-Lastly, we want to introduce the quantum relative entropy. The same way we
-motivated the Von Neumann entropy, we want to define a quantum mechanical
-analogue to the classical relative entropy. 
-
-\begin{defn}\label{defn:rel-ent}
-  Given two density matrices $\rho$ and $\sigma$, 
-
-  $S: H^{\otimes N} \times H^{\otimes N} \to \mathbb{R}^+_0 \cup \{\infty\}$
-
-  \begin{align}
-    S\left(\rho\mid\mid\sigma\right) \equiv \Tr[\rho\log\rho] -
-    \Tr[\rho\log\sigma] = -S(\rho) - \Tr[\rho\log\sigma]
+\begin{defn}[Von Neumann entropy]\label{defn:vonneumann}
+  Let $\rho$ be an $N$-qubit density matrix. The Von Neumann entropy of $\rho$
+  is given by
+  \begin{align}\label{eq:entropy-vn}
+    S\left(\rho\right) \equiv \expval{-\log \rho} = -\Tr[\rho\log\rho]
   .\end{align}
 \end{defn}
+For diagonalizable matrices (as we expect density matrices to be) we can also
+express \cref{eq:entropy-vn} as a sum over eigenvalues $\lambda_k$ of $\rho$, i.e.
+\begin{align}\label{eq:entropy-vn-sum}
+  S\left(\rho\right) = -\sum_k \lambda_k \log \lambda_k
+,\end{align}
+where $0\leq\lambda_k\leq 1$.
+This can be shown by diagonalizing $\rho$ and using the fact that the matrix
+logarithm of a diagonal matrix is just the logarithm of the entries.
+(Note that we set $0\cdot\log 0 \equiv 0$.)
 
-
-\subsection{Klein's Inequality}
-In \cite{garrattProbingPostmeasurementEntanglement2023} they introduce a method
-to obtain an upper bound on the entanglement entropy through classical means.
-In particular, they apply Klein's inequality
-\cite{nielsenQuantumComputationQuantum2010}
-\begin{align}
-  \label{eq:kleins-ineq}
-  S(\rho \mid\mid \sigma) \geq 0 \Leftrightarrow -\Tr[\rho\log\sigma]\geq
-  S_\mathrm{E}
-\end{align}
-with the relative and entanglement entropy $S(\rho\mid\mid\sigma)$ and
-$S_\mathrm{E}$ respectively.
-Among other things, they make use of shadow tomography to circumvent the
-post-selection problem. 
-However, they do MPS simulations, and not stabilizer. This, of course, calls
-for an adaptation (oh well\ldots).
-\subsection{Stabilizers}
-
-\subsubsection{Aside: On References}
-I like how references are provided in physics: all those little numbers in
-little brackets or as superscript above a claim to support it. It allows me to
-follow the bibliography in parallel to the paper and check some pertinent
-publications easily. This is, of course, very different in many other
-disciplines, i.e. psychology or philosophy, where it is common-practice to give
-your sources in alphabetical order sorted by the author's surname.
-
-I claim that physicists are not appreciative enough of this. It will never fail
-to frustrate me if people cite some shit that has nothing at all to do with the
-claim in question. This is especially so if the claim is better supported by
-the results of other papers; papers that a lot of times make it into the
-\texttt{.bib} file of at least one of the authors, or why else would they be
-prominently cited in a section, where it doesnt make sense to do so.
-Ultimately, the highest degree of frustration for me is if the references are
-off by one, or cite a previous project by the same authors. This kind of
-situation lies in the uncanny valley of "is it them or me?". And more often
-than not, it should be \emph{me}, right? But then you go on and on, read the
-cited papers thoroughly, try to understand the context in which it is
-referenced in the work you originally went through, and now, multiple layers
-deep in the reference rabbithole are you ultimately forced to realize that it's
-not you, it's them. 
-
-%\subsection{Shadow Tomography}
-%these papers are cited in
-%\cite{garrattProbingPostmeasurementEntanglement2023} for shadow tomography:
-%\begin{itemize}
-%  \item \citetitle{elbenRandomizedMeasurementToolbox2022}
-%    \cite{elbenRandomizedMeasurementToolbox2022}
-%
-%    Review paper. Context: "It will be useful to first outline shadow
-%    tomography \cite{elbenRandomizedMeasurementToolbox2022} in its simplest
-%    incarnation for a single qubit"
-%
-%    It has indeed been useful, but I gotta admit, i didn't get my outline from
-%    this one, but from:
-%  \item \citetitle{huangPredictingManyProperties2020}
-%    \cite{huangPredictingManyProperties2020} 
-%
-%    In this paper, shadow tomography is the main thing investigated. Context:
-%    "Generalizing \ldots to multiple qubits is straightforward
-%    \cite{huangPredictingManyProperties2020}: one possibility is to construct
-%    $N$-qubit shadows as the tensor products of $N$ objects with the structure
-%    \ldots"
-%\end{itemize}
-%
-%Some more shadow tomography papers:
-%\begin{itemize}
-%  \item \cite{aaronsonShadowTomographyQuantum2018} shadow tomography defined
-%    for the first time
-%  \item IDK where i want to include this one, but i think it will be
-%    interesting to study a bit more:
-%    \cite{tothEntanglementDetectionStabilizer2005} Entanglement witness
-%\end{itemize}
-%
-%This one is not on shadow tomography, but is cited in
-%\cite{garrattProbingPostmeasurementEntanglement2023}, which got me hella
-%frustrated, since I did not know what the hell they meant with "Our discussion
-%in this section largely follows Ref.
-%\cite{garrattMeasurementsConspireNonlocally2023}" if it does not really match
-%the vibe of \emph{this section}.
-%
-\section{Na\"ive approach}
-spoiler: it (sort of) doesn't work out (as expected).
-
-One property of $S(\rho\mid\mid\sigma)$ is
-\cite{leditzkyRelativeEntropiesTheir2016}
+From this definition we can already derive some important properties, namely
+its lower and upper bound. Firstly, $S(\rho)$ is non-negative and $0$ iff.
+$\rho$ is pure. It is easy to convince onself of that fact; for pure states we
+have $\rho = \dyad{\phi}$, which has only one non-zero eigenvalue, $\lambda =
+1$. Consequently, \cref{eq:entropy-vn-sum} reduces to $S(\rho) = - 1\cdot\log 1
+=0$.  Next, $S(\rho)$ is maximal for the maximally mixed state. In a
+$d$-dimensional Hilbert space, the density matrix of the maximally mixed state
+is $\rho = \mathds{1}/d$. Hence, \cref{eq:entropy-vn-sum} reduces to
+\[
+  -\sum_k \frac{1}{d} \log \frac{1}{d} = -\log \frac{1}{d} = \log d
+.\]
+%One property we want to emphasize in particular is that $S(\rho)$ is bounded
+%from above and below; it is $0$ for a pure state and $\log d$ for a maximally
+%mixed state in a $d$-dimensional Hilbert space.
+\subsubsection{Quantum relative entropy}
+Lastly, we want to introduce the quantum relative entropy. 
+%In classical
+%information theory the relative entropy of one probability distribution $p_x$
+%to another distribution $q_x$ provides a measure of excess information.
+%Lost in the sense that if one assumes $q_x$ as the probability distribution
+%over some sample space, where 
+The same way we
+motivated the Von Neumann entropy, we want to define a quantum mechanical
+analogue to the classical relative entropy. This quantity will play a role of
+major importance in this chapter and is defined as follows.
+\begin{defn}[Quantum relative entropy]\label{defn:rel-ent}
+  Let $\rho$ and $\sigma$ be density matrices with identical dimension. The
+  relative entropy of $\rho$ to $\sigma$ is
+  %$S: H^{\otimes N} \times H^{\otimes N} \to \mathbb{R}^+_0 \cup \{\infty\}$
+  \begin{align}\label{eq:rel-ent-defn}
+    S\left(\rho\mid\mid\sigma\right) \equiv \Tr[\rho\log\rho] -
+    \Tr[\rho\log\sigma] = -S(\rho) - \Tr[\rho\log\sigma]
+  ,\end{align}
+  with the Von Neumann entropy $S(\rho)$.
+  The last term in \cref{eq:rel-ent-defn}, that is, $\Tr[\rho\log\sigma]$ is also
+  known as \emph{cross entropy}. 
+\end{defn}
+Relative entropy, classical or quantum, quantifies excess surprisal when
+one assumes $\sigma$ as a state\footnote{or probability distribution in the
+classical case}, when the actual state is $\rho$. In that sense it tells us how
+different two quantum states are. Interpreting it in this way also provides us
+with a neat heuristic approach to possible values: the only way we do not lose
+information is if we assume correctly, and in any other case we lose some. The
+most extreme form of this is if $\mathrm{supp}(\rho)\cap\mathrm{ker}(\sigma)={0}$, where the
+relative entropy diverges. In most general terms the relative entropy fulfils
 \begin{align}\label{eq:inf-cond}
   S(\rho\mid\mid\sigma) < \infty \Longleftrightarrow \mathrm{supp}(\rho) \subseteq
   \mathrm{supp}(\sigma)
@@ -174,13 +124,211 @@ where supp$(\bullet)\equiv\ $ker$(\bullet)^\perp$ is the support of a linear
 operator, which is defined as the orthogonal complement to the kernel.
 Alternatively, for diagonalizable matrices, it is the subspace spanned by
 eigenvectors with non-zero eigenvalues
-\cite{schumacherRelativeEntropyQuantum2000}.
+\cite{leditzkyRelativeEntropiesTheir2016,schumacherRelativeEntropyQuantum2000}.
+This condition can be interpreted in a physical way. Let
+\[
+  \rho = \sum_i \lambda_i \dyad{\lambda_i} \quad{\text{and}} \quad
+  \sigma = \sum_i \mu_i \dyad{\mu_i}
+\]
+be orthonormal eigendecomposition of $\rho$ and $\sigma$.
+Then $S(\rho\mid\mid\sigma)$ diverges iff. there are states that $\rho$
+features in its mixture that $\sigma$ doesn't. That is, $\rho$ has to be more
+mixed than -- or at least as mixed as -- $\sigma$. If it is as mixed as
+$\sigma$, it has to be a mixture of the same states. This means that the
+information lost under the assumption of a purer state is infinite.
+Since we know the Von Neumann entropy to be bounded, this divergence occurs
+solely in the $-\Tr[\rho\log\sigma]$ term. 
 
-In this section we will provide and prove a necessary and sufficient condition
+One property hinted at earlier is the non-negativity of the relative entropy.
+This property goes by many different names, depending on context. For instance,
+in classical statistical mechanics, this result is known as the \emph{Gibbs
+inequality}. Its quantum mechanical analog is also known as \emph{Klein's
+inequality}.
+\subsection{Klein's Inequality}
+In this section we will state and prove the relation central to this chapter.
+Its statement reads as follows.
+\begin{thm}[Klein's Inequality]\label{thm:kleins-ineq}
+  The quantum relative entropy is non-negative, $S(\rho\mid\mid\sigma)\geq 0$, with equality iff.
+  $\rho=\sigma$.
+\end{thm}
+While the statement in itself is rather simply written out, proving it requires
+us to introduce two auxilliary relations, namely \emph{Jensen's inequality} and
+the \emph{log sum inequality}.
+%Before we can go about proving \cref{thm:kleins-ineq}, we first need to
+%introduce two auxilliary statements, which will be proven in the following.
+%non-negativity of the classical relative entropy first. To this end, we introduce and
+%prove some auxilliary lemmata, beginning with Jensen's inequality.
+\begin{thm}[Jensen's inequality]\label{thm:jensen}
+  Let $f$ be a convex function, that is, $f\left(\lambda x_1 + \left(
+  1-\lambda \right)x_2\right) \leq \lambda f\left( x_1 \right) + \left(
+  1-\lambda \right) f(x_2)$ with $0\leq\lambda\leq1$, and $X$ a discrete random
+  variable. Then
+  \begin{align}
+    \mathbb{E}\left[f(X)\right] \geq f\left( \mathbb{E}\left[X\right] \right)
+  .\end{align}
+\end{thm}
+\begin{proof}[Proof of Jensen's inequality]
+  We will prove Jensen's inequality by induction over the mass of $X$.
+  Associated with each event $x_i \in X$ is its probability $p_i$, such that
+  our induction hypothesis is
+  \begin{align}\label{eq:ind-hyp}
+    \sum_{i=1}^n p_i f\left(x_i\right) \geq f\left(\sum_{i=1}^n p_i x_i
+    \right).
+  \end{align}
+  As base case we have $n=2$;
+  \begin{alignat*}{2}
+    \mathbb{E}\left[f(X)\right] 
+      &= p_1 f(x_1) + p_2 f(x_2) \\
+      &= p_1 f(x_1) + (1-p_1) f(x_2) &&\qquad{\text{(Kolmogorov)}}\\
+      &\geq f(p_1x_1 + (1-p_1)x_2) &&\qquad{(f\text{ convex})}\\
+      &= f(\mathbb{E}[X])
+  .\end{alignat*}
+  For the induction step, assume \cref{eq:ind-hyp} holds for some
+  $n\in\mathbb{N}_{>1}$, it must then also hold for $n+1$;
+  \begin{alignat*}{2}
+    \sum_{i=1}^{n+1} p_i f(x_i) 
+      &= p_{n+1} f(x_{n+1}) + \sum_{i=1}^n p_i f(x_i)\\
+      &= p_{n+1} f(x_{n+1}) + (1-p_{n+1})\sum_{i=1}^n \frac{p_i}{1-p_{n+1}} f(x_i)\\
+      &\geq p_{n+1} f(x_{n+1}) + (1-p_{n+1})f\left(\sum_{i=1}^n
+  \frac{p_i}{1-p_{n+1}} x_i\right) &&\qquad{\text{(Induction hypothesis)}}\\
+      &\geq f\left(p_{n+1}x_{n+1} + (1-p_{n+1})\sum_{i=1}^n \frac{p_i}{1-p_{n+1}} x_i\right)
+      &&\qquad{(f\text{ convex})}\\
+      &=f\left(\sum_{i=1}^{n+1}p_i x_i\right).
+  \end{alignat*}
+  Since the base case and the induction step hold, we conclude that it holds
+  $\forall n \in \mathbb{N}_{>1}$.
+\end{proof}
+\begin{cor}[Log sum inequality]\label{cor:logsum}
+  Let $a_1, \ldots, a_n, b_1, \ldots, b_n \geq 0$ and let $a = \sum_i a_i$ and
+  $b = \sum_i b_i$. Then
+  \begin{align}\label{eq:logsum}
+    \sum_{i=1}^n a_i \log \frac{a_i}{b_i} \geq a \log \frac{a}{b}
+  .\end{align}
+\end{cor}
+\begin{proof}
+  Let $f(x)=x\log x$. It is easy to convince oneself that $f$ is convex, and
+  that it lets us rewrite the left side of \cref{eq:logsum}. We then have
+  \begin{alignat*}{2}
+    \sum_i a_i \log \frac{a_i}{b_i}
+      &=\sum_i b_i f\left( \frac{a_i}{b_i} \right) 
+      =b\sum_i \frac{b_i}{b} f\left( \frac{a_i}{b_i} \right) \\
+      &\geq b\cdot f\left( \sum_i \frac{b_i}{b}\frac{a_i}{b_i} \right)
+      &&\qquad{\text{(\cref{thm:jensen})}}\\
+      &= b\cdot f\left( \frac{1}{b}\sum_i a_i \right)
+      = b\cdot f\left( \frac{a}{b}\right) \\
+      &= a \log \frac{a}{b}
+  .\end{alignat*}
+%  We can apply Jensen's inequality, since $\sum_i \frac{b_i}{b} = 1$ can be
+%  taken as an average.   
+\end{proof}
+%Before we state the proof of \cref{thm:kleins-ineq} 
+We now have all the tools ready to prove \cref{thm:kleins-ineq}. Our proof
+follows the one laid out in \cite{nielsenQuantumComputationQuantum2010}, with
+slight modifications.
+\begin{proof}[Proof of \cref{thm:kleins-ineq}]
+  Let $\rho=\sum_i p_i \dyad{i}$ and $\sigma=\sum_j q_j \dyad{j}$ be
+  orthonormal decompositions for $\rho$ and $\sigma$. From \cref{defn:rel-ent}
+  we can write
+  \begin{align}\label{eq:ke-proof1}
+    S(\rho\mid\mid\sigma) = \sum_i p_i \log p_i - \sum_i \bra{i} \rho
+    \log\sigma \ket{i}
+  .\end{align}
+  With the eigendecomposition of $\rho$ and $\sigma$ we can write $\bra{i} \rho = p_i
+  \bra{i}$ and
+  \begin{align}\label{eq:ke-proof2}
+    \expval{\log\sigma}{i} = \expval{\left(\sum_j \log q_j \dyad{j}
+    \right)}{i} = \sum_j P_{ij}\log q_j  
+  ,\end{align}
+  with $P_{ij} = \ip{i}{j}\ip{j}{i} \geq 0$. 
+  Plugging this into \cref{eq:ke-proof1} yields
+  \begin{align}\label{eq:ke-proof3}
+    S(\rho\mid\mid\sigma) = \sum_i p_i \left(\log p_i - \sum_j P_{ij} \log q_j \right)
+  .\end{align}
+  Note that $P_{ij}$ satisfies $\sum_i P_{ij} = \sum_j P_{ij} = 1$. We can thus
+  interpret the last term in \cref{eq:ke-proof3} as an average of $-\log q_j$.
+  Since $-\log$ is a strictly convex function it follows from \cref{thm:jensen}
+  that
+  \begin{align}
+    -\sum_j P_{ij} \log q_j \geq - \log r_i
+  ,\end{align}
+  where $r_i = \sum_j P_{ij} q_j$, with equality iff. there exists a value of
+  $j$ where $P_{ij}=1$. This implies 
+  \begin{align}
+    S(\rho\mid\mid\sigma) \geq \sum_i p_i \log\frac{p_i}{r_i}
+  ,\end{align}
+  where the equality occurs iff. there exists a $j$ with $P_{ij}=1$, i.e. iff.
+  $P_{ij}$ is a permutation matrix.
+
+  By \cref{cor:logsum} and the double stochasticity of $P_{ij}$ we obtain the
+  final result
+  \begin{align}
+     S(\rho\mid\mid\sigma) \geq \sum_i p_i \log\frac{p_i}{r_i} \geq 1\cdot \log
+     \frac{1}{1} = 0
+  .\end{align}
+\end{proof}
+
+This result is essentially already our upper bound on the entanglement entropy,
+since we have
+\begin{align}
+  \label{eq:kleins-ineq}
+  S(\rho \mid\mid \sigma) \geq 0 \Leftrightarrow -\Tr[\rho\log\sigma]\geq
+  S\left( \rho \right) 
+\end{align}
+with the relative and Von Neumann entropy $S(\rho\mid\mid\sigma)$ and
+$S(\rho)$ respectively. Since the Von Neumann entropy is a more general form of
+the entanglement entropy, we can employ Klein's inequality to upper bound the
+entanglement entropy as well and thus try to find a signature of the phase
+transition.
+
+This idea was used in \cite{garrattProbingPostmeasurementEntanglement2024} for
+a hybrid circuit of Haar random 2-qubit unitaries and $Z$ measurements. Since
+they investigate a hybrid circuit, they take additional steps to circumvent the
+post-selection problem, such as shadow tomography. To test their approach they
+simulate their circuits with matrix product state (MPS) simulations. These
+allow for a broader spectrum of mixed states than stabilizers do, and it is
+computationally expensive, but feasible, to diagonalize the density matrix and
+take its logarithm, to then compute the cross entropy upper bound. In our case,
+however, we investigate a random circuit consisting of pauli measurements only
+and thus employ stabilizer simulations to run numerical experiments on a
+classical computer. As already elaborated on in \cref{sec:stab-basics},
+the stabilizer formalism allows for lots of elegant computational shortcuts,
+allowing efficient quantum simulations on classical computers. Consequently,
+one might ask if there also is an efficient way to compute the cross or
+relative entropy. We will explore this question in the next section.
+
+%Among other things, they make use of shadow tomography to circumvent the
+%post-selection problem. 
+%However, they do MPS simulations, and not stabilizer. This, of course, calls
+%for an adaptation (oh well\ldots).
+%\begin{itemize}
+%  \item \cite{garrattProbingPostmeasurementEntanglement2024} do mps
+%    simulations, which, as it turns out, have a broader spectrum of mixed states than stabilizer
+%    states. 
+%  \item thats why they need shadow tomography and stuff
+%  \item also, they do a hybrid circuit with random haar unitaries
+%  \item only one type of measurement and the probability refers to if any
+%    measurement is performed (on the computational basis)
+%  \item MPS has lower dimensions, it is computationally expensive, but
+%    feasible, to diagonalize the density matrix and take its log
+%  \item[$\to$] what about clifford circuits? is there a way to write out the
+%    relative entropy for stabilizers? In fact, there is:
+%\end{itemize}
+
+
+\subsection{Stabilizers}\label{sec:rel-ent-stab}
+In this section we will investigate the upper bound on the entanglement entropy
+given by \cref{thm:kleins-ineq} in the context of stabilizers and the
+stabilizer formalism. In particular, we will explore the condition of infinite
+relative entropy,
+provide and prove a necessary and sufficient condition
 for $S(\rho\mid\mid\sigma)<\infty$ when $\rho$ and $\sigma$ are stabilizer
-density matrices (\cref{prop:subgroup}). 
-To prove \cref{prop:subgroup} we will need an auxilliary lemma, which will
-be stated and proven in the following.
+density matrices (\cref{prop:subgroup}), and derive an expression for finite cross
+and relative entropy.
+
+Recall that we have $S(\rho\mid\mid\sigma)<\infty$ for
+supp$(\rho)\subseteq$supp$(\sigma)$. For the proof of \cref{prop:subgroup} it
+will prove useful to introduce an auxilliary lemma, which relates the support
+of a density matrix to the stabilized subspace.
 \begin{lem}\label{lem:supp-is-vs}
   Let $\rho$ be an $N$-qubit stabilizer density matrix with stabilizer group $S = \langle
   g_1, \ldots, g_n \rangle$, and $0\leq n \leq N$.
@@ -206,14 +354,14 @@ be stated and proven in the following.
   \[ \mathrm{supp}(\rho) = \mathrm{supp}(P_S) = V_S. \]
 \end{proof}
 
-\begin{prop}\label{prop:subgroup}
+\begin{thm}\label{prop:subgroup}
   Let $\rho$ and $\sigma$ be $N$-qubit stabilizer density matrices with
   respective stabilizer groups $S_\rho$ and $S_\sigma$. Then
   \[ \mathrm{supp}(\rho)\subseteq \mathrm{supp}(\sigma) \Longleftrightarrow
   S_\sigma \leq S_\rho. \]
   That is, with \cref{eq:inf-cond}, $S(\rho\mid\mid\sigma)$ takes on finite values iff. $S_\sigma$ is a
   subgroup of $S_\rho$.
-\end{prop}
+\end{thm}
 
 \begin{proof}[Proof of \cref{prop:subgroup}]
   We will prove implication from both directions to prove equivalence.
@@ -237,6 +385,8 @@ be stated and proven in the following.
   \enquote{$\Rightarrow$} Let $V_{S,\rho} = \mathrm{supp}(\rho) \subseteq
   \mathrm{supp}(\sigma) = V_{S,\sigma}$. 
 
+  \begin{figure}[htpb]
+    \centering
   \begin{tikzpicture}
   \matrix (m) [matrix of math nodes,row sep=3em,column sep=4em,minimum width=2em]
   {
@@ -247,6 +397,7 @@ be stated and proven in the following.
             edge node [above] {$P_\rho$} (m-1-2)
     (m-2-1) edge node [below] {$P_\rho$} (m-1-2);
   \end{tikzpicture}
+\end{figure}
 
   We can read above diagram as follows: From the $N$-qubit Hilbert space we can
   project onto the vector space stabilized by $S_\sigma$, $V_\sigma$, by means of a
@@ -345,7 +496,89 @@ It turns out that we can.
     .\end{align}
 \end{itemize}
 
-\clearpage
+
+\subsubsection{Aside: On References}
+I like how references are provided in physics: all those little numbers in
+little brackets or as superscript above a claim to support it. It allows me to
+follow the bibliography in parallel to the paper and check some pertinent
+publications easily. This is, of course, very different in many other
+disciplines, i.e. psychology or philosophy, where it is common-practice to give
+your sources in alphabetical order sorted by the author's surname.
+
+I claim that physicists are not appreciative enough of this. It will never fail
+to frustrate me if people cite some shit that has nothing at all to do with the
+claim in question. This is especially so if the claim is better supported by
+the results of other papers; papers that a lot of times make it into the
+\texttt{.bib} file of at least one of the authors, or why else would they be
+prominently cited in a section, where it doesnt make sense to do so.
+Ultimately, the highest degree of frustration for me is if the references are
+off by one, or cite a previous project by the same authors. This kind of
+situation lies in the uncanny valley of "is it them or me?". And more often
+than not, it should be \emph{me}, right? But then you go on and on, read the
+cited papers thoroughly, try to understand the context in which it is
+referenced in the work you originally went through, and now, multiple layers
+deep in the reference rabbithole are you ultimately forced to realize that it's
+not you, it's them. 
+
+%\subsection{Shadow Tomography}
+%these papers are cited in
+%\cite{garrattProbingPostmeasurementEntanglement2023} for shadow tomography:
+%\begin{itemize}
+%  \item \citetitle{elbenRandomizedMeasurementToolbox2022}
+%    \cite{elbenRandomizedMeasurementToolbox2022}
+%
+%    Review paper. Context: "It will be useful to first outline shadow
+%    tomography \cite{elbenRandomizedMeasurementToolbox2022} in its simplest
+%    incarnation for a single qubit"
+%
+%    It has indeed been useful, but I gotta admit, i didn't get my outline from
+%    this one, but from:
+%  \item \citetitle{huangPredictingManyProperties2020}
+%    \cite{huangPredictingManyProperties2020} 
+%
+%    In this paper, shadow tomography is the main thing investigated. Context:
+%    "Generalizing \ldots to multiple qubits is straightforward
+%    \cite{huangPredictingManyProperties2020}: one possibility is to construct
+%    $N$-qubit shadows as the tensor products of $N$ objects with the structure
+%    \ldots"
+%\end{itemize}
+%
+%Some more shadow tomography papers:
+%\begin{itemize}
+%  \item \cite{aaronsonShadowTomographyQuantum2018} shadow tomography defined
+%    for the first time
+%  \item IDK where i want to include this one, but i think it will be
+%    interesting to study a bit more:
+%    \cite{tothEntanglementDetectionStabilizer2005} Entanglement witness
+%\end{itemize}
+%
+%This one is not on shadow tomography, but is cited in
+%\cite{garrattProbingPostmeasurementEntanglement2023}, which got me hella
+%frustrated, since I did not know what the hell they meant with "Our discussion
+%in this section largely follows Ref.
+%\cite{garrattMeasurementsConspireNonlocally2023}" if it does not really match
+%the vibe of \emph{this section}.
+%
+\section{Na\"ive approach}
+The key idea of the upper bound is to have a quantity that is linear in $\rho$.
+By obtaining a measurement record $\vb{m}$, we can try and classically
+reconstruct the experimental density matrix $\rho$ from the record. Since we
+are doing a classical computation, we have the advantage of being able to
+project onto measurement results. We therefore can -- naively -- attempt a
+reconstruction of our experiment based on the data. Of course, in our case, we
+also use a classical simulator to generate data. 
+\begin{itemize}
+  \item modeling errors like in \cref{ch:lxe}
+  \item naive approach is to just project and then computing $-\log\sigma$
+  \item before we compute the entanglement entropy/von neumann entropy, we
+    ptrace and check if the subgroup condition holds.
+  \item remember: $\sigma$ ought to be at least as or more mixed than $\rho$
+    for the cross entropy to be finite
+  \item errors can happen anywhere at any time, we will relax this assumption
+    later for an unphysical one (with a nice explanation onto why we do this)
+  \item spoiler: it doesn't work out nicely
+\end{itemize}
+
 \subsection{\enquote{Failure} of the na\"ive approach}
 Hier auch auf jeden Fall n Plot mit dem naive approach drin
 \begin{itemize}
@@ -373,10 +606,44 @@ Hier auch auf jeden Fall n Plot mit dem naive approach drin
    \item This is way too complicated, just to get an estimate on how many
      simulations will end in $\infty$ for \cref{eq:kleins-ineq}. 
 \end{itemize}
-\clearpage
 \section{Other Approaches}
-\subsection{Algorithm \#1}
-\subsection{Algorithm \#2}
+\begin{itemize}
+  \item Naive approach fails because of errors, which cannot be detected by
+    construction
+  \item also, because so far we have only dealt with pure states.
+  \item we thus need a new classical post-processsing algorithm
+  \item first, we need to disallow errors after the last couple of
+    measurements, since these are the ones that make it into the subgroup check
+  \item this is, of course, an unphyisical assumption to take, but thats not
+    our main concern. informally speaking, we want to test the limits of
+    \cref{eq:kleins-ineq} for our system. We found this irreconcilable one in
+    the context of our model
+  \item if we relax the assumption of errors happening everywhere, we could try
+    other approaches and maybe get an idea of how viable the general approach
+    of an upper bound is to find a signature of the entanglement transition.
+  \item next, we have this condition of diverging cross entropy. Why not go in
+    reverse and try an algorithm, which has the stabilizers of $\sigma$ be a
+    subgroup of $\rho$.
+  \item we can do that by modifying the projections slightly
+  \item in the following sections we explore some approaches to modify the
+    projection operation to incorporate mixedness
+\end{itemize}
+\subsection{Maximal Mixing}
+\begin{itemize}
+  \item the first approach is what we'd call \emph{maximal mixing}.
+  \item The maginot line of no errors occuring is still a factor. However, each
+    time we encounter a discrepancy for the projections, we remove \emph{all}
+    the stabilizers in $\sigma$
+  \item since the trivial group is always a subgroup of any group (group
+    axioms), we still obey the subgroup rule
+  \item the technical details of how this is done is described in detail in
+    \cref{sec:expanding}
+  \item most importantly, for a system with no errors, the bound is perfectly
+    saturated, with equality everywhere
+  \item when introducing errors, we lose this feature and start to become more
+    inaccurate.
+\end{itemize}
+\subsection{Minimal Mixing}
 \begin{itemize}
   \item We would like to compare $\rho$, which is the \enquote{experiment}
     (i.e. a quantum simulator), with $\sigma$, which is the classical
@@ -405,6 +672,34 @@ Hier auch auf jeden Fall n Plot mit dem naive approach drin
   %  mixture of all possible quantum states
 \end{itemize}
 \section{Results}
+\begin{figure}[h]
+  \centering
+  \includegraphics{extreme-rel-ent-4x3-svn_se.pdf}
+  \caption{Cross Entropy and entanglement entropy of selected system sizes with
+  periodic boundary conditions. To be able to adequately compare it to LXE the
+different trackings and errors are shown in the same manner as in
+\cref{fig:err-vs-tra}}
+  \label{fig:max_mix-svn_se-4x3}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics{extreme-rel-ent-4x3-inftyratio.pdf}
+  \caption{Ratio of divergences in cross entropy to number of samples for
+    different system sizes
+  periodic boundary conditions. To be able to adequately compare it to LXE the
+different trackings and errors are shown in the same manner as in
+\cref{fig:err-vs-tra}}
+  \label{fig:max_mix-inftyratio-4x3}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics{extreme-rel-ent-4x3-svn_sigma_full.pdf}
+  \caption{$S(\sigma)$ of full density matrix $\sigma$ 
+  periodic boundary conditions. To be able to adequately compare it to LXE the
+different trackings and errors are shown in the same manner as in
+\cref{fig:err-vs-tra}}
+  \label{fig:max_mix-inftyratio-4x3}
+\end{figure}
 \section{Summary}
 
 \clearpage

@@ -362,14 +362,30 @@ noise.
     get noticed will henceforth be denoted with \textsf{B1} and \textsf{B2} for
     $X$ errors and $ZZ$ errors respectively.
 \end{itemize}
+
 Mechanism \textsf{B1} tikz figure
 \begin{figure}[h]
   \centering
   \input{fig/tikz/mechanism_b1.tex}
-  \caption{mechanism \textsf{B1}}
+  \caption{Excerpt of a possible PTIM circuit with non-zero probability of
+  $X$-errors occuring showcasing mechanism \textsf{B1}. At timestep $t=i$, 
+  we perform a $ZZ$ measurement on two neighbouring qubits with result $+1$,
+  and an $X$ error occurs on the first after the measurement. Then in the next
+  timestep, we measure $ZZ$ once more. As a consequence of the error, this $ZZ$
+  measurement is not deterministically $+1$, but randomly $\pm 1$ with
+  probability $\frac{1}{2}$. When trying to project in the classical
+  simulation, this discrepancy gets noticed, since we do not have access to the
+  precise nature of the errors. Upon failed projection we have $\chi=0$.}
   \label{fig:mech-b1-lxe}
 \end{figure}
 
+Mechanism \textsf{B2} tikz figure
+\begin{figure}[h]
+  \centering
+  \input{fig/tikz/mechanism_b2.tex}
+  \caption{mechanism \textsf{B2}}
+  \label{fig:mech-b2-lxe}
+\end{figure}
 
 
 what happens if we only track a subset of measurements?

@@ -3,6 +3,7 @@
 
 \lstset{style=myStyle}
 
+\verb|C++| code for the computation of $\chi_C$.
 \begin{lstlisting}[caption=Computation of the linear cross entropy for one
   measurement history of a circuit, label={lst:lxe-cpp}, language=C++]
 bool success = true; 
@@ -21,5 +22,71 @@ for (int t=0; t<t_max; t++) {
 if (success) {
 results.lxs.av++;
 results.lxs.se++;
+}
+\end{lstlisting}
+
+\verb|C++| code for the \verb|get_state_type| function.
+\begin{lstlisting}[caption=\texttt{get\_state\_type} function in the simulator,
+label={lst:get-state-type-cpp}, language=C++]
+int Qubits::get_state_type(const int q) {
+    int dummy{}, val{};
+    for ( int i = 0; i < 2*(N-mix); i+=2 ) {
+        val = 2*get_bit(tab[q],2*i)+get_bit(tab[q],2*i+1);
+        if ( val != 0 && dummy == 0 ) dummy = val;
+        else if ( val != 0 && val != dummy ) return 1;
+    }
+    if (dummy) return 0;
+    else return -1;
+}
+\end{lstlisting}
+\verb|C++| code for the \verb|rowreduce| function.
+\begin{lstlisting}[caption=\texttt{rowreduce} function in the simulator,
+label={lst:rowreduce-cpp}, language=C++]
+void Qubits::rowreduce(const int q) {
+   // helper variables
+   int first_x = -1, first_z = -1;
+   int num_x{}, num_z{};
+   int last_stab = 2*(N-1), last_anti = 2*N-1;
+
+   // loop through x stabilizer
+   for (int j = 0; j < 2*N; j += 2) {
+       if ( get_bit( tab[q], 2*j ) && num_x == 0 ) {
+           first_x = j;
+           num_x++;
+       }
+       else if ( get_bit( tab[q], 2*j ) && num_x > 0 ) {
+           rowsum(j,first_x);             // update stabilizer
+           rowsum(first_x+1, j+1);     // update antistabilizer in parallel
+           num_x++;
+       } 
+   }
+
+   if ( num_x > 0 && first_x != last_stab ) {
+       for (int k = first_x; k<last_stab; k++){
+           rowswap(k,k+2);
+       }
+   }
+
+
+   // loop through z stabilizer
+   for (int j = 0; j < 2*N; j += 2) {
+       if ( get_bit( tab[q], 2*j+1 ) && num_z == 0 ) {
+           first_z = j;
+           num_z++;
+       }
+       else if ( get_bit( tab[q], 2*j+1 ) && num_z > 0 ) {
+           rowsum(j,first_z);             // update stabilizer
+           rowsum(first_z+1,j+1);     // update antistabilizer in parallel
+           num_z++;
+       } 
+   }
+
+
+   if ( num_z > 0 && ((num_x > 0 && first_z != last_stab) || num_x==0)) {
+       for (int k = first_z; k<last_stab; k++){
+           rowswap(k,k+2);
+       }
+   }
+
 }
 \end{lstlisting}

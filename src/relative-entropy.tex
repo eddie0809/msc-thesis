@@ -418,7 +418,6 @@ of a density matrix to the stabilized subspace.
   \[
     S_\sigma \leq S_\rho.
   \]
-
 %  $\ket{\psi} \in V_{S,\rho}$ and $\ket{\phi} \in
 %  V_{S,\sigma} \setminus
 %  V_{S,\rho}$. \"o Since the stabilizer group is the
@@ -441,6 +440,32 @@ of a density matrix to the stabilized subspace.
 %  .\end{align*}
   This concludes the proof.
 \end{proof}
+We have thus shown that that the condition for finite values of the relative
+entropy is equivalent to a simple statement about the group structure of the
+respective stabilizer groups. Furthermore, we know from
+\cite{fattalEntanglementStabilizerFormalism2004} that the entropy of
+entanglement can be expressed in a simple way through group properties.
+It is thus not 
+Even though the challenge might be 
+\begin{thm}[Cross entropy -- stabilizers]\label{thm:cross-ent-stab}
+  Let $\rho$ and $\sigma$ be $N$-qubit stabilizer density matrices with
+  respective stabilizer groups $S_\rho$ and $S_\sigma$, where $\abs{S_\sigma}
+  \equiv s$. Then
+  \begin{align}
+    -\Tr[\rho\log\sigma] = N - s
+  .\end{align}
+\end{thm}
+
+\begin{cor}[Relative entropy -- stabilizers]\label{col:rel-ent-stab}
+  Let $\rho$ and $\sigma$ be $N$-qubit stabilizer density matrices with
+  respective stabilizer groups $S_\rho$ and $S_\sigma$, where $\abs{S_\rho}
+  \equiv r$ and $\abs{S_\sigma} \equiv s$. The relative entropy of $\rho$ to
+  $\sigma$ then reads
+  \begin{align}
+    S\left(\rho\mid\mid\sigma\right) = r - s
+  .\end{align}
+\end{cor}
+
 This begs the question: Can we derive a simple expression for relative entropy
 in the case of $\rho$ and $\sigma$ being stabilizer density matrices?
 It turns out that we can.
@@ -495,30 +520,6 @@ It turns out that we can.
       S_E \leq N-r'
     .\end{align}
 \end{itemize}
-
-
-\subsubsection{Aside: On References}
-I like how references are provided in physics: all those little numbers in
-little brackets or as superscript above a claim to support it. It allows me to
-follow the bibliography in parallel to the paper and check some pertinent
-publications easily. This is, of course, very different in many other
-disciplines, i.e. psychology or philosophy, where it is common-practice to give
-your sources in alphabetical order sorted by the author's surname.
-
-I claim that physicists are not appreciative enough of this. It will never fail
-to frustrate me if people cite some shit that has nothing at all to do with the
-claim in question. This is especially so if the claim is better supported by
-the results of other papers; papers that a lot of times make it into the
-\texttt{.bib} file of at least one of the authors, or why else would they be
-prominently cited in a section, where it doesnt make sense to do so.
-Ultimately, the highest degree of frustration for me is if the references are
-off by one, or cite a previous project by the same authors. This kind of
-situation lies in the uncanny valley of "is it them or me?". And more often
-than not, it should be \emph{me}, right? But then you go on and on, read the
-cited papers thoroughly, try to understand the context in which it is
-referenced in the work you originally went through, and now, multiple layers
-deep in the reference rabbithole are you ultimately forced to realize that it's
-not you, it's them. 
 
 %\subsection{Shadow Tomography}
 %these papers are cited in
@@ -672,7 +673,8 @@ Hier auch auf jeden Fall n Plot mit dem naive approach drin
   %  mixture of all possible quantum states
 \end{itemize}
 \section{Results}
-\begin{figure}[h]
+\subsection{Maximal mixing}
+\begin{figure}[H]
   \centering
   \includegraphics{extreme-rel-ent-4x3-svn_se.pdf}
   \caption{Cross Entropy and entanglement entropy of selected system sizes with
@@ -681,7 +683,7 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:max_mix-svn_se-4x3}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics{extreme-rel-ent-4x3-inftyratio.pdf}
   \caption{Ratio of divergences in cross entropy to number of samples for
@@ -691,7 +693,7 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:max_mix-inftyratio-4x3}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics{extreme-rel-ent-4x3-svn_sigma_full.pdf}
   \caption{$S(\sigma)$ of full density matrix $\sigma$ 
@@ -699,6 +701,35 @@ different trackings and errors are shown in the same manner as in
 different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:max_mix-inftyratio-4x3}
+\end{figure}
+\subsection{Minimal mixing}
+\begin{figure}[H]
+  \centering
+  \includegraphics{minimal_mixing-4x3-svn_se.pdf}
+  \caption{Cross Entropy and entanglement entropy of selected system sizes with
+  periodic boundary conditions. To be able to adequately compare it to LXE the
+different trackings and errors are shown in the same manner as in
+\cref{fig:err-vs-tra}}
+  \label{fig:min_mix-svn_se-4x3}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics{minimal_mixing-4x3-inftyratio.pdf}
+  \caption{Ratio of divergences in cross entropy to number of samples for
+    different system sizes
+  periodic boundary conditions. To be able to adequately compare it to LXE the
+different trackings and errors are shown in the same manner as in
+\cref{fig:err-vs-tra}}
+  \label{fig:min_mix-inftyratio-4x3}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics{minimal_mixing-4x3-svn_sigma_full.pdf}
+  \caption{$S(\sigma)$ of full density matrix $\sigma$ 
+  periodic boundary conditions. To be able to adequately compare it to LXE the
+different trackings and errors are shown in the same manner as in
+\cref{fig:err-vs-tra}}
+  \label{fig:min_mix-inftyratio-4x3}
 \end{figure}
 \section{Summary}
 

@@ -32,7 +32,7 @@ algorithm, which allows simulations in polynomial time, and expand it to
 properly deal with mixed states. We assume the reader to be familiar with the
 corresponding sections in \cref{sec:stab-basics}.
 
-\subsubsection*{A complexity theory primer}
+\subsubsection*{A computer science primer}
 %%% WAS HIER URSPRÜNGLICH MAL STAND:
 % This chapter addresses classical computation and algorithms, focussing on the
 % simulation of a particular class of quantum circuits using classical computers.
@@ -52,13 +52,13 @@ discussion thereof will necessarily feature
 %cursed language devised by the utterly deranged: computer scientists. To
 %prepare for this, we will introduce some of its vocabulary here.
 terminology commonly associated with the field of \emph{computer} science.
-To ensure clarity, we will briefly
-introduce key computer science concepts relevant to our discussion.  
+To ensure clarity, we will briefly introduce key computer science concepts
+relevant to our discussion.  
 
 The first concept we introduce is asymptotic behavior, along with the so-called
-\emph{Big O} notation. It is not exclusive to computer science as such, as we
+\emph{Big }$\mathcal{O}$ notation. It is not exclusive to computer science as such, as we
 often deal with asymptotic behavior in physics as well.  In computer science,
-the Big O notation is used to describe the space (i.e. data storage) and
+the Big $\mathcal{O}$ notation is used to describe the space (i.e. data storage) and
 time requirements of algorithms with increasing input size. The notation is
 defined precisely in \cref{defn:bigo-theta}.
 \begin{defn}[$\Theta$ and $\mathcal{O}$ notation
@@ -81,7 +81,7 @@ the validity of a solution) are grouped into a variety of \emph{complexity
 classes}. For instance, an algorithm is said to scale polynomially (in time) if
 its asymptotic behavior is $\mathcal{O}(n^\alpha)$ with $\alpha \geq 1$, and
 exponentially if it is $\mathcal{O}(2^n)$. These classes constitute an
-important subset in the field of theoretical computer science, in the form of
+important subfield in theoretical computer science in the form of
 complexity theory, where numerous classes exist.\footnote{A continuously
 updated list can be found in \cite{ComplexityZoo}.} The two examples from above
 fall in the classes \textsf{P} (polynomial time) and \textsf{EXP} (exponential
@@ -106,9 +106,9 @@ present the \emph{tableau algorithm}, as proposed by Aaronson and Gottesman in
 draws largely from outside sources, namely refs.
 \cite{aaronsonImprovedSimulationStabilizer2004, arabLectureNotesQuantum2024,
 gottesmanStabilizerCodesQuantum1997,
-gottesmanHeisenbergRepresentationQuantum1998}. As it serves an introductory
-purpose, this section can (and should) be read as a sequel to
-\cref{sec:stab-basics}.
+gottesmanHeisenbergRepresentationQuantum1998}. As this following section serves
+to introduce the computational algorithms based on the stabilizer formalism, it
+can (and should) be read as a sequel to \cref{sec:stab-basics}.
 %This section provides an introduction to the tableau algorithm. It can (and
 %should)
 %be read as the sequel to \cref{sec:stab-basics}. Note that this section is
@@ -133,76 +133,295 @@ stabilizer formalism is $n(2n+1)$. In other words, storing only the stabilizer
 generators reduces the space complexity of stabilizer simulations from
 $\mathcal{O}\left( 2^n \right)$ to $\mathcal{O}\left( n^2 \right)$.
 
+For practical purposes, these bits can be assorted to two $n\times n$ matrices
+and a vector containing the $n$ signs. This way of writing the generators is
+called the \emph{Tableau Representation}. As an example, consider the state
+$\ket{\phi}=\ket{0000}$, which is stabilized by Stab$(\ket{\phi}) = \langle
+Z_1, Z_2, Z_3, Z_4\rangle$. The stabilizer tableau $\mathcal{T}$ of
+$\ket{\phi}$ is then given by
+\begin{align}\label{eq:stabtab}
+\mathcal{T}_{\ket{\phi}} = 
+\left[
+  \begin{array}{cccc|cccc|c}
+    0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+  \end{array}
+\right]
+%\left[
+%  \begin{array}{cccc|cccc|c}
+%    \multicolumn{4}{c|}{\underbrace{
+%    \begin{matrix}
+%    0 & 0 & 0 & 0 \\
+%    0 & 0 & 0 & 0 \\
+%    0 & 0 & 0 & 0 \\
+%    0 & 0 & 0 & 0
+%    \end{matrix}}_{X\text{-matrix}}} &
+%    \multicolumn{4}{c|}{\overbrace{
+%    \begin{matrix}
+%    1 & 0 & 0 & 0 \\
+%    0 & 1 & 0 & 0 \\
+%    0 & 0 & 1 & 0 \\
+%    0 & 0 & 0 & 1
+%    \end{matrix}}^{Z\text{-matrix}}} &
+%    \underbrace{
+%    \begin{matrix}
+%    0 \\
+%    0 \\
+%    0 \\
+%    0
+%    \end{matrix}}_{\text{signs}}
+%  \end{array}
+%  \right]
+.\end{align}
+Each row in \cref{eq:stabtab} represents a generator of Stab$(\ket{\phi})$. The
+first four columns are the $X$-matrix, the next four are the $Z$-matrix and the
+last column represents the sign. The $i$-th column of the $X$ and $Z$ matrix
+encode the Pauli matrix at position $i$ in the tensor product of the
+corresponding generator, where $00\equiv I$, $01\equiv Z$, $10\equiv X$, and
+$11\equiv Y$. 
+
 At this point, we have merely stored the state in memory. However,
 \cref{thm:gottesman-knill} implies that simulations of stabilizer cicruits can
 also be done efficiently on a classical computer. As stated in
 \cref{defn:efficient-alg}, for an algorithm to be
 considered \enquote{efficient}, it must have polynomial time complexity.
 Thus, the Gottesman-Knill theorem can be rephrased to state that the bits encoding
-$\ket{\phi}$ can be updated in polynomial time after a Hadamard gate, phase
-gate, controlled-\verb|NOT| gate, Pauli gate or Pauli measurement gate is
-applied to $\ket{\phi}$.
+$\ket{\phi}$ can be updated in polynomial time after a Clifford gate is
+applied to $\ket{\phi}$. Before we show this, let us first consider how the individual
+gates act on our generator tableau. 
+\begin{alg}[Application of Clifford gates to stabilizer
+  tableau]\label{alg:cliff-gates-alg1}
+  The following modifications have to be applied to the stabilizer tableau
+  after the application of
+  \begin{itemize}
+    \item $H$ to qubit $a$:
+
+      Swap column $a$ of the $X$ matrix with the $a$-th column of the
+      $Z$-matrix.
+    \item $S$ to qubit $a$:
+
+      Modify column $a$ of the $Z$-matrix such that the
+      new $z_{ia} = z_{ia} \texttt{XOR} x_{ia}$, i.e. apply bitwise
+      \texttt{XOR} from column $a$ of $X$ into column $a$ of $Z$.
+    \item CNOT from control $a$ to target $b$:
+     
+      Apply bitwise \texttt{XOR} from
+      column $a$ to $b$ of $X$, and from column $b$ to column $a$ of $Z$.
+    \item Random or deterministic outcome of computational basis measurement on
+      qubit $a$:
+
+      The outcome is deterministic iff. column $a$ of the $X$-matrix is all 0s.
+    \item Measurement of qubit $a$ with a random outcome
+
+      Let $x_{ia}=1$. We first apply bitwise \texttt{XOR} from row $i$ into any
+      subsequent row $j$, where $x_{ja}=1$. We then set row $i$ to $0$
+      everywhere, except $z_{ia}=1$ and set the sign to $0$ or $1$ randomly.
+  \end{itemize}
+\end{alg}
+These rudimentary algorithms follow the rules of the stabilizer formalism, as
+laid out in \cref{sec:stab-basics}. Let us now consider the performance of
+the algorithms in \cref{alg:cliff-gates-alg1}.
+
 \begin{thm}[Simulating stabilizer gates]\label{thm:sim-stab-comp}
   Simulating a Clifford gate on an $n$-qubit stabilizer state requires $\Theta(n)$
   time, while a measurement gate is simulated in $O(n^2)$ or $O(n^3)$ time for
   random and deterministic outcomes respectively.
 \end{thm}
 \begin{proof}
-  An $n$-qubit stabilizer state $\ket{\phi}$ can be represented as an
-  $n\times(2n+1)$ bit matrix $M$, where the rows are the $n$ generators in the
+  We already know that an $n$-qubit stabilizer state $\ket{\phi}$ can be represented as an
+  $n\times(2n+1)$ tableau $\mathcal{T}$, where the rows are the $n$ generators in the
   afforementioned $(2n+1)$-bit representation. Any computational basis state can
   thus be represented by
-  \[
-    M = \mqty( 
-    01 & 00 & 00 & \ldots & 00 & \pm \\
-    00 & 01 & 00 & \ldots & 00 & \pm \\
-    00 & 00 & 01 & \ldots & 00 & \pm \\
-    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
-    00 & 00 & 00 & \ldots & 01 & \pm \\
-    ),
-  \]
+  \begin{align}
+    \mathcal{T} = 
+    \left[
+      \begin{array}{cccc|cccc|c}
+        0 & 0 & \ldots & 0 & 1 & 0 & \ldots & 0 & \pm \\
+        0 & 0 & \ldots & 0 & 0 & 1 & \ldots & 0 & \pm \\
+        \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+        0 & 0 & \ldots & 0 & 0 & 0 & \ldots & 1 & \pm
+      \end{array}
+    \right]
+  ,\end{align}
   where $Z$ and $I$ are encoded as $01$ and $00$ respectively, and $\pm$ is a
   placeholder for either $0$ or $1$ depending on the sign. Simulating a
-  Clifford gate $U$ on $\ket{\phi}$ maps $g_i$, that is, the $i$-th row of $M$,
-  to $U g_i U$. This operation updates at most two columns, since Clifford
-  gates act on at most two qubits at once. Therefore, simulating $U$ takes $\Theta(n)$
-  time.
+  Clifford gate $U$ on $\ket{\phi}$ maps $g_i$, that is, the $i$-th row of
+  $\mathcal{T}$, to $U g_i U$. As discussed in \cref{alg:cliff-gates-alg1},
+  this operation updates at most two columns. Therefore, simulating $U$ takes
+  $\Theta(n)$ time.
 
   To show the scaling behavior of measurements we consider computational basis
-  measurements without loss of generality. Each qubit in $\ket{\phi}$ is either
-  in a computational basis state $\ket{0}$ or $\ket{1}$, where we have a
-  deterministic outcome, or in a superposition
-  of both states with equal amplitude, where either outcome is random with
+  measurements on qubit $a$, $Z_a$, without loss of generality.\footnote{We can
+    consider those without loss of generality, since we can always apply
+    $\mathcal{O}(n)$ unitaries to change basis in $\Theta(n)$ time, which
+  doesn't affect the scaling behavior of $\mathcal{O}(n^2)$.} Each individual
+  qubit in $\ket{\phi}$ is either in a computational basis state $\ket{0}$ or
+  $\ket{1}$, where we have a deterministic outcome, or in a superposition of
+  both states with equal amplitude, where either outcome is random with
   probability $p=1 / 2$. Recall from \cref{sec:stab-basics} that the process of
   determining the type of outcome (random or deterministic) is done by checking
   the commutation relations between the measurement operator and the generators
-  of $\ket{\phi}$. If some generator anti-commutes the outcome is random,
+of $\ket{\phi}$. If some generator $g_k$ anti-commutes with $Z_a$, i.e.
+\[ \{g_k, Z_a\} =0 \quad{\text{or}}\quad [g_k, Z_a] \neq 0,\]
+the outcome is random,
   otherwise it is deterministic (this implies a scaling of $\mathcal{O}(n)$
-  already, since we go through the entire matrix in the worst case). Suppose
-  there is a generator $g_i$ that anticommutes with $Z_i$, implying a random outcome. As the
-  outcome, we randomly choose $x\in\{0,1\}$. We then multiply any subsequent
-  rows that anticommute with $Z_i$ by $g_i$ in order for them to commute with
-  $Z_i$. We then replace $g_i$ by $\pm Z_i$ depending on the random outcome.
-  Since this algorithm takes up to $n$ row multiplications, the runtime scales
-  with $\mathcal{O}(n^2)$.
+  already, since we go through the entire matrix in the worst case). We now
+  consider these cases separately.
+  
+  \par{Case 1, random outcome:}
+  Let $g_k$ be a stabilizer generator with $\{g_k, Z_a\}=0$, implying a random
+  outcome. As the outcome, we randomly choose $x\in\{0,1\}$. We then multiply
+  any subsequent rows that anticommute with $Z_a$ by $g_k$ in order for them to
+  commute with $Z_a$. We then replace $g_k$ by $\pm Z_a$ depending on the
+  random outcome. Since this algorithm takes up to $n$ row multiplications,
+  the runtime scales with $\mathcal{O}(n^2)$.
 
-  If the outcome is deterministic, the 
+  \par{Case 2, deterministic outcome:}
+  If the outcome is deterministic, we know that our stabilizer group contains
+  $Z_a$, but is not necessarily in the generating set. We thus need to modify
+  $\mathcal{T}$ such that its row space contains $\left( 00\cdots 0_a\cdots 0\mid
+  00\cdots 1_a \cdots 0 \mid \pm \right) = \pm Z_a$ and then read out the signs
+  vector. This is done by Gaussian
+  elimination, which requires $\mathcal{O}(n^3)$ time.
 \end{proof}
-%But as it turns out, this improvement in space complexity is also accompanied
-%by 
-%
-%
-%We already know that we do not need the full stabilizer group to describe our
-%state,
-%This reduces the
-%number of operators that need to be saved to $n=\log2^n$.
-%Since stabilizer
-%groups are built from Pauli matrices, we need $2n+1$ bits to specify 
+This proof, in principle, also proves \cref{thm:gottesman-knill}, since the
+simulation of any of a circuit's constituents is in \textsf{P}. Consequently, a
+finite number $m$ of them will be in $\mathcal{O}(mn^\alpha)$, and thus also in
+\textsf{P}.
 
-\subsection{The Tableau Algorithm}\label{sec:tableau}
-The name of the algorithm stems from the fact that a state is represented by a
-\emph{tableau}. This tableau is a binary $2n\times2n+1$ matrix. 
+\subsection{The Aaronson-Gottesman Algorithm}\label{sec:tableau}
+In the previous section we have shown that measurements take $\mathcal{O}(n^3)$
+time in practice. However, Aaronson and Gottesman showed in
+\cite{aaronsonImprovedSimulationStabilizer2004} that with the cost of a factor
+2 increase in memory requirements we can improve measurements to always have
+quadratic time complexity.  In particular, for each of the $n$ stabilizer
+generators we store a destabilizer (also equivalently referred to as
+antistabilizer) generator, which are also tensor products of Pauli operators.
+These $2n$ operators together generate the full $n$-qubit Pauli group
+$\mathcal{P}_n$.
 
+The tableau idea applied in \cref{eq:stabtab} can be expanded into
+\begin{align}\label{eq:new-stabtab}
+  \mathcal{T}_{\ket{\phi}} = 
+  \left[
+    \begin{array}{ccc|ccc|c}
+      x_{11} & \cdots & x_{1n} & z_{11} & \cdots & z_{1n} & r_1 \\
+      \vdots & \ddots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+      x_{n1} & \cdots & x_{nn} & z_{n1} & \cdots & z_{nn} & r_n \\ \hline
+      x_{(n+1)1} & \cdots & x_{(n+1)n} & z_{(n+1)1} & \cdots & z_{(n+1)n} & r_{n+1} \\
+      \vdots & \ddots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+      x_{(2n)1} & \cdots & x_{(2n)n} & z_{(2n)1} & \cdots & z_{(2n)n} & r_{2n}
+    \end{array}
+  \right]
+\end{align}
+for an arbitrary stabilizer state $\ket{\phi}$. The first $n$ rows represent
+the newly introduced destabilizer states, while the last $n$ rows constitute
+the tableau of stabilizers we have already discussed. For later convenience, an
+additional $(2n+1)$st row is added to the tableau. A minimal example of the
+generalized tableau is the state $\ket{00}$, which has
+\begin{align}\label{eq:new-stabtab-example}
+  \mathcal{T}_{\ket{00}} = 
+  \left[
+    \begin{array}{cc|cc|c}
+      1 & 0 & 0 & 0 & 0 \\
+      0 & 1 & 0 & 0 & 0 \\ \hline
+      0 & 0 & 1 & 0 & 0 \\
+      0 & 0 & 0 & 1 & 0 \\ \hline
+      0 & 0 & 0 & 0 & 0 
+    \end{array}
+  \right]
+.\end{align}
+Although it is simply stated, it is not immediately obvious how (a) we choose
+destabilizer generators, and (b) how this improves the scaling of measurements.
+For now we say that the simulation algorithm starts in the state
+$\ket{0}^{\otimes n}$, where the initial tableau is taken as the $n$-qubit
+generalization of \cref{eq:new-stabtab-example}. Any other stabilizer state can
+then be arrived at via Clifford or Pauli measurement gates. The former can be
+implemented as follows.
+\begin{alg}[Improved simulation of Clifford gates]\label{alg:tab-clifford}
+  Let $\oplus$ denote bitwise \verb|XOR|. The implementations are
+  \begin{itemize}
+    \item CNOT from control $a$ to target $b$:
+
+      $\forall i \in \{1,\ldots,2n\}$ set $r_i = r_i \oplus x_{ia}z_{ib}\left(
+      x_{ib} \oplus z_{ia} \oplus 1 \right)$, $x_{ib} = x_{ib} \oplus x_{ia}$,
+      and $z_{ia} = z_{ia}\oplus z_{ib}$.
+    \item $H$ on qubit $a$:
+
+      $\forall i \in \{1,\ldots,2n\}$ set $r_i = r_i \oplus x_{ia}z_{ia}$, then
+      swap $x_{ia}$ and $z_{ia}$.
+    \item $S$ on qubit $a$:
+
+      $\forall i \in \{1,\ldots,2n\}$ set $r_i = r_i \oplus x_{ia}z_{ia}$, then
+      set $z_{ia} = z_{ia} \oplus x_{ia}$
+  \end{itemize}
+\end{alg}
+We know from earlier considerations that simulating measurement gates,
+requires the multiplication of
+generators. To this end, we introduce 
+a subroutine called \texttt{rowsum(h,i)}.
+It updates the $h$-th generator to be $h+i$
+and keeps track of the phase $r_h$.
+Its implementation is given in \cref{alg:rowsum}.
+\begin{alg}[rowsum]\label{alg:rowsum}
+  First we define a function $g(x_1, z_1, x_2, z_2)$ taking 4 bits as input and
+  outputting the exponent of $i$ after $x_1 z_1$ and $x_2 z_2$ are multiplied.
+  We focus on four cases explicitly, namely
+  \[
+  \begin{array}{ccc}\toprule
+      x_1 & z_1 & g(x_1,z_1,x_2,z_2) \\ \midrule
+      0 & 0 & 0 \\
+      0 & 1 & x_2\left( 1-2z_2 \right) \\
+      1 & 0 & z_2\left( 2x_2-1 \right) \\
+      1 & 1 & z_2 - x_2 \\ \bottomrule
+  \end{array}
+  \]
+  For the rowsum routine we set $r_h$ to $0$ if
+  \begin{align}\label{eq:congruentdings}
+    2r_h + 2r_i + \sum_{j=1}^n g\left(x_{ij},z_{ij},x_{hj},z_{hj}\right) \equiv
+    0 \text{ (mod } 4)
+  .\end{align}
+  or set $r_h$ to $1$ if the sum in \cref{eq:congruentdings} is congruent to
+  $2$ mod $4$. Next, we set $x_{hj}=x_{ij}\oplus x_{hj}$ and $z_{hj} = z_{ij}
+  \oplus z_{hj}$, where $\oplus$ denotes bitwise \verb|XOR|.
+\end{alg}
+Next it will prove useful to define the \emph{symplectic inner product} between
+two Pauli operators $A$ and $B$ in tableau representation as
+\begin{align}\label{eq:symp-inner-prod}
+  A\cdot B = x_{a1}z_{b1} \oplus \cdots \oplus x_{an}z_{bn} \oplus x_{b1}
+  z_{a1} \oplus \cdots \oplus x_{bn}z_{an}
+.\end{align}
+This inner product is $0$ if $A$ and $B$ commute and $1$ if they anti-commute.
+
+Equipped with rowsum and the symplectic inner product, we can now examine the
+simulation of measurement gates.
+\begin{alg}[Improved simulation of Measurement gates]\label{alg:tab-measure}
+  Suppose we measure $\hat{O}$. As a $0$th step,
+  check if there exists a $p\in\{n+1,\ldots,2n\}$ (the stabilizer
+  generators) such that $[\hat{O},R_p] \neq 0$. This can be done by
+  multiplication with respect to \cref{eq:symp-inner-prod}. Then there are two
+  cases:
+
+  Case 1, such a $p$ exists. First, call rowsum($i,p$) for all $i \in
+  \{1,\ldots,2n\}$ such that $i\neq p$ and $[\hat{O},R_i] \neq 0$. Next,
+  set the $(p-n)$th row equal to the $p$th row. Then, set row $p$ equal to
+  $\hat{O}$ and set $r_p$ to 0 or 1 with equal probability. Finally, return
+  $r_p$ as measurement outcome.
+
+  Case 2, such a $p$ does not exist. First, set the entire $(2n+1)$st row (the one
+  added for convenience earlier) to 0. Next, call rowsum($2n+1, i+n$) for all
+  $i\in\{1,\ldots,n\}$ (the destabilizer generators) such that
+  $[\hat{O},R_i]\neq 0$. Finally, return $r_{2n+1}$ as measurement outcome. 
+\end{alg}
+
+With \cref{alg:tab-clifford,alg:rowsum}, all possible allowed modifications to
+the stabilizer tableau $\mathcal{T}$ are defined. \Cref{prop:comm-tab} collects
+some symmetries of this simulator. That is, some commutation relations are
+invariant under operations of the Aaronson-Gottesman tableau algorithm. It is
+these relations we want to keep intact, when setting out to expand the existing
+simulator with more functionalities.
 \begin{prop}[Invariants of the tableau algorithm]\label{prop:comm-tab}
   The following are invariant under operations of the tableau algorithm
   \begin{enumerate}
@@ -212,39 +431,167 @@ The name of the algorithm stems from the fact that a state is represented by a
     \item $\forall h \in \{1,\ldots,n\}, \ \{R_h, R_{h+n}\} = 0$
     \item $\forall i,h \in \{1,\ldots,n\}, \ \text{with } i\neq h, \ [R_i, R_{h+n}] = 0$
   \end{enumerate}
-  
 \end{prop}
-
-One subroutine of major importance to the tableau algorithm is \texttt{rowsum}.
-
-\subsection{\texttt{rowsum}}\label{sec:rowsum}
+We will conclude this section with a note of caution; the simulator we set out
+to expand has, in contrast to how it was defined in this section, the
+stabilizers in even-numbered rows of the tableau, and each associated
+antistabilizers in the row below it. Although it is merely a change of indices,
+it is a major one, and for didactic reasons we chose to forego this change.
+Since it only matters which antistabilizer is associated with each stabilizer,
+we try to limit the mention of any explicit ordering of generators in the
+tableau.
 
 \section{Expanding the Tableau algorithm}\label{sec:expanding}
-Tableau algorithm: \cite{aaronsonImprovedSimulationStabilizer2004}
+In this section we present the modifications to the existing simulator that
+were necessary for the numerical experiments of this thesis. Usually, these
+would fall into the \emph{Methods} sections of the respective
+chapters. However, the modifications were extensive enough to warrant the
+dedication of an entire chapter to it. We will first briefly introduce the function
+necessary for computing the linear cross entropy $\chi$, from \cref{ch:lxe}, as
+this was only a small addition. We
+then continue with the larger discussion of stabilizer mixed states and relative
+entropy, implementing our results from \cref{sec:rel-ent-stab}.
 
-\textcolor{red}{Hier w\"are es ganz nice f\"ur die ganzen algs so flowcharts
-dabei zu haben, u.a. auch um listings aus dem weg zu gehen. Alg als flowchart
-ist generischer als der (evtl unsauber geschriebene) \texttt{C++} code}
+\subsection{Pure states}
+The first function implemented is the \emph{project} function. It is used in
+the algorithm for computing the linear cross entropy, as successful projections
+in the circuit yields $\chi = 1$ and $\chi = 0$ otherwise. Luckily for us,
+projections are already a part of the existing simulator in the form of
+projective measurements. The important difference between the measurement
+algorithm and projections is that we already know the measurement outcome as an
+argument of our function. That is, we take the usual measurement algorithm, but
+add a new argument for the measurement result, which is projected onto. As
+such, the projection always works for a random result, since one of the steps
+in the measurement was to flip a coin for the sign, which is now a fixed value.
+However, for the deterministic case we are not as agnostic. Since we try to
+project onto a state, which is already in the stabilizer, the signs of what we
+have and what we pass as argument should match. If they don't, the function
+returns \verb|false|. This is then used as break condition when computing the
+LXE. The project algorithm is outlined in
+\cref{alg:projection}.
+\begin{alg}[Projection onto Pauli eigenstates]\label{alg:projection}
+  Suppose we want to apply $P = \frac{I + \hat{O}}{2}$. As step 0, we again
+  need to check if projection changes the state,
+   by checking if there exists a stabilizer generator $R_p$
+  such that $[\hat{O},R_p]\neq 0$. Then there are two cases:
 
-The tableau algorithm as outlined in \cref{sec:tableau} is only able to
-simulate stabilizer circuits on pure states. This however, neglects the most
-general class of quantum states, namely, mixed states. It will become apparent
-in \cref{ch:rel-ent} why this extension is necessary for our purposes. 
-%
-%\subsection{sample flowchart!}
-%delete this subsection later!
-%\begin{figure}[H]
-%  \centering
-%  \input{fig/tikz/example.tex}
-%  \caption{dings}
-%  \label{fig:asdf}
-%\end{figure}
+  Case 1, projection modifies the state. We repeat the steps from case 1 of
+  \cref{alg:tab-measure}, but instead of randomly choosing the sign, we use the
+  one we want to project onto. Finally, we return \verb|true| since the
+  projection was successful.
 
-\subsection{The \texttt{mix} attribute}
-Each instance of \texttt{Qubit} now comes with a new attribute called
-\texttt{mix}! Its like a buy one get one free deal!
+  Case 2, projection does not modify the state. We similarly repeat the steps
+  from case 2 of \cref{alg:tab-measure}, but return \verb|true| or \verb|false|
+  depending on if the sign we pass as function argument matches $r_{2n+1}$ or
+  not.
+\end{alg}
+An important point to note is that this function does not resemble anything we
+could do in an experiment. There is no experimental apparatus conceivable to
+perform the operation we are simulating. It is possible only because we
+perform a classical simulation and know mathematically what a projection
+operation does. This kind of degree of freedom is noteworthy, and we should
+keep it in mind going forward.
 
-\subsection{\texttt{get\_state\_type}}
+\subsection{Mixed states}\label{sec:mixed-states}
+The tableau algorithm in the form it is outlined in \cref{sec:tableau}
+currently supports stabilizer circuit simulations exclusively for pure states.
+This however,
+neglects a more general class of quantum states, namely, mixed states. It has
+become apparent in \cref{ch:rel-ent} why this adaption is necessary for our
+purposes. Ideally, we want to build on the existing infrastructure we have been
+using for pure states and extend it such that pure states arise as a special
+case within the simulator. It is easy to convince oneself that this should, in
+principle, be possible. Let us therefore do that and approach this problem
+heuristically by thinking about an intuitive approach to incorporate mixed
+state to the simulator.
+
+Consider the density matrix of a general $N$-qubit stabilizer
+state with generating set Stab$\left( \rho \right) = \langle g_1, \ldots, g_n
+\rangle$,
+\begin{align}
+  \rho = \frac{1}{2^N} \prod_{i=1}^n I + g_i
+.\end{align}
+Here, $\rho$ describes a pure state iff. $n=N$ and a mixed state otherwise.
+That is, by reducing the number of generators, we increase the state's
+mixedness, with the maximally mixed state represented by the trivial group,
+generated by the empty set.
+
+What about the action of unitary transformations, i.e. Clifford gates, on our
+state? Since applying unitaries to density matrices works by conjugation with
+$U$ and $U^\dagger$, their application remains unchanged from the pure-state
+case. Measurements, however, introduce a new challenge:
+One can show that when measuring any
+Pauli operator $\hat{O}$ on a qubit in a maximally mixed state, the outcomes
+will be random and their probabilities uniformly distributed. However, this
+contrasts the previous instances where measurement outcomes were random, since
+there are no anticommuting generators of $\rho$ with $\hat{O}$. This is
+certainly something to take note of in modifying the existing measurement
+algorithm.
+
+With mixed states come new possibilities for quantities we could query on our
+system. For instance, the Von Neumann entropy (cf. \cref{defn:vonneumann}) of a
+pure state is always $0$. It is only non-zero for a mixed state.
+Furthermore, the cross and relative entropy only
+really get particularily interesting when considering mixed states, as we have
+discussed in detail in \cref{sec:rel-ent-stab}. We should therefore include the
+ability to access these entropic quantities, and also compare two states to
+another, as is done for the cross and relative entropy.
+
+%Finalizing our philosophizing on mixed states is possibly the most important
+%question of how to obtain them.
+One central question remains left unanswered: how \emph{do} we obtain mixed
+states within this framework?  That is, if the previous program pertained to
+pure states only, what would be a natural way to introduce mixedness?  One
+approach could certainly be to start with a pure state of a larger system and
+then trace out entangled qubits.  So, a natural inclusion to our algorithm
+would be a partial trace function.  Alternatively, we can recognize once more
+that we are not bound by the limits of nature; similarly to the project
+function, which has no natural or experimental pendant, we can artificially
+introduce mixedness by selectively removing stabilizers.
+%Alternatively, mixedness can be introduced artificially by selectively removing
+%stabilizers.
+For instance, removing a generator that acts only on one qubit (which is not
+coupled to other qubits) should yield a mixed state for that qubit. This allows
+outside control of mixedness within the simulation.
+%Next, we could artificially introduce mixedness by removing certain generators
+%from the stabilizers. If there is a generator acting exclusively on one qubit,
+%with no other stabilizer acting on it, and we shrink our generating set by said
+%stabilizer, we expect this qubit (and only this qubit) to be in a mixed state.
+%Thus, we could artificially introduce mixedness, by bringing our stabilizers in
+%such a form and removing this qubit.
+
+Let us briefly summarize this train of thought:
+\begin{description}
+  \item[Minimal reworking] The current algorithm (cf. \cref{sec:tableau})
+    should be extended with minimal changes. Any previously written simulation
+    based on it may not break.
+  \item[Generator count] An $N$-qubit pure state has $N$ stabilizer generators,
+    while a mixed state has $0\leq n<N$ generators.
+  \item[Unitaries] The application of unitaries is agnostic to mixedness. They
+    should work \emph{exactly} the same way they have before.
+  \item[Measurements] Measurements introduce a new contingency for random
+    results. The existing measurement function should be made to be able to handle it.
+  \item[Entropy] Mixed states allow for a broader spectrum of entropic
+    quantities to be computed. %They should be included in the simulator.
+  \item[Partial trace] There should be a function, which implements the partial trace over (at
+    least) one qubit.
+  \item[Classical advantages] Classical simulation allows us to construct artificial ways of
+    introducing mixedness.
+\end{description}
+\textcolor{red}{hier gibts bestimmt ne gute \"uberleitung. mir f\"allt aktuell
+aber keine ein. don't forget!!}
+
+\subsubsection{The \texttt{mix} attribute}
+\textcolor{orange}{Each instance of the \texttt{Qubit} object now comes with a
+new attribute called \texttt{mix}! Its like a buy one get one free type deal! I
+hecking love Object Oriented Programming!}
+
+\subsubsection{Unitaries and measurements}
+\begin{itemize}
+  \item unitaries stay the same
+  \item measurements get a new contingency for random results.
+\end{itemize}
+\subsubsection{\texttt{get\_state\_type}}
 The first algorithm we want to introduce is an auxilliary subroutine needed for
 the \texttt{ptrace} algorithm, which we call \texttt{get\_state\_type}. It
 takes a qubit position $a$ as input and outputs the number of unique stabilizer
@@ -264,12 +611,25 @@ variable \texttt{dummy}. If we have two differing non-zero values for our Pauli
 encoding, we know our qubit to be in an entangled state with at least one other
 qubit, and we return $1$. If there are no other generators, we return $0$ and
 if \texttt{dummy} is $0$, qubit $a$ is in a mixed state. This algorithm is
-represented as pseudocode in \cref{alg:get_state_type} and as a flowchart in
+formally written out in \cref{alg:get_state_type},
+represented as pseudocode in \cref{alg:get_state_type1}, and as a flowchart in
 \cref{fig:statetype-diag}.
 
+\textcolor{kw-olive}{hier die frage: was dient alles zum besseren
+verst\"andnis und was ist overload? pseudocode muss imo. nicht sein z.b.}
+
+\begin{alg}[Determine state type]\label{alg:get_state_type}
+  Let $a$ be the qubit we want to determine the \enquote{state type} of. First,
+  set a dummy variable to $0$. Then, loop over non-mix stabilizers and compute
+  $2X_{ia} + Z_{ia}$. If this quantitiy is non-zero, set the dummy variable
+  equal to it, then continue looping if necessary. If $2X_{ia}+Z_{ia}$ is
+  non-zero again, and not equal to \verb|dummy|, return 1. If the loop ends and
+  \verb|dummy| is non-zero, return 0. If the loop breaks with
+  $\texttt{dummy}=0$, return $-1$.
+\end{alg}
 \begin{algorithm}[H]
 \caption{Determine State Type for Qubits}
-\label{alg:get_state_type}
+\label{alg:get_state_type1}
 \begin{algorithmic}[1]
 \REQUIRE qubit $a$, total number of qubits $N$, tableau $\mathcal{T}$
 \ENSURE Returns 1, 0, or -1 based on the conditions
@@ -298,7 +658,7 @@ represented as pseudocode in \cref{alg:get_state_type} and as a flowchart in
   \label{fig:statetype-diag}
 \end{figure}
 
-\subsection{\texttt{rowreduce}}
+\subsubsection{\texttt{rowreduce}}
 The next subroutine we expand the simulator with is \texttt{rowreduce}, which
 is also vital to the \verb|ptrace| algorithm. Remember that the tableau
 algorithm is based on the stabilizer generators and we already know that adding
@@ -456,7 +816,7 @@ representation of this algorithm is provided in \cref{alg:rowreduce}.
   \label{fig:rowreduce-diag}
 \end{figure}
 
-\subsection{\texttt{ptrace}}\label{sec:ptrace}
+\subsubsection{\texttt{ptrace}}\label{sec:ptrace}
 We now combine the two previous subroutines to the \verb|ptrace| algorithm.
 The algorithm traces out one qubit and modifies the remaining stabilizers
 accordingly. For instance, tracing out a qubit in a product state will just
@@ -479,8 +839,18 @@ $$\rho_i = \frac{1}{2} \left[\dyad{0}_i + \dyad{1}_i\right].$$
   \label{fig:ptrace-dig}
 \end{figure}
 
-\subsection{\texttt{is\_subgroup\_of}}
+\subsubsection{\texttt{is\_subgroup\_of}}
 
-\subsection{\texttt{project\_or\_mix}}
+\subsubsection{\texttt{cross\_entropy}}
 
-\subsection{\texttt{force\_projection}}
+\subsubsection{\texttt{project\_or\_mix}}
+
+
+\subsection{sample flowchart!}
+delete this subsection later!
+\begin{figure}[H]
+  \centering
+  \input{fig/tikz/example.tex}
+  \caption{dings}
+  \label{fig:asdf}
+\end{figure}

@@ -9,10 +9,12 @@
   \node [decision, below of=valnot0, yshift=-.5cm] (dummy0)
   {\verb|dummy| $=0$?};
   \node [decision, left of=valnot0, xshift=-.5cm] (loopend) {End of loop?};
-  \node [return, right of=dummy0, xshift=1cm] (return1) {return 1};
   \node [block, left of=dummy0, xshift=-1.5cm] (setdummy) {\verb|dummy| $=2X_{ia} +
   Z_{ia}$};
-  \node [decision, left of=setdummy, yshift=-3cm] (dummynot0)
+  \node [decision, below of=dummy0, yshift=-.5cm] (dummypauli)
+{\verb|dummy| $\neq\texttt{val}$?};
+  \node [return, right of=dummypauli, xshift=1cm] (return1) {return 1};
+  \node [decision, left of=setdummy, yshift=-4.5cm] (dummynot0)
   {\verb|dummy| $\neq 0$?};
   \node [return, right of=dummynot0, xshift=1cm] (ret0) {return 0};
   \node [return, below of=dummynot0, yshift=-.5cm] (ret-) {return $-1$};
@@ -47,7 +49,9 @@
     \draw [arrow] (valnot0) -- node[anchor=south] {no} (loopend);
     
     \draw [arrow] (dummy0) -- node[anchor=south] {yes} (setdummy);
-    \draw [arrow] (dummy0) -- node[anchor=south] {no} (return1);
+    \draw [arrow] (dummy0) -- node[anchor=west] {no} (dummypauli);
+    \draw [arrow-notip] (dummypauli) -| node[anchor=east] {no} (setdummy);
+    \draw [arrow] (dummypauli) -- node[anchor=south] {yes} (return1);
     \draw [arrow] (setdummy) -- (loopend);
     
     \draw [arrow] (loopend) |- node[anchor=east] {no} (loop);

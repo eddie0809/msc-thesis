@@ -39,9 +39,37 @@ Hier numerische Implementierung der LXE (also die project funktion. evtl
 flowchart für algorithmus). Besser beschreiben als die in ihrem appendix.
 
 Tracking hier genauer beschreiben, i guess?
+
 \section{Auswertung PTIM \& Fehler}
 \subsection{Keine Fehler}
 \subsection{Fehler}
+\begin{itemize}
+  \item Mit Fehlermodell aus \cite{tikhanovskayaUniversalityCrossEntropy2023}
+    k\"onnen wir schauen wie schlecht unser experiment ist. Wenn
+    \enquote{Track $ZZ$} spalte von 1 verschieden ist haben wir ein faulty
+    experiment in $X$.
+  \item Geht mit $ZZ$ fehlern nicht so prickelnd,%aber wenn keine $X$-Fehler da sind,
+    aber aus der kombination der tracks kann man inferieren. 
+  \item Warum fehlt hier die absch\"atzung? da war doch mal eine am start?
+  \item Folgende ist gemeint:
+
+    Wenn man annimmt, dass \textsf{B1} der einzige mechanismus ist, der die LXE
+    nach unten dr\"uckt (wie bspw. bei Track $ZZ$, $X$ Error), dann kann man
+    folgende absch\"atzung machen:
+    \begin{align}
+      \chi \leq \left( 1-q\left( 1-p \right)^4  \right)^{(L-1)(T-1)}
+    .\end{align}
+    Recht simple explanation dazu: in der ersten klammer ist die
+    wahrscheinlichkeit, dass mechanismus \textsf{B1} \emph{nicht} passiert.
+    $\left( 1-p \right)^2$ von den zwei im circuit chillenden $ZZ$ messungen,
+    $\left( 1-p \right)^2$ von den zwei nicht im circuit chillenden $X$
+    messungen, und $\frac{2}{2} q$ von den zwei m\"oglichen fehlerpositionen
+    mit je $\frac{1}{2}$ wahrscheinlichkeit die LXE zu bricken.
+
+  \item Das sollte ich vielleicht noch plotten, oder?
+  \item gleiche \"Uberlegung gilt auch mit track $X$. hier muss halt die upper
+    bound mit der \enquote{Track $X$} LXE multipliziert werden.
+\end{itemize}
 
 \section{Summary}
 

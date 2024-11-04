@@ -103,7 +103,7 @@ provide a proper introduction to the simulation algorithm that forms the
 foundation for the numerical experiments in this thesis.  In particular, we
 present the \emph{tableau algorithm}, as proposed by Aaronson and Gottesman in
 \cite{aaronsonImprovedSimulationStabilizer2004}.  Consequently, this section
-draws largely from outside sources, namely refs.
+draws largely from outside sources, namely Refs.
 \cite{aaronsonImprovedSimulationStabilizer2004, arabLectureNotesQuantum2024,
 gottesmanStabilizerCodesQuantum1997,
 gottesmanHeisenbergRepresentationQuantum1998}. As this following section serves
@@ -279,11 +279,13 @@ the outcome is random,
   the runtime scales with $\mathcal{O}(n^2)$.
 
   \par{Case 2, deterministic outcome:}
-  If the outcome is deterministic, we know that our stabilizer group contains
-  $Z_a$, but is not necessarily in the generating set. We thus need to modify
+  If we did not find an anticommuting generator, we know that our stabilizer
+  group contains $Z_a$. However, this does not necessitate $Z_a$ being in the
+  generating set.
+  We thus need to modify
   $\mathcal{T}$ such that its row space contains $\left( 00\cdots 0_a\cdots 0\mid
   00\cdots 1_a \cdots 0 \mid \pm \right) = \pm Z_a$ and then read out the signs
-  vector. This is done by Gaussian
+  vector, which is the result. This is done by Gaussian
   elimination, which requires $\mathcal{O}(n^3)$ time.
 \end{proof}
 This proof, in principle, also proves \cref{thm:gottesman-knill}, since the
@@ -295,8 +297,9 @@ finite number $m$ of them will be in $\mathcal{O}(mn^\alpha)$, and thus also in
 In the previous section we have shown that measurements take $\mathcal{O}(n^3)$
 time in practice. However, Aaronson and Gottesman showed in
 \cite{aaronsonImprovedSimulationStabilizer2004} that with the cost of a factor
-2 increase in memory requirements we can improve measurements to always have
-quadratic time complexity.  In particular, for each of the $n$ stabilizer
+2 increase in memory requirements we can improve measurements to have
+quadratic time complexity $\mathcal{O}\left(n^2\right)$, independent of
+\enquote{outcome type}. In particular, for each of the $n$ stabilizer
 generators we store a destabilizer (also equivalently referred to as
 antistabilizer) generator, which are also tensor products of Pauli operators.
 These $2n$ operators together generate the full $n$-qubit Pauli group
@@ -333,6 +336,14 @@ generalized tableau is the state $\ket{00}$, which has
     \end{array}
   \right]
 .\end{align}
+A quick remark on notation: we will refer to the $i$th row of $\mathcal{T}$ by
+$R_i$, where it is clear from the respective context if the row refers to a
+stabilizer or destabilizer generator. If we explicitly refer to one of them, we
+write $g_i$ for the $i$th stabilizer generator and $h_i$ for the $i$th
+antistabilizer generator. Matrix elements of the $X$ and $Z$ matrices are
+denoted by $x_{ab}$ and $z_{ab}$ respectively. Entries of the sign vector are
+denoted by $r_i$ (cf. \cref{eq:new-stabtab}).
+
 Although it is simply stated, it is not immediately obvious how (a) we choose
 destabilizer generators, and (b) how this improves the scaling of measurements.
 For now we say that the simulation algorithm starts in the state
@@ -345,17 +356,17 @@ implemented as follows.
   \begin{itemize}
     \item CNOT from control $a$ to target $b$:
 
-      $\forall i \in \{1,\ldots,2n\}$ set $r_i = r_i \oplus x_{ia}z_{ib}\left(
-      x_{ib} \oplus z_{ia} \oplus 1 \right)$, $x_{ib} = x_{ib} \oplus x_{ia}$,
-      and $z_{ia} = z_{ia}\oplus z_{ib}$.
+      $\forall i \in \{1,\ldots,2n\}$ $r_i := r_i \oplus x_{ia}z_{ib}\left(
+      x_{ib} \oplus z_{ia} \oplus 1 \right)$, $x_{ib} := x_{ib} \oplus x_{ia}$,
+      and $z_{ia} := z_{ia}\oplus z_{ib}$.
     \item $H$ on qubit $a$:
 
-      $\forall i \in \{1,\ldots,2n\}$ set $r_i = r_i \oplus x_{ia}z_{ia}$, then
+      $\forall i \in \{1,\ldots,2n\}$ $r_i := r_i \oplus x_{ia}z_{ia}$, then
       swap $x_{ia}$ and $z_{ia}$.
     \item $S$ on qubit $a$:
 
-      $\forall i \in \{1,\ldots,2n\}$ set $r_i = r_i \oplus x_{ia}z_{ia}$, then
-      set $z_{ia} = z_{ia} \oplus x_{ia}$
+      $\forall i \in \{1,\ldots,2n\}$ $r_i := r_i \oplus x_{ia}z_{ia}$, then
+      set $z_{ia}$ to $z_{ia} \oplus x_{ia}$.
   \end{itemize}
 \end{alg}
 We know from earlier considerations that simulating measurement gates,
@@ -367,7 +378,7 @@ and keeps track of the phase $r_h$.
 Its implementation is given in \cref{alg:rowsum}.
 \begin{alg}[rowsum]\label{alg:rowsum}
   First we define a function $g(x_1, z_1, x_2, z_2)$ taking 4 bits as input and
-  outputting the exponent of $i$ after $x_1 z_1$ and $x_2 z_2$ are multiplied.
+  outputting the exponent of the imaginary unit $i$ after $x_1 z_1$ and $x_2 z_2$ are multiplied.
   We focus on four cases explicitly, namely
   \[
   \begin{array}{ccc}\toprule
@@ -384,8 +395,8 @@ Its implementation is given in \cref{alg:rowsum}.
     0 \text{ (mod } 4)
   .\end{align}
   or set $r_h$ to $1$ if the sum in \cref{eq:congruentdings} is congruent to
-  $2$ mod $4$. Next, we set $x_{hj}=x_{ij}\oplus x_{hj}$ and $z_{hj} = z_{ij}
-  \oplus z_{hj}$, where $\oplus$ denotes bitwise \verb|XOR|.
+  $2$ mod $4$. Next, we set $x_{hj}$ to $x_{ij}\oplus x_{hj}$ and $z_{hj}$ to $z_{ij}
+  \oplus z_{hj}$ for all $j$, where $\oplus$ denotes bitwise \verb|XOR|.
 \end{alg}
 Next it will prove useful to define the \emph{symplectic inner product} between
 two Pauli operators $A$ and $B$ in tableau representation as
@@ -446,16 +457,17 @@ In this section we present the modifications to the existing simulator that
 were necessary for the numerical experiments of this thesis. Usually, these
 would fall into the \emph{Methods} sections of the respective
 chapters. However, the modifications were extensive enough to warrant the
-dedication of an entire chapter to it. We will first briefly introduce the function
+dedication of an entire chapter to them. We will first briefly introduce the function
 necessary for computing the linear cross entropy $\chi$, from \cref{ch:lxe}, as
 this was only a small addition. We
-then continue with the larger discussion of stabilizer mixed states and relative
+then continue with the larger discussion of mixed states in the stabilizer
+formalism and relative
 entropy, implementing our results from \cref{sec:rel-ent-stab}.
 
 \subsection{Pure states}
 The first function implemented is the \emph{project} function. It is used in
 the algorithm for computing the linear cross entropy, as successful projections
-in the circuit yields $\chi = 1$ and $\chi = 0$ otherwise. Luckily for us,
+in the circuit yield $\chi = 1$ and $\chi = 0$ otherwise. Luckily for us,
 projections are already a part of the existing simulator in the form of
 projective measurements. The important difference between the measurement
 algorithm and projections is that we already know the measurement outcome as an
@@ -500,10 +512,10 @@ neglects a more general class of quantum states, namely, mixed states. It has
 become apparent in \cref{ch:rel-ent} why this adaption is necessary for our
 purposes. Ideally, we want to build on the existing infrastructure we have been
 using for pure states and extend it such that pure states arise as a special
-case within the simulator. It is easy to convince oneself that this should, in
-principle, be possible. Let us therefore do that and approach this problem
+case within the simulator. 
+Let us approach this problem
 heuristically by thinking about an intuitive approach to incorporate mixed
-state to the simulator.
+states to the simulator.
 
 Consider the density matrix of a general $N$-qubit stabilizer
 state with generating set Stab$\left( \rho \right) = \langle g_1, \ldots, g_n
@@ -621,8 +633,8 @@ verst\"andnis und was ist overload? pseudocode muss imo. nicht sein z.b.}
 \begin{alg}[Determine state type]\label{alg:get_state_type}
   Let $a$ be the qubit we want to determine the \enquote{state type} of. First,
   set a dummy variable to $0$. Then, loop over non-mix stabilizers and compute
-  $2X_{ia} + Z_{ia}$. If this quantitiy is non-zero, set the dummy variable
-  equal to it, then continue looping if necessary. If $2X_{ia}+Z_{ia}$ is
+  $2x_{ia} + z_{ia}$. If this quantitiy is non-zero, set the dummy variable
+  equal to it, then continue looping if necessary. If $2x_{ia}+z_{ia}$ is
   non-zero again, and not equal to \verb|dummy|, return 1. If the loop ends and
   \verb|dummy| is non-zero, return 0. If the loop breaks with
   $\texttt{dummy}=0$, return $-1$.
@@ -699,12 +711,27 @@ end, cf. \cref{prop:comm-tab-2}, where this statement is formalized and proven.
   Let $\mathcal{T}$ be a tableau with stabilizer and antistabilizer generators
   $S=\langle g_1, \ldots, g_n \rangle$ and $A=\langle h_1, \ldots, h_n \rangle$
   respectively, where the generators fulfil the commutation relations of
-  \cref{prop:comm-tab}. Modifying $S$ by multiplication of two generators $g_i$
-  and $g_j$ needs to be accompanied by an appropriate modification of $A$
+  \cref{prop:comm-tab}. 
+  Replacing $g_j$ by $g_i g_j$ in the stabilizer generators leaves
+  \cref{prop:comm-tab} invariant if $h_i$ is replaced by $h_i h_j$ in the antistabilizer
+  generators.
+%  When replacing $g_j$ by $g_i g_j$ in the stabilizer generators, $h_i$ has to
+%  be replaced by $h_i h_j$ to 
+%  Modifying $S$ by multiplication of two generators $g_i$
+%  and $g_j$ needs to be accompanied by an appropriate modification of $A$
 \end{prop}
 \begin{proof}
-  We will conduct the proof by showing that each point in \cref{prop:comm-tab}
-  still holds.
+  We will first recall the invariants as given in \cref{prop:comm-tab}.
+  They read
+  \begin{enumerate}
+    \item $R_{n+1},\ldots,R_{2n}$ generate $S(\ket{\phi})$, and $R_1, \ldots,
+      R_{2n}$ generate $\mathcal{P}_n$.
+    \item $R_1, \ldots, R_n$ commute.
+    \item $\forall h \in \{1,\ldots,n\}, \ \{R_h, R_{h+n}\} = 0$
+    \item $\forall i,h \in \{1,\ldots,n\}, \ \text{with } i\neq h, \ [R_i, R_{h+n}] = 0$
+  \end{enumerate}
+  We prove the statement by showing that each of the above points still hold
+  for the proposed modifications.
   \begin{enumerate}
     \item Since we merely multiplied generators, this holds by group theoretic
       arguments

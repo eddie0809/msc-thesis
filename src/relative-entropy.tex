@@ -733,8 +733,30 @@ different trackings and errors are shown in the same manner as in
   \label{fig:min_mix-svn_sigma_full-4x3}
 \end{figure}
 \section{Regularization attempts}
-We can see that there is a 
-\subsection{Naive regu
+We can see that, even though we chose our numerical algorithms in a way that
+should mitigate the infinities, we still have them. Furthermore, the subgroup
+check is a subtle way to incorporate once more what we try to avoid. Namely,
+we want to find a density matrix, which is independent of the experimental
+density matrix $\rho$. However, with the subgroup check, we implicitly
+introduce it into our computation again, as we once more require knowledge of
+the full density matrix, bringing us back to the sampling problem. In the
+following we present two approaches to regularize the infinity appearing in the
+cross entropy. These approaches require nothing but the numerically computed
+density matrix $\sigma$. The first approach is one, which could be implemented
+in a stabilizer simulator, which has the drawback of being exponentially worse
+than the trivial upper bound $N$. The other is more flexible, but lacks an
+obvious implementation for stabilizer states. Both of these approaches could be
+the subject of further study, as the computational argument is one of
+feasibility, but not possibility (i.e., it is possible, but at what
+computational cost).
+\subsection{Attempt #1}
+\begin{align}
+  \tilde{\sigma} = \frac{e^\sigma}{\Tr[e^\sigma]}
+.\end{align}
+\subsection{Attempt #2}
+\begin{align}
+  D_\sigma = \mqty(\dmat{1-\varepsilon,1-\varepsilon,\ddots,\varepsilon,\varepsilon})
+.\end{align}
 \section{Summary}
 
 \clearpage

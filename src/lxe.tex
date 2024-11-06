@@ -33,6 +33,19 @@ stabilizer (mit dieser projection und so)
 
 Auch verschiedene Trackings?
 
+\subsection{Definition and properties}
+We first introduce the linear cross entropy (also abbreviated as LXE) in the
+context of general random quantum circuits and then go into more detail within
+our discussion of the PTIM. 
+\begin{defn}[Linear cross entropy]\label{defn:lxe}
+  Circuit-level LXE:
+  \begin{align}\label{eq:lxe-c-defn}
+    \chi_C = \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
+      C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
+      C, \sigma)\right)^2}
+  ,\end{align}
+\end{defn}
+
 \section{Numerik \& Methoden}
 \label{sec:lxe-numeric}
 Hier numerische Implementierung der LXE (also die project funktion. evtl

@@ -35,16 +35,226 @@ Auch verschiedene Trackings?
 
 \subsection{Definition and properties}
 We first introduce the linear cross entropy (also abbreviated as LXE) in the
-context of general random quantum circuits and then go into more detail within
-our discussion of the PTIM. 
+context of general random quantum circuits. We then provide a concrete
+description and expression of the LXE for our system, the projective
+transverse-field Ising model.
+
+Consider a hybrid circuit with some cicruit layout $C$, consisting of unitary
+and measurement gates. The measurement gates within the circuit yield results
+$m_i$, which are collected in the sequence $\mathbf{m} = \{m_1, m_2, \ldots,
+m_N\}$, where $N$ is the number of measurement gates. We call this sequence of
+measurement outcomes the \emph{measurement record}. For some initial state
+$\rho$ of our hybrid circuit, we can compute the \emph{unnormalized} output
+state as
+\begin{align}\label{eq:rho-m}
+  \rho_\mathbf{m} \equiv C_\mathbf{m} \rho C^\dagger_\mathbf{m}
+.\end{align}
+Here, $C_\mathbf{m}$ is the time-ordered product of all gates in the circuit,
+unitary and measurement, and can be written as
+\begin{align}
+  C_\mathbf{m} = 
+.\end{align}
+The action of $C_\mathbf{m}$ on the initial state
+$\rho$ is the mathematical object representing one possible trajectory with
+measurement outcomes $\mathbf{m}$. Leaving the state unnormalized after 
+projection operations is a deliberate choice; it allows us to define the
+probability of a certian measurement record.
+
+\begin{defn}[Probability of a trajectory]\label{defn:prob-traj}
+  Given a random circuit $C$ and an initial state $\rho$ with corresponding
+  measurement record $\mathbf{m}$, the probability of $\mathbf{m}$ is denoted
+  by
+  \begin{align}
+    P\left( \mathbf{m} \mid C, \rho \right) \equiv \Tr[\rho_\mathbf{m}] =
+    \Tr[C_\mathbf{m} \rho C^\dagger_\mathbf{m}]
+  .\end{align}
+\end{defn}
+
+Although we do not want to delve too deep into probability theory at this point,
+let us nonetheless first convince ourselves that \cref{defn:prob-traj} really does
+define a proper probability measure. To this end, consider the simplest example of
+a circuit with initial state $\rho = \dyad{+}$ and a single measurement in the
+Pauli-$Z$ basis. By \cref{eq:rho-m} our unnormalized output state reads
+\begin{align}\label{eq:prob-example}
+  \rho_\mathbf{m} = \mathbb{P}_m \dyad{+} \mathbb{P}_m^\dagger = \begin{cases}
+    \frac{1}{2}\dyad{0}, & m = 1 \\
+    \frac{1}{2}\dyad{1}, & m = -1
+  \end{cases}
+\end{align}
+with $\mathbb{P}_m = \frac{1}{2}\left(\mathds{1} + m Z \right)$. Computing the
+trace then yields $\frac{1}{2}$ for the probability of each trajectory. This is
+also consistent with our expectation from elementary quantum mechanics. As
+projectors sum to the identity (completeness), all the probabilities sum to
+$1$, as they should.
+Furthermore, since unitaries leave the norm invariant, the trace only picks up
+projections. However, one needs to be careful here. Applying a Hadamard gate to
+$\dyad{+}$ transforms the state, and the probabilities change.\footnote{The
+  probabilities for the outcomes of a Pauli-$Z$ measurement become $1$ and
+$0$}. Conversely,
+applying a Hadamard gate to any of the output states in \cref{eq:prob-example}
+does not alter the trace, but rather the output state itself.
+
+We will later continue this discussion for the measurement-only circuit of the
+PTIM. For now, we employ \cref{defn:prob-traj} and define the circuit-level
+linear cross entropy $\chi_C\left(\rho, \sigma  \right)$.
+
 \begin{defn}[Linear cross entropy]\label{defn:lxe}
-  Circuit-level LXE:
+  Given a random circuit $C$ with two distinct initial states $\rho$ and
+  $\sigma$, and measurement records $\mathbf{m}$, the normalized linear cross
+  entropy is defined as
   \begin{align}\label{eq:lxe-c-defn}
     \chi_C = \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
       C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
       C, \sigma)\right)^2}
   ,\end{align}
+  where the sums $\sum_\mathbf{m}$ go over all possible measurement outcomes of
+  the measurement gates in the circuit.
 \end{defn}
+Most times when dealing with random circuits, we want to investigate numerous
+different circuit realizations for a given parameter (usually probability).
+Hence, when referring to the linear cross entropy, we will mostly refer to the
+circuit-averaged linear cross entropy,
+\begin{align}
+  \chi \equiv \expval{\chi_C}_C
+.\end{align}
+We will later also see the utility of defining $\chi$ and $\chi_C$ this way,
+especially concerning the denominator in \cref{eq:lxe-c-defn}. For now it
+suffices to remark that it is a normalizing factor such that the linear cross
+entropy is bounded from above by 1, $0 \leq \chi \leq 1$.
+
+We can interpret this quantity like a classical fidelity between two
+probability distributions. For two given initial states, we have a probability
+distribution over measurement records. For each measurement record,
+\cref{defn:prob-traj} provides a way to quantify the probability. For these
+probabilities, the linear cross entropy quantifies the overlap of one
+probability distribution with the other. If $\chi = 1$, the probability
+distributions are identical, and if we chose different initial states, a unit
+linear cross entropy tells us that this circuit (or parameter $p$) is not
+suited to distinguish between the initial states $\rho$ and $\sigma$. On the
+other hand, if $\chi=0$, we have no measurement record, which is compatible
+with $\rho$ and $\sigma$ simultaneously.
+
+\subsection{LXE and the PTIM}\label{sec:lxe-for-ptim}
+Now that we have introduced the general concept of the linear cross entropy and
+defined the relevant quantities formally, we will examine it more closely in
+the context of the projective transverse-field Ising model. As we are able to
+simulate the PTIM with a stabilizer simulator, we will also introduce a way to
+compute the LXE in Clifford circuits, which will be implemented in the
+simulator.
+
+To find an expression for $\chi$ in Clifford circuits, we first derive an
+expression for the probabilities $P\left( \mathbf{m} \mid C, \rho \right)$,
+laid out in \cref{lem:prob-traj-cliff}.
+\begin{lem}[Probability of a trajectory in measurement-only Clifford circuits]\label{lem:prob-traj-cliff}
+  Given a Clifford circuit $C$ with $N$ measurement gates and no other gates, with initial
+  stabilizer state $\rho$, the probability of a measurement record is
+  \begin{align}
+    P\left(\mathbf{m} \mid C, \rho\right) = 2^{-N_\mathrm{rand}}
+  ,\end{align}
+  where $N_\mathrm{rand} \leq N$ is the number of random outcomes for the
+  measurement gates.
+\end{lem}
+\begin{proof}
+Suppose we have a Clifford circuit $C$ with $N$ measurement gates and an
+$n$-qubit initial stabilizer state $\rho$. We already
+know from \cref{sec:stab-basics} that there are two types of measurement
+outcomes, random or deterministic. Each measurement potentially has 2 outcomes,
+and in the former case each outcome has probability $1 / 2$ of occuring. (The
+other outcomes, the deterministic ones, trivially have unit probability.)
+Furthermore, we know that $\rho$ can be expressed as the product of projectors
+\begin{align}
+  \rho = \frac{1}{2^n} \prod_{i=1}^n (I + g_i)
+\end{align}
+or equivalently as a sum of all stabilizer group elements
+\begin{align}
+  \rho = \frac{1}{2^n} \sum_{g\in \mathrm{Stab}(\rho)} g
+.\end{align}
+
+If we now subject $\rho$ to the circuit $C$, we obtain a measurement record
+$\mathbf{m}$. By \cref{defn:prob-traj} we compute the probability by tracing the
+unnormalized output state (cf. \cref{eq:rho-m}), which in turn is obtained by application
+of the respective projectors on the input state, i.e.
+\begin{align}
+  \rho_\mathbf{m} = C_\mathbf{m}\ \rho \ C_\mathbf{m}^\dagger 
+  = T\left\{\prod_i^N\mathbb{P_i}\right\}\ \rho \ T\left\{\prod_i^N\mathbb{P_i}\right\}^\dagger 
+.\end{align}
+Here, $T\{\bullet\}$ is the time-ordering operator and $\mathbb{P}_i$ is the
+projection operator on measurement outcome $i$. The probability of some
+measurement record is then given by
+\begin{align}
+  P\left(\mathbf{m} \mid C, \rho\right) = \Tr[C_\mathbf{m} \rho
+  C_\mathbf{m}^\dagger]
+,\end{align}
+which can be written as
+\begin{align}
+  P\left(\mathbf{m} \mid C, \rho\right) = \Tr[T\left\{\prod_i^N
+  \mathbb{P}_i\right\}\rho]
+,\end{align}
+with the cyclic property of the trace and $\mathbb{P}^2 = \mathbb{P}$.
+We can now consider the successive application of measurement gates.
+We know that each of the $N$ measurements is either random or deterministic.
+Let us therefore consider these two cases separately.
+\par{Case 1 -- Deterministic outcome:}
+If a measurement has a deterministic outcome, the measurement operator was
+already part of the stabilizer group. We can therefore construct a set of
+commuting operators $\langle g_i\rangle$, containing the measurement operator
+$M$, which generate the
+stabilizer group. If we let $g_1=M$ w.l.o.g., we have
+\begin{align}
+  P\left(\mathbf{m} \mid C, \rho\right) 
+  &= \Tr[ \mathbb{P}_N \cdots \mathbb{P}_i \rho ] \nonumber\\
+  &= \frac{1}{2^n}\Tr[\mathbb{P}_N \cdots \frac{1}{2} (I + M) (I + g_1)
+  \prod_{i=2}^n (I + g_i)] \nonumber\\
+  &= \frac{1}{2^n}\Tr[\mathbb{P}_N\cdots (I+M) \prod_{i=2}^n (I+g_i)] \nonumber\\
+  &= \frac{1}{2^n}\Tr[\mathbb{P}_N\cdots \mathbb{P}_{i+1} \prod_{i=1}^n
+  (I+g_i)] \label{eq:prob-determ}
+,\end{align}
+where we used the fact that $\mathbb{P}^2 =\mathbb{P}$. The last line of
+\cref{eq:prob-determ} tells us that deterministic measurements do nothing on
+the state and the probability.
+\par{Case 2 -- Random outcome:}
+In the case of a random outcome, the operator to be measured was not in the
+stabilizer group. Technically, it should be replaced, which is done by
+conjugation with the projector. However, it turns out that for the probability,
+we only need to consider a single projection. It is
+\begin{align}
+  P\left(\mathbf{m} \mid C, \rho\right) 
+  &= \Tr[ \mathbb{P}_N \cdots \mathbb{P}_i \frac{1}{2^n}\sum_{g \in
+  \mathrm{Stab}(\rho)} g]\nonumber\\
+  &= \Tr[ \mathbb{P}_N \cdots \frac{1}{2} \left(\frac{1}{2^n} \sum_{g \in
+  \mathrm{Stab}(\rho)} g + \sum_{g \in \mathrm{Stab}(\rho)} Mg\right) ]
+.\end{align}
+Since the second sum is exclusively one over Pauli matrices, which are traceless,
+they don't contribute to the total. We thus have
+\begin{align}
+  P\left(\mathbf{m} \mid C, \rho\right) 
+  = \Tr[\mathbb{P}_N \cdots \mathbb{P}_{i+1} \frac{1}{2^{n+1}}
+  \sum_{g\in\mathrm{Stab}(\rho)} g]
+.\end{align}
+
+Combining cases 1 and 2, knowing that measurements with deterministic outcomes
+don't alter the state at all, we have
+\begin{align}
+  P\left(\mathbf{m} \mid C, \rho\right) 
+  &= \Tr[\frac{2}{2^{n+N_\mathrm{rand}}} \sum_{g\in\mathrm{Stab}(\rho)}
+  g]\nonumber\\
+  &= \frac{1}{2^{N_\mathrm{rand}}} = 2^{-N_\mathrm{rand}}
+.\end{align}
+%
+%that each of the $N$ measurements is either a projection onto a stabilizer of
+%$\rho$ or an alteration of the state in one or another way with probability $1
+%/2$. Thus, any projection onto a measurement with deterministic outcome will
+%act as identity on $\rho$. Consequently, we are left with $N_\mathrm{rand}$
+%random outcomes to measurements, each of them with probability $1/2$. 
+\end{proof}
+We can now use this result to find a nice expression for the linear cross
+entropy in Clifford circuits, and in particular the projective transverse-field
+Ising model.
+\begin{thm}[LXE for Clifford circuits]\label{thm:lxe-cliff}
+  Let $\rho$ and $\sigma$ be initial states for a clifford circuit $C$. 
+  
+\end{thm}
+
 
 \section{Numerik \& Methoden}
 \label{sec:lxe-numeric}

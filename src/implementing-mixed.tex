@@ -1,36 +1,53 @@
-\chapter{Implementing mixed states}
+\chapter{Classical Simulation of Clifford Circuits}
 \label{ch:mixed}
 \epigraph{Always programming a new type of antidote in your perimeter}{
 \citeauthor{quasimotoDiscipline99Pt2000}
 %on \citefield{quasimotoDiscipline99Pt2000}{title}
 }
 
-Ref. \cite{aaronsonImprovedSimulationStabilizer2004} will need to do some heavy
-lifting in giving primers on stabilizer simulation.
+In this chapter we present the simulation algorithm and 
+the modifications to the existing infrastructure that
+were necessary for the numerical experiments of this thesis. Usually, these
+would fall into the \emph{Methods} sections of the respective
+chapters. However, the modifications were extensive enough to warrant the
+dedication of an entire chapter to them. We will first briefly introduce the
+simulation algorithm based on the results from Gottesman and Knill
+\cite{gottesmanHeisenbergRepresentationQuantum1998}, and Aaronson
+\cite{aaronsonImprovedSimulationStabilizer2004}. Then, we briefly present
+the functions
+necessary for computing the linear cross entropy $\chi$, from \cref{ch:lxe}, as
+this was only a small addition. We
+then finish off with the larger discussion of mixed states in the stabilizer
+formalism and the realizations of the mixed state simulation algorithms, as
+well as the functions for the various entropic quantities, implementing our
+results from \cref{sec:rel-ent-stab}.
 
-It will later prove useful to implement mixed states into the existing
-stabilizer simulator. As of yet, this does not exist.
-
-In this paper \cite{audenaertEntanglementMixedStabilizer2005} they present an
-algorithm to perform a partial trace on a stabilizer state. They need an
-auxilliary algorithm, the Reduced row echelon form algorithm. I think this is a
-promising approach, but needs implementation of the RREF and the ptrace
-algorithm. From what I've seen, the first one is going to take longer than the
-second to implement. Maybe look for this kind of alg in the existing codebase?
-
-Note from 10 minutes later: its basically what we already had, only a bit more
-formalized. 
-
-Lecture notes on stabilizers: \cite{arabLectureNotesQuantum2024}
-
-This chapter serves as a primer on the nitty-gritty details of simulating
-stabilizer circuits on a classical computer. As already touched on in
-\cref{ch:basics}, according to the \emph{Gottesman-Knill Theorem} we can
-perform efficient classical simulations of quantum circuits using only Clifford
-gates. In the following sections we will introduce the so-called tableau
-algorithm, which allows simulations in polynomial time, and expand it to
-properly deal with mixed states. We assume the reader to be familiar with the
-corresponding sections in \cref{sec:stab-basics}.
+%Ref. \cite{aaronsonImprovedSimulationStabilizer2004} will need to do some heavy
+%lifting in giving primers on stabilizer simulation.
+%
+%It will later prove useful to implement mixed states into the existing
+%stabilizer simulator. As of yet, this does not exist.
+%
+%In this paper \cite{audenaertEntanglementMixedStabilizer2005} they present an
+%algorithm to perform a partial trace on a stabilizer state. They need an
+%auxilliary algorithm, the Reduced row echelon form algorithm. I think this is a
+%promising approach, but needs implementation of the RREF and the ptrace
+%algorithm. From what I've seen, the first one is going to take longer than the
+%second to implement. Maybe look for this kind of alg in the existing codebase?
+%
+%Note from 10 minutes later: its basically what we already had, only a bit more
+%formalized. 
+%
+%Lecture notes on stabilizers: \cite{arabLectureNotesQuantum2024}
+%
+%This chapter serves as a primer on the nitty-gritty details of simulating
+%stabilizer circuits on a classical computer. As already touched on in
+%\cref{ch:basics}, according to the \emph{Gottesman-Knill Theorem} we can
+%perform efficient classical simulations of quantum circuits using only Clifford
+%gates. In the following sections we will introduce the so-called tableau
+%algorithm, which allows simulations in polynomial time, and expand it to
+%properly deal with mixed states. We assume the reader to be familiar with the
+%corresponding sections in \cref{sec:stab-basics}.
 
 \subsubsection*{A computer science primer}
 %%% WAS HIER URSPRÜNGLICH MAL STAND:
@@ -97,7 +114,7 @@ Having laid out these foundational concepts, we can now delve deeper into the
 subtleties of stabilizers and the problem of simulating stabilizer
 circuits, potentially gaining a new appreciation for their intricacies.
 
-\section{Classical simulation of stabilizer circuits}\label{sec:sim-stab}
+\section{Consequences of the Gottesman-Knill theorem}\label{sec:sim-stab}
 In this section we explore the implications of \cref{thm:gottesman-knill} and
 provide a proper introduction to the simulation algorithm that forms the
 foundation for the numerical experiments in this thesis.  In particular, we
@@ -452,19 +469,9 @@ Since it only matters which antistabilizer is associated with each stabilizer,
 we try to limit the mention of any explicit ordering of generators in the
 tableau.
 
-\section{Expanding the Tableau algorithm}\label{sec:expanding}
-In this section we present the modifications to the existing simulator that
-were necessary for the numerical experiments of this thesis. Usually, these
-would fall into the \emph{Methods} sections of the respective
-chapters. However, the modifications were extensive enough to warrant the
-dedication of an entire chapter to them. We will first briefly introduce the function
-necessary for computing the linear cross entropy $\chi$, from \cref{ch:lxe}, as
-this was only a small addition. We
-then continue with the larger discussion of mixed states in the stabilizer
-formalism and relative
-entropy, implementing our results from \cref{sec:rel-ent-stab}.
-
-\subsection{Pure states}
+%\section{Expanding the Tableau algorithm}\label{sec:expanding}
+%
+\section{New functions on pure states}
 The first function implemented is the \emph{project} function. It is used in
 the algorithm for computing the linear cross entropy, as successful projections
 in the circuit yield $\chi = 1$ and $\chi = 0$ otherwise. Luckily for us,
@@ -504,7 +511,7 @@ perform a classical simulation and know mathematically what a projection
 operation does. This kind of degree of freedom is noteworthy, and we should
 keep it in mind going forward.
 
-\subsection{Mixed states}\label{sec:mixed-states}
+\section{Implementing mixed states}\label{sec:mixed-states}
 The tableau algorithm in the form it is outlined in \cref{sec:tableau}
 currently supports stabilizer circuit simulations exclusively for pure states.
 This however,
@@ -590,22 +597,244 @@ Let us briefly summarize this train of thought:
   \item[Classical advantages] Classical simulation allows us to construct artificial ways of
     introducing mixedness.
 \end{description}
-\textcolor{red}{hier gibts bestimmt ne gute \"uberleitung. mir f\"allt aktuell
-aber keine ein. don't forget!!}
+In the following sections we will go over the algorithms and their
+implementations of each of the
+above points in detail.
 
-\subsubsection{The \texttt{mix} attribute}
-\textcolor{orange}{Each instance of the \texttt{Qubit} object now comes with a
-new attribute called \texttt{mix}! Its like a buy one get one free type deal! I
-hecking love Object Oriented Programming!}
+\subsubsection{On \enquote{minimal reworking}}
+The point about \enquote{minimal reworking} is somewhat unrelated to
+physics, but rather computer science (once again). Going forward, our working
+philosophy should, of course, be the faithful implementation of physical
+phenomena to classical computers. However, we also try to follow common
+practices and principles of software development. In particular, we aim for as
+little repetition as necessary, by the DRY (don't repeat yourself) principle,
+and introduce new subroutines only if deemed unavoidable. If there exists a
+function that does what we want, we will use it.
 
-\subsubsection{Unitaries and measurements}
-\begin{itemize}
-  \item unitaries stay the same
-  \item measurements get a new contingency for random results.
-\end{itemize}
+\subsection{The mix attribute}
+%\textcolor{orange}{Each instance of the \texttt{Qubit} object now comes with a
+%new attribute called \texttt{mix}! Its like a buy one get one free type deal! I
+%hecking love Object Oriented Programming!}
+%
+For the first point\footnote{Considering \enquote{Minimal reworking} is our
+working philosophy, the thing to keep in mind, we count it as $0$th point}  --
+the generator count --, we introduce the \emph{mix} attribute to the simulator.
+In the existing implementation, each multi-qubit stabilizer system is an
+instance of the \texttt{Qubits} class. Its member functions are the possible
+actions on a stabilizer state. By introducing the \verb|mix| attribute, which
+is an integer $0\leq mix \leq N$, we keep track of how many stabilizers
+contribute to the description of the physical state. The technical use of this
+attribute is to control which rows of the tableau correspond to those
+generators which describe the physical state, and which rows are generators
+completing the tableau. To clarify, if we were to take the stabilizer tableau
+of an arbitrary pure state, its \verb|mix| value will be $0$. Incrementing this
+value by $1$ increases the mixedness and constraints the rows of the tableau we
+interpret as the stabilizer generators. Consider the example of the two-qubit
+bell state $\ket{\phi} = \left( \ket{00} + \ket{11} \right) /\sqrt{2}$ with
+generating set $\langle ZZ, XX\rangle$. The corresponding stabilizer tableau
+(omitting the scratch row) is
+\begin{align}
+\mathcal{T}_{\ket{\phi}} = 
+  \left[
+    \begin{array}{cc|cc|c}
+      1 & 0 & 0 & 0 & 0 \\
+      0 & 0 & 0 & 1 & 0 \\ \hline
+      0 & 0 & 1 & 1 & 0 \\
+      1 & 1 & 0 & 0 & 0 \\ 
+    \end{array}
+  \right]
+.\end{align}
+If we now increment \verb|mix| by $1$, the last (anti-)stabilizer row is still
+carried around in the simulation, but does not correspond to any stabilizer of
+the state. For the above state, incrementing \verb|mix| reduces the generating
+set to $\langle ZZ \rangle$, which corresponds to a mixed state with density
+matrix
+\begin{align}\label{eq:sample-mixedstate}
+  \rho = \frac{1}{4}\left( I + ZZ \right) = \frac{1}{2}\mqty(\dmat[0]{1,0,0,1})
+.\end{align}
+The corresponding bit matrix in the tableau representation then reads
+\begin{align}
+\mathcal{T}_{\rho} = 
+  \left[
+    \begin{array}{cc|cc|c}
+      1 & 0 & 0 & 0 & 0 \\ \hdashline
+      0 & 0 & 0 & 1 & 0 \\ \hline
+      0 & 0 & 1 & 1 & 0 \\ \hdashline
+      1 & 1 & 0 & 0 & 0 \\ 
+    \end{array}
+  \right]
+\end{align}
+where the dashed lines correspond to the increment of \verb|mix|. Note that we,
+in principle, have all the freedoms laid out in \cref{prop:comm-tab} to choose
+the generators below the dashed line as it is only needed for mathematical and
+technical convenience. We will see the advantages of keeping tabs on the
+full-rank tableau in the following sections.
+\subsection{Unitaries and measurements}
+Now that we have introduced a method to describe a mixed state to the
+simulator, let us further investigate how its member functions need to be
+adapted in order to faithfully simulate the behavior of mixed states. Luckily
+for us, adapting unitary transformations is a rather simple task, since it
+works the same as for mixed states. It thus requires no further inquiry. 
+
+The same cannot be said about measurements. As introductory example, consider
+the mixed state described by the density matrix in \cref{eq:sample-mixedstate}.
+Suppose we now perform a $Z$ measurement on the first qubit. The fact that the
+measurement operator commutes with every generator\footnote{$ZZ$ in this simple
+example} might lead us to believe that the measurement outcome is
+deterministic. However, we also have
+\begin{align}
+  p(m_Z = +1) &= \Tr[\frac{I+Z_1}{2} \frac{1}{4} (I+ZZ)] \nonumber \\
+              &= \Tr[\frac{1}{8}\left(I + Z_1Z_2 + Z_1 + Z_2  \right)] \nonumber \\
+              &= \frac{1}{8} \Tr[I] = \frac{1}{2}
+.\end{align}
+This seems to contradict our previous method of determining the \emph{type} of
+measurement outcome. As a consequence, we need to include this new contingency
+into the existing measurement function. At this point, recall that we still
+keep the whole tableau of generators, as if we had a pure state, and just track
+how many are not descriptors of the physical state. Therein also lies the
+solution to the problem; we can intercept the case for random outcomes in a
+mixed state by checking the tableau below the mix line as well. Note that we
+also include the antistabilizers in this case. The commutation relations laid
+out in \cref{prop:comm-tab} ensures the success of this algorithm. The
+augmentations of \cref{alg:tab-measure} is given in \cref{alg:sim-meas-mixed}.
+
+\begin{alg}[Simulation of measurement gates on mixed
+  states]\label{alg:sim-meas-mixed}
+  Suppose we measure $\hat{O}$. As a $0$th step, check if there exists a $p \in
+  \{ n+1, \ldots, 2(n-mix) \}$ (generators describing the state) such that
+  $[\hat{O}, R_P] \neq 0$. Then there are three cases:
+
+  Case 1, such a $p$ exists. This case is the same as case 1 of
+  \cref{alg:tab-measure}.
+
+  Case 2, such a $p$ does not exist. First, check analogously to step $0$ if
+  there exists a $p \in \{n-mix, \ldots, n, 2(n-mix), \ldots, 2n\}$ such that
+  $[\hat{O}, R_P] \neq 0$. if such a $p$ does not exist, this case reduces to
+  case 2 of \cref{alg:tab-measure}. If it exists, we have the new third case.
+
+  Case 3, there exists a $p \in \{n-mix, \ldots, n, 2(n-mix), \ldots, 2n\}$
+  such that $[\hat{O}, R_P] \neq 0$. We perform the steps from case 1 of
+  \cref{alg:tab-measure} with this $p$. Then we swap rows such that $R_p$ is
+  included in the topmost row of the \verb|mix| stabilizers. (Depending on $p$,
+  this might include a swap of an antistabilizer to the stabilizers.) Then, we
+  decrement \verb|mix| by 1.
+\end{alg}
+\subsection{Entropies}
+By taking a broader class of quantum states into our consideration, we unlock a
+broader set of entropic quantities to be investigated and computed. We will
+here introduce the functions that compute the von Neumann, cross and relative
+entropy.
+\subsubsection{Von Neumann entropy}
+The first new function the \verb|mix| attribute allows us to realize is the von
+Neumann entropy. We know from \cref{sec:rel-ent-stab} that the von Neumann
+entropy has a simple expression for stabilizer states, namely
+\begin{align}
+  S\left( \rho \right) = -\Tr[\rho\log\rho] = N - \abs{S_\rho}
+\end{align}
+with the number of qubits $N$ and the rank of the stabilizer group
+$\abs{S_\rho}$. Since the rank of a group is the size of its smallest
+generating set, we already have the von Neumann entropy baked into our
+extension. By definition, \verb|mix| is the number of generators the state has
+fewer than a pure state, which has $N$ generators. Thus, the von Neumann
+entropy is just \verb|mix|. Due to its simplicity we will forego a detailed
+listing of the function here. Nonetheless, the implementation of the von
+Neumann entropy in the simulator (written in \verb|C++|) can be found in
+\cref{ch:apdx-code}.
+
+\subsection{Cross and relative entropy}
+We want to include a way to compute the cross and relative entropy between two
+stabilizer states in our simulator. However, this requires an auxiliary
+subroutine, which will be introduced beforehand.
+
+\subsubsection{\texttt{is\_subgroup\_of}}
+Since we know from \cref{prop:subgroup} that the relative or cross
+entropy $\Tr[\rho\log\sigma]$ only takes on finite values if and only if the
+stabilizer group of $\sigma$, Stab$(\sigma)$, is a subgroup of the stabilizer group
+of $\rho$, Stab$(\rho)$. As such, before continuing with the implementation of
+other entropic quantities, it seems a worthwhile endeavor to introduce a
+subroutine that verifies if one stabilizer group is a subgroup of the other.
+To simplfy notation, we fix the Qubit objects such that we ask if $\sigma$ is a
+subgroup of $\rho$.
+
+The function \verb|is_subgroup_of| should, as its name implies, return a
+boolean; \verb|true| if $\sigma$ is a subgroup of $\rho$, and \verb|false| if
+it is not. Its implementation could, for instance, be as a member function of
+the Qubit class, which takes as input a reference to an instance of another Qubit
+object. This way, the function is still within the scope of the class,
+and already has access to the tableau and consequently the generators. 
+
+Answering the question if one stabilizer group is the subgroup of another is
+equivalent to answering the question if we can generate the smaller group from
+group elements of the larger one. That is, if there is no generating set of
+Stab$(\rho)$ that \emph{does not} also generate Stab$(\sigma)$, we know that
+Stab$(\rho)\not\leq$ Stab$(\sigma)$. Put differently, if there is an element in
+the stabilizer of $\sigma$ that cannot be constructed with $\rho$ stabilizers
+by means of the group operation, the condition fails.
+It follows that we need a way to determine if the generating set of $\sigma$ is
+contained in $\rho$.
+
+One advantage of the tableau representation is that, while it is not a proper
+\enquote{representation} in the strictest mathematical sense\footnote{In
+representation theory, the group elements are mapped onto GL$(V)$ and the group
+operation becomes matrix multiplication}, it does feature a way to represent
+the group operation, namely \emph{rowsum}. The question to answer can then be
+abstracted to the following. Given two stabilizer tableaus, corresponding to
+$\sigma$ and $\rho$, respectively, can the tableau of $\sigma$ be transformed
+to contain only $0$s using only rowsum$(s,r)$, where $r$ and $s$ are rows of
+$\mathcal{T}_\rho$ and $\mathcal{T}_\sigma$, respectively?
+
+Note that this question pertains to matrices and row manipulation thereof. What
+we arrived at through this chain of arguments is Gaussian elimination of a
+combined stabilizer tableau. If we write the stabilizer tableaus of $\rho$ and
+$\sigma$ above one another and then perform Gaussian elimination on the
+resulting tableau, we can deduce the subgroup property by checking if the rows
+corresponding to $\sigma$ have non-zero entries. If they do, there is a
+generator of $\sigma$ we couldn't construct from generators of $\rho$.
+Consequently, the function should return \verb|false| in these cases and
+\verb|true| for all zeros. The algorithm of this function is summarized in
+\cref{alg:is-subgroup-of}.
+\begin{alg}[Is subgroup of]\label{alg:is-subgroup-of}
+  Let $\mathcal{T}_\sigma$ and $\mathcal{T}_\rho$ be tableaus of (possibly
+  mixed) $N$-qubit stabilizer states $\sigma$ and $\rho$, respectively. W.l.o.g
+  we say that we want to determine if Stab$(\sigma)\leq \mathrm{Stab}(\rho)$.
+
+  First, construct a new auxiliary matrix $M$ as follows. Rows $1, \ldots,
+  N-\verb|rho.mix|$ of $M$ correspond to the \enquote{non-mix} stabilizer
+  generators in $\mathcal{T}_\rho$. Rows $(N-\verb|rho.mix|+1), \ldots,
+  (2N-\verb|rho.mix|-\verb|sigma.mix|)$ correspond to the analogous rows of
+  $\mathcal{T}_\sigma$.
+
+  Next, perform a standard Gaussian elimination algorithm on $M$. If, at any
+  point during the algorithm, the pivot is found in a row corresponding to
+  $\mathcal{T}_\sigma$, return \verb|false|. 
+
+  Finally, if the elimination algorithm finished without returning \verb|false|, the
+  pivot was never found in a row corresponding to the $\sigma$ tableau. Thus,
+  these rows are all $0$s, and the function returns \verb|true|.
+\end{alg}
+\subsubsection{Cross and relative entropy, ctd.}
+With the subgroup check in place, we can tend to the computation of the other
+entropic quantities. If the subgroup condition does \emph{not} hold,
+the functions for the cross and relative entropy should return
+$\infty$. With finite computational resources, representing an infinite value
+is rather impossible. Thus, in the case where the subgroup check fails, these
+functions return \verb|quiet_nan|s.
+
+In the other case, we employ the results from \cref{sec:rel-ent-stab}, namely
+\cref{thm:cross-ent-stab,col:rel-ent-stab} for the cross and relative entropy,
+respectively.  The cross entropy between $\rho$ and $\sigma$ then simply
+becomes the von Neumann entropy of $\sigma$, while the relative entropy becomes
+the difference between \verb|sigma.mix| and \verb|rho.mix|.
+
+\subsection{Partial trace}
+The next item on the list is a function that implements the partial tracing
+over a subsystem. The function itself is rather short, but relies on two
+auxiliary functions, which hide the work required. We first introduce the
+subroutines to then combine it into the full partial trace function.
+
 \subsubsection{\texttt{get\_state\_type}}
-The first algorithm we want to introduce is an auxilliary subroutine needed for
-the \texttt{ptrace} algorithm, which we call \texttt{get\_state\_type}. It
+The first auxilliary subroutine needed for
+the partial trace algorithm we call \texttt{get\_state\_type}. It
 takes a qubit position $a$ as input and outputs the number of unique stabilizer
 generators minus one on that qubit. The name of the function stems from the
 fact that we can have $3$ different state types: entangled, product and mixed.
@@ -623,12 +852,15 @@ variable \texttt{dummy}. If we have two differing non-zero values for our Pauli
 encoding, we know our qubit to be in an entangled state with at least one other
 qubit, and we return $1$. If there are no other generators, we return $0$ and
 if \texttt{dummy} is $0$, qubit $a$ is in a mixed state. This algorithm is
-formally written out in \cref{alg:get_state_type},
-represented as pseudocode in \cref{alg:get_state_type1}, and as a flowchart in
-\cref{fig:statetype-diag}.
-
-\textcolor{kw-olive}{hier die frage: was dient alles zum besseren
-verst\"andnis und was ist overload? pseudocode muss imo. nicht sein z.b.}
+formally written out in \cref{alg:get_state_type}. Since this is a novel
+subroutine, which has no counterpart in the previous simulator, we have
+included a flowchart representation of the algorithm, shown in
+\cref{fig:statetype-diag}
+%represented as pseudocode in \cref{alg:get_state_type1}, and as a flowchart in
+%\cref{fig:statetype-diag}.
+%
+%\textcolor{kw-olive}{hier die frage: was dient alles zum besseren
+%verst\"andnis und was ist overload? pseudocode muss imo. nicht sein z.b.}
 
 \begin{alg}[Determine state type]\label{alg:get_state_type}
   Let $a$ be the qubit we want to determine the \enquote{state type} of. First,
@@ -639,30 +871,30 @@ verst\"andnis und was ist overload? pseudocode muss imo. nicht sein z.b.}
   \verb|dummy| is non-zero, return 0. If the loop breaks with
   $\texttt{dummy}=0$, return $-1$.
 \end{alg}
-\begin{algorithm}[H]
-\caption{Determine State Type for Qubits}
-\label{alg:get_state_type1}
-\begin{algorithmic}[1]
-\REQUIRE qubit $a$, total number of qubits $N$, tableau $\mathcal{T}$
-\ENSURE Returns 1, 0, or -1 based on the conditions
-\STATE $\verb|dummy| \leftarrow 0$
-\STATE $\verb|pauli| \leftarrow 0$
-\FOR{$i \leftarrow 0$ \TO $(N - mix)$}
-  \STATE $\verb|pauli| \leftarrow 2\cdot X_{ia} + Z_{ia}$
-  \IF{$\texttt{pauli} \neq 0$ \AND $\texttt{dummy} = 0$}
-        \STATE $\texttt{dummy} \leftarrow \texttt{pauli}$
-        \ELSIF{$\texttt{pauli} \neq 0$ \AND $\texttt{pauli} \neq \texttt{dummy}$}
-        \RETURN 1
-    \ENDIF
-\ENDFOR
-\IF{$\texttt{dummy} \neq 0$}
-    \RETURN 0
-\ELSE
-    \RETURN -1
-\ENDIF
-\end{algorithmic}
-\end{algorithm}
-
+%\begin{algorithm}[H]
+%\caption{Determine State Type for Qubits}
+%\label{alg:get_state_type1}
+%\begin{algorithmic}[1]
+%\REQUIRE qubit $a$, total number of qubits $N$, tableau $\mathcal{T}$
+%\ENSURE Returns 1, 0, or -1 based on the conditions
+%\STATE $\verb|dummy| \leftarrow 0$
+%\STATE $\verb|pauli| \leftarrow 0$
+%\FOR{$i \leftarrow 0$ \TO $(N - mix)$}
+%  \STATE $\verb|pauli| \leftarrow 2\cdot X_{ia} + Z_{ia}$
+%  \IF{$\texttt{pauli} \neq 0$ \AND $\texttt{dummy} = 0$}
+%        \STATE $\texttt{dummy} \leftarrow \texttt{pauli}$
+%        \ELSIF{$\texttt{pauli} \neq 0$ \AND $\texttt{pauli} \neq \texttt{dummy}$}
+%        \RETURN 1
+%    \ENDIF
+%\ENDFOR
+%\IF{$\texttt{dummy} \neq 0$}
+%    \RETURN 0
+%\ELSE
+%    \RETURN -1
+%\ENDIF
+%\end{algorithmic}
+%\end{algorithm}
+%
 \begin{figure}[H]
   \centering
   \input{fig/tikz/get_state_type.tex}
@@ -676,7 +908,9 @@ is also vital to the \verb|ptrace| algorithm. Remember that the tableau
 algorithm is based on the stabilizer generators and we already know that adding
 two rows together, i.e. multiplying two generators, leaves the commutation
 relations invariant. This means that we can perform row reduction to row
-echelon form on our tableau without effect on the described state. However,
+echelon form on our tableau without effect on the described state.
+
+However,
 some subtleties need to be taken into account. In principle it is possible to
 row reduce the entire tableau. But it turns out that we need only to reduce the
 columns associated with one particular qubit, when epmloyed as subroutine to
@@ -692,21 +926,25 @@ reconcile this is to reduce the $X$ stabilizers first, swapping the row
 containing $X$ to the bottom if necessary, then doing $Z$ stabilizers. That way
 we ensure that we do not introduce $X$ stabilizers when adding rows together
 to get rid of $Z$ stabilizers. This already hints to the next subtlety we need
-to take into account. A priori, one would probably perform gaussian
+to take into account.
+
+A priori, one would probably perform gaussian
 elimination to obtain an upper triangular form. The algorithm thereof is widely
 studied and the plight of many computer science first year students. It would
 thus be natural to assume that we want to have the reduced rows as first rows
 of the matrix. Nevertheless, our case is different; since we exclusively call
 \verb|rowreduce| to trace out a qubit, it will later prove convenient to have
 the reduced rows on the \emph{bottom} of the tableau. This way, we can later
-simply set \verb| N=N-1;|. We refer to \cref{sec:ptrace} for a more in-depth
-explanation why this is done. The last subtlety we want to highlight is the
-fact that with each modification of the stabilizer generators, we need an
-appropriate modification of the \emph{anti}stabilizers to keep the commutation
-relations of \cref{prop:comm-tab} intact. Although we do not technially need to
-modify the antistabilizers for our purposes, it is still necessary if we want
-to continue applying the tableau algorithm on the rowreduced tableau. To this
-end, cf. \cref{prop:comm-tab-2}, where this statement is formalized and proven.
+simply set \verb| N=N-1;|. We refer to the later discussion of the partial
+trace function for a more in-depth explanation why this is done.
+
+The last subtlety we want to highlight is the fact that with each modification
+of the stabilizer generators, we need an appropriate modification of the
+\emph{anti}stabilizers to keep the commutation relations of
+\cref{prop:comm-tab} intact. Although we do not technially need to modify the
+antistabilizers for our purposes, it is still necessary if we want to continue
+applying the tableau algorithm on the rowreduced tableau. To this end, cf.
+\cref{prop:comm-tab-2}, where this statement is formalized and proven.
 \begin{prop}\label{prop:comm-tab-2}
   Let $\mathcal{T}$ be a tableau with stabilizer and antistabilizer generators
   $S=\langle g_1, \ldots, g_n \rangle$ and $A=\langle h_1, \ldots, h_n \rangle$
@@ -783,101 +1021,151 @@ we call \verb|rowsum(k,first_x)| and \verb|rowsum(first_x+1,k+1)|, where
 \verb|h+1| is the associated antistabilizer to stabilizer \verb|h|. After
 looping through the $X$ stabilizers, we move row \verb|first_x| to the bottom
 if necessary. We then repeat the previous procedure with the $Z$ stabilizers,
-also moving \verb|first_z| to the bottom if necessary. A pseudocode
-representation of this algorithm is provided in \cref{alg:rowreduce}.
+also moving \verb|first_z| to the bottom if necessary. 
+The rowreduce algorithm is summarized in \cref{alg:rowreduce} and represented
+as a flowchart in \cref{fig:rowreduce-diag}.
+\begin{alg}[Rowreduce]\label{alg:rowreduce}
+  Let $a$ denote the qubit we want to reduce. First, set two helper variables
+  \verb|first_x| and \verb|first_z| to $-1$. Then loop over all rows in the $X$
+  matrix of the stabilizers. If $X_{ia} = 1$ for the first time, set
+  \verb|first_x| to $i$. For any subsequent rows $j$ with $X_{ja} = 1$, call
+  rowsum($j$, \verb|first_x|) and the dual in the antistabilizers according to
+  \cref{prop:comm-tab-2}. Once the loop hits the end, swap row $i$ to the
+  bottom of the tableau, depending on if \verb|first_x| $\neq-1$. Then repeat
+  the previous steps for the $Z$ matrix.
+\end{alg}
+%A pseudocode
+%representation of this algorithm is provided in \cref{alg:rowreduce}.
 
-\begin{algorithm}[H]
-\caption{Rowreduce stabilizers for qubit $a$}
-\label{alg:rowreduce}
-\begin{algorithmic}[1]
-\REQUIRE qubit $a$, total number of qubits $N$, tableau $\mathcal{T}$
-\STATE $\verb|first_x| \leftarrow -1$
-\FOR{$i \leftarrow 0$ \TO $2N$ \textbf{step} 2}
-\IF{$X_{ia} = 1$ \AND $\texttt{first\_x} = -1$}
-    \STATE $\verb|first_x| \leftarrow i$
-    \ELSIF{$X_{ia} = 1$ \AND $\texttt{first\_x} > -1$}
-    \STATE \verb|rowsum(i, first_x)|
-    \STATE \verb|rowsum(first_x+1, i+1)|
-  \ENDIF
-\ENDFOR
-\IF{ $-1 < \texttt{first\_x} < 2N$}
-  \FOR{$i \leftarrow$ \texttt{first\_x} \TO $2N$}
-    \STATE \verb|rowswap(i, i+2)|
-  \ENDFOR
-\ENDIF
-\STATE $\verb|first_z| \leftarrow -1$
-\FOR{$i \leftarrow 0$ \TO $2N$ \textbf{step} 2}
-\IF{$X_{ia} = 1$ \AND $\texttt{first\_z} = -1$}
-    \STATE $\verb|first_z| \leftarrow i$
-    \ELSIF{$X_{ia} = 1$ \AND $\texttt{first\_z} > -1$}
-    \STATE \verb|rowsum(i, first_z)|
-    \STATE \verb|rowsum(first_z+1, i+1)|
-  \ENDIF
-\ENDFOR
-\IF{ $-1 < \texttt{first\_z} < 2N$ \OR \texttt{first\_x} = $-1$}
-  \FOR{$i \leftarrow$ \texttt{first\_z} \TO $2N$}
-    \STATE \verb|rowswap(i, i+2)|
-  \ENDFOR
-\ENDIF
+%\begin{algorithm}[H]
+%\caption{Rowreduce stabilizers for qubit $a$}
+%\label{alg:rowreduce}
+%\begin{algorithmic}[1]
+%\REQUIRE qubit $a$, total number of qubits $N$, tableau $\mathcal{T}$
+%\STATE $\verb|first_x| \leftarrow -1$
+%\FOR{$i \leftarrow 0$ \TO $2N$ \textbf{step} 2}
+%\IF{$X_{ia} = 1$ \AND $\texttt{first\_x} = -1$}
+%    \STATE $\verb|first_x| \leftarrow i$
+%    \ELSIF{$X_{ia} = 1$ \AND $\texttt{first\_x} > -1$}
+%    \STATE \verb|rowsum(i, first_x)|
+%    \STATE \verb|rowsum(first_x+1, i+1)|
+%  \ENDIF
+%\ENDFOR
+%\IF{ $-1 < \texttt{first\_x} < 2N$}
+%  \FOR{$i \leftarrow$ \texttt{first\_x} \TO $2N$}
+%    \STATE \verb|rowswap(i, i+2)|
+%  \ENDFOR
+%\ENDIF
 %\STATE $\verb|first_z| \leftarrow -1$
-%\FOR{$i \leftarrow 0$ \TO $2N$ \STEP 2}
-%  \IF{$X_{ia} = 1$ \AND \verb|first_z| = $-1$}
-%    \STATE $\verb|first_x| \gets i$
-%  \ELSIF{$X_{ia} = 1$ \AND \verb|first_z| > $-1$}
+%\FOR{$i \leftarrow 0$ \TO $2N$ \textbf{step} 2}
+%\IF{$X_{ia} = 1$ \AND $\texttt{first\_z} = -1$}
+%    \STATE $\verb|first_z| \leftarrow i$
+%    \ELSIF{$X_{ia} = 1$ \AND $\texttt{first\_z} > -1$}
 %    \STATE \verb|rowsum(i, first_z)|
 %    \STATE \verb|rowsum(first_z+1, i+1)|
 %  \ENDIF
 %\ENDFOR
-%\IF{$-1 < \verb|first_z| < 2N$ \OR \verb|first_x| = $-1$}
-%  \FOR{$i \gets \verb|first_z| \TO 2N$}
+%\IF{ $-1 < \texttt{first\_z} < 2N$ \OR \texttt{first\_x} = $-1$}
+%  \FOR{$i \leftarrow$ \texttt{first\_z} \TO $2N$}
 %    \STATE \verb|rowswap(i, i+2)|
 %  \ENDFOR
 %\ENDIF
-\end{algorithmic}
-\end{algorithm}
+%%\STATE $\verb|first_z| \leftarrow -1$
+%%\FOR{$i \leftarrow 0$ \TO $2N$ \STEP 2}
+%%  \IF{$X_{ia} = 1$ \AND \verb|first_z| = $-1$}
+%%    \STATE $\verb|first_x| \gets i$
+%%  \ELSIF{$X_{ia} = 1$ \AND \verb|first_z| > $-1$}
+%%    \STATE \verb|rowsum(i, first_z)|
+%%    \STATE \verb|rowsum(first_z+1, i+1)|
+%%  \ENDIF
+%%\ENDFOR
+%%\IF{$-1 < \verb|first_z| < 2N$ \OR \verb|first_x| = $-1$}
+%%  \FOR{$i \gets \verb|first_z| \TO 2N$}
+%%    \STATE \verb|rowswap(i, i+2)|
+%%  \ENDFOR
+%%\ENDIF
+%\end{algorithmic}
+%\end{algorithm}
 
 \begin{figure}[H]
   \centering
   \input{fig/tikz/rowreduce.tex}
-  \caption{flowchart for rowreduce algorithm}
+  \caption{Flowchart representation of the rowreduce subroutine}
   \label{fig:rowreduce-diag}
 \end{figure}
 
-\subsubsection{\texttt{ptrace}}\label{sec:ptrace}
-We now combine the two previous subroutines to the \verb|ptrace| algorithm.
-The algorithm traces out one qubit and modifies the remaining stabilizers
-accordingly. For instance, tracing out a qubit in a product state will just
-remove this qubit, since it doesn't correlate with any other qubit. If we do
-have correlations in the form of entanglement, the algorithm will modify the
-remaining stabilizers in a way that increases the mixedness. 
+\subsubsection{Partial trace}\label{sec:ptrace}
+We can now combine the two previous subroutines to an algorithm realizing the
+partial trace, also refered to as \verb|ptrace| for short. The algorithm traces
+out one qubit and modifies the remaining stabilizers accordingly. For instance,
+tracing out a qubit in a product state will just remove this qubit, since it
+doesn't correlate with any other qubit. If we do have correlations in the form
+of entanglement, the algorithm will modify the remaining stabilizers in a way
+that increases the mixedness. 
+
 Consider the paradigmatic example of the two-qubit Bell state
 \[
   \ket{\phi} = \frac{\ket{00} + \ket{11}}{\sqrt{2}} \quad{\text{with density
   matrix}} \quad \rho = \dyad{\phi}.
 \]
-After tracing out any of the two qubits we are left with a mixed state, namely
-$$\rho_i = \frac{1}{2} \left[\dyad{0}_i + \dyad{1}_i\right].$$
+After tracing out any of the two qubits we are left with a mixed state of the
+form
+$$\rho_i = \frac{1}{2} \left[\dyad{0}_i + \dyad{1}_i\right],$$
+which is the maximally mixed state for qubit $i$. The analogous operation in
+the stabilizer picture is starting with the state stabilized by
+Stab$(\ket{\phi}) = \langle ZZ, XX \rangle$. Then, by means of partially
+tracing out one qubit arriving at Stab$(\rho_i) = \langle \rangle = \{ I \}$.
 
+Conversely, if we start out in a product state, such as $\ket{\phi} =
+\ket{00}$, and then trace out one qubit, the state of the qubit is still pure.
+Thus, the decrease in purity after the partial trace operation depends on the
+correlations of the qubit to be traced out. This is what we need the
+\verb|get_state_type| function for. One of the steps in the partial trace
+function should be to increase or decrease the \verb|mix| attribute by an
+amount depending on the state type. The value of this alteration is exactly
+the return value of \verb|get_state_type| for the qubit to be traced out. With
+that we have a sensible first step in the \verb|ptrace| algorithm, namely
+calling \verb|get_state_type| and updating \verb|mix| accordingly.
 
-\begin{figure}[h]
-  \centering
-  \input{fig/tikz/ptrace.tex}
-  \caption{flowchart for ptrace algorithm}
-  \label{fig:ptrace-dig}
-\end{figure}
+The next step is to move the columns corresponding to qubit $a$ to position
+$N$. The reason for this is the same as why we moved the rows to the bottom
+in the \verb|rowreduce| subroutine (cf. \cref{alg:rowreduce}). Since we
+decrease the system size by $1$, we set $N$ to $N-1$, and since the tableau
+dimensions depend on this $N$ explicitly, moving a column to $N$ and then
+decrementing $N$ by $1$ amounts to deleting the column. 
 
-\subsubsection{\texttt{is\_subgroup\_of}}
+Then, we call rowreduce on the last column. After rowreduce has been called,
+the stabilizer generators of qubit $a$ are in column $N$ and row $N$, or
+possibly $N-1$ too.
 
-\subsubsection{\texttt{cross\_entropy}}
+Finally, we decrement $N$, thereby removing the
+qubit from the system. The \verb|ptrace| function is summarized in
+\cref{alg:ptrace}.
+\begin{alg}[Partial trace]\label{alg:ptrace}
+  Let $a$ be the qubit to be traced out. First, call \verb|get_state_type| (cf.
+  \cref{alg:get_state_type}) and add its return value to \verb|mix|. Then, move
+  column $a$ to $N$ by means of transposition. Next, call rowreduce on column
+  $N$. Finally, decrement $N$ by 1.
+\end{alg}
+%\begin{figure}[H]
+%  \centering
+%  \input{fig/tikz/ptrace.tex}
+%  \caption{flowchart for ptrace algorithm}
+%  \label{fig:ptrace-dig}
+%\end{figure}
 
-\subsubsection{\texttt{project\_or\_mix}}
+\subsection{Classical control of mixedness}
+The last point we want to discuss is the control we wield over the quantum
+simulation and the possible algorithms we can conceive to artificially
+introduce mixedness to our system. The algorithms used in
+\cref{sec:naive-approach,sec:maximal-mixing,sec:minimal-mixing} were realized
+by selectively choosing the appropriate qubits to be cast to a mixed state.
 
-
-\subsection{sample flowchart!}
-delete this subsection later!
-\begin{figure}[H]
-  \centering
-  \input{fig/tikz/example.tex}
-  \caption{dings}
-  \label{fig:asdf}
-\end{figure}
+%\subsection{sample flowchart!}
+%delete this subsection later!
+%\begin{figure}[H]
+%  \centering
+%  \input{fig/tikz/example.tex}
+%  \caption{dings}
+%  \label{fig:asdf}
+%\end{figure}

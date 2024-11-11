@@ -13,16 +13,16 @@ to obtain an upper bound on the entanglement entropy via classical
 post-processing.
 
 \section{The Idea \& Stabilizers}
-Hier Klein's Inequality (mit Herleitung), Interpretation von KL-Divergence und
+Hier Klein's inequality (mit Herleitung), Interpretation von KL-Divergence und
 Cross Entropy.
 
 In this section we will introduce the upper bound on entanglement entropy,
-provide an information theoretic interpretation and derive an expression for
+provide an information-theoretic interpretation and derive an expression for
 the quantity of interest in case of stabilizer states. First however, we will
 freshen up on definitions of some important quantities.
 \subsubsection{Entropy of entanglement}
 The main quantity of interest in the whole field of entanglement transitions is
-the entropy of entanglement. It is a measure how entangled one subsystem of a
+the entropy of entanglement. It is a measure for how entangled one subsystem of a
 bipartite state $\ket{\phi}_{AB}$ is with the other. We recall from
 \cref{sec:ent-trans} that its definition can be stated as follows
 \cite{fattalEntanglementStabilizerFormalism2004}.
@@ -40,11 +40,10 @@ This quantity can be efficiently computed in clifford circuits via the
 stabilizer formalism. It is important to note that the density matrix of the
 whole system $\rho = \dyad{\phi}$ describes a pure state. For a more universal
 measure of entropy, where the entropy of entanglement is a special case, we
-need to consider the more general \emph{Von Neumann entropy}.
+need to consider the more general \emph{von Neumann entropy}.
 \subsubsection{Von Neumann entropy}
-Similar in appearance, but nonetheless quite different is the Von Neumann
-entropy. It lets us quantify the average information content in a mixture of
-quantum states. Originally, Von Neumann introduced it as an extension of the
+The von Neumann entropy lets us quantify the average information content in a mixture of
+quantum states. Originally, von Neumann introduced it as an extension of the
 classical Shannon entropy to quantum systems, as density matrices serve as
 extension of the classical notion of (discrete) probability distributions
 \cite{vonneumannMathematischeGrundlagenQuantenmechanik1968}.\footnote{Shannon
@@ -53,9 +52,9 @@ extension of the classical notion of (discrete) probability distributions
   probability $p_x$, we can write down an average, $S = \expval{-\log p_x}_x =
   -\sum_x p_x \log p_x$, which defines the Shannon entropy
 \cite{shannonMathematicalTheoryCommunication1948}.} 
-Consequently, we can write down a definition of the Von Neumann entropy.
+Consequently, we can write down a definition of the von Neumann entropy.
 \begin{defn}[Von Neumann entropy]\label{defn:vonneumann}
-  Let $\rho$ be an $N$-qubit density matrix. The Von Neumann entropy of $\rho$
+  Let $\rho$ be an $N$-qubit density matrix. The von Neumann entropy of $\rho$
   is given by
   \begin{align}\label{eq:entropy-vn}
     S\left(\rho\right) \equiv \expval{-\log \rho} = -\Tr[\rho\log\rho]
@@ -73,7 +72,7 @@ logarithm of a diagonal matrix is just the logarithm of the entries.
 
 From this definition we can already derive some important properties, namely
 its lower and upper bound. Firstly, $S(\rho)$ is non-negative and $0$ iff.
-$\rho$ is pure. It is easy to convince onself of that fact; for pure states we
+$\rho$ is pure. It is easy to convince oneself of that fact; for pure states we
 have $\rho = \dyad{\phi}$, which has only one non-zero eigenvalue, $\lambda =
 1$. Consequently, \cref{eq:entropy-vn-sum} reduces to $S(\rho) = - 1\cdot\log 1
 =0$.  Next, $S(\rho)$ is maximal for the maximally mixed state. In a
@@ -93,7 +92,7 @@ Lastly, we want to introduce the quantum relative entropy.
 %Lost in the sense that if one assumes $q_x$ as the probability distribution
 %over some sample space, where 
 The same way we
-motivated the Von Neumann entropy, we want to define a quantum mechanical
+motivated the von Neumann entropy, we want to define a quantum mechanical
 analogue to the classical relative entropy. This quantity will play a role of
 major importance in this chapter and is defined as follows.
 \begin{defn}[Quantum relative entropy]\label{defn:rel-ent}
@@ -104,7 +103,7 @@ major importance in this chapter and is defined as follows.
     S\left(\rho\mid\mid\sigma\right) \equiv \Tr[\rho\log\rho] -
     \Tr[\rho\log\sigma] = -S(\rho) - \Tr[\rho\log\sigma]
   ,\end{align}
-  with the Von Neumann entropy $S(\rho)$.
+  with the von Neumann entropy $S(\rho)$.
   The last term in \cref{eq:rel-ent-defn}, that is, $\Tr[\rho\log\sigma]$ is also
   known as \emph{cross entropy}. 
 \end{defn}
@@ -130,13 +129,13 @@ This condition can be interpreted in a physical way. Let
   \rho = \sum_i \lambda_i \dyad{\lambda_i} \quad{\text{and}} \quad
   \sigma = \sum_i \mu_i \dyad{\mu_i}
 \]
-be orthonormal eigendecomposition of $\rho$ and $\sigma$.
+be orthonormal eigendecompositions of $\rho$ and $\sigma$.
 Then $S(\rho\mid\mid\sigma)$ diverges iff. there are states that $\rho$
 features in its mixture that $\sigma$ doesn't. That is, $\rho$ has to be more
-mixed than -- or at least as mixed as -- $\sigma$. If it is as mixed as
+mixed than, or at least as mixed as, $\sigma$. If it is as mixed as
 $\sigma$, it has to be a mixture of the same states. This means that the
 information lost under the assumption of a purer state is infinite.
-Since we know the Von Neumann entropy to be bounded, this divergence occurs
+Since we know the von Neumann entropy to be bounded, this divergence occurs
 solely in the $-\Tr[\rho\log\sigma]$ term. 
 
 One property hinted at earlier is the non-negativity of the relative entropy.
@@ -144,14 +143,15 @@ This property goes by many different names, depending on context. For instance,
 in classical statistical mechanics, this result is known as the \emph{Gibbs
 inequality}. Its quantum mechanical analog is also known as \emph{Klein's
 inequality}.
-\subsection{Klein's Inequality}
+\subsection{Klein's inequality}
 In this section we will state and prove the relation central to this chapter.
 Its statement reads as follows.
-\begin{thm}[Klein's Inequality]\label{thm:kleins-ineq}
+\begin{thm}[Klein's inequality]\label{thm:kleins-ineq}
   The quantum relative entropy is non-negative, $S(\rho\mid\mid\sigma)\geq 0$, with equality iff.
   $\rho=\sigma$.
 \end{thm}
-While the statement in itself is rather simply written out, proving it requires
+While the statement in itself is written out rather simply, proving
+\cref{thm:kleins-ineq} requires
 us to introduce two auxilliary relations, namely \emph{Jensen's inequality} and
 the \emph{log sum inequality}.
 %Before we can go about proving \cref{thm:kleins-ineq}, we first need to
@@ -274,8 +274,8 @@ since we have
   S(\rho \mid\mid \sigma) \geq 0 \Leftrightarrow -\Tr[\rho\log\sigma]\geq
   S\left( \rho \right) 
 \end{align}
-with the relative and Von Neumann entropy $S(\rho\mid\mid\sigma)$ and
-$S(\rho)$ respectively. Since the Von Neumann entropy is a more general form of
+with the relative and von Neumann entropy $S(\rho\mid\mid\sigma)$ and
+$S(\rho)$ respectively. Since the von Neumann entropy is a more general form of
 the entanglement entropy, we can employ Klein's inequality to upper bound the
 entanglement entropy as well and thus try to find a signature of the phase
 transition.
@@ -560,7 +560,7 @@ It turns out that we can.
 %the vibe of \emph{this section}.
 %
 
-\section{Na\"ive approach}
+\section{Na\"ive approach}\label{sec:naive-approach}
 The key idea of the upper bound is to have a quantity that is linear in $\rho$.
 By obtaining a measurement record $\vb{m}$, we can try and classically
 reconstruct the experimental density matrix $\rho$ from the record. Since we
@@ -608,7 +608,7 @@ Hier auch auf jeden Fall n Plot mit dem naive approach drin
      simulations will end in $\infty$ for \cref{eq:kleins-ineq}. 
 \end{itemize}
 
-\section{Other Approaches}
+\section{Other Approaches}\label{sec:other-approaches}
 \begin{itemize}
   \item Naive approach fails because of errors, which cannot be detected by
     construction
@@ -630,7 +630,7 @@ Hier auch auf jeden Fall n Plot mit dem naive approach drin
   \item in the following sections we explore some approaches to modify the
     projection operation to incorporate mixedness
 \end{itemize}
-\subsection{Maximal Mixing}
+\subsection{Maximal Mixing}\label{sec:maximal-mixing}
 \begin{itemize}
   \item the first approach is what we'd call \emph{maximal mixing}.
   \item The maginot line of no errors occuring is still a factor. However, each
@@ -645,7 +645,7 @@ Hier auch auf jeden Fall n Plot mit dem naive approach drin
   \item when introducing errors, we lose this feature and start to become more
     inaccurate.
 \end{itemize}
-\subsection{Minimal Mixing}
+\subsection{Minimal Mixing}\label{sec:minimal-mixing}
 \begin{itemize}
   \item We would like to compare $\rho$, which is the \enquote{experiment}
     (i.e. a quantum simulator), with $\sigma$, which is the classical

@@ -25,6 +25,130 @@ results.lxs.se++;
 }
 \end{lstlisting}
 
+\verb|C++| code for the \verb|entropy_vn| function, computing the von Neumann
+entropy.
+\begin{lstlisting}[caption=\texttt{entropy\_vn} function in the simulator,
+label={lst:entropy-vn-cpp}, language=C++]
+int Qubits::entropy_vn() {
+    return mix;
+}
+\end{lstlisting}
+
+\verb|C++| code for the \verb|is_subgroup_of| function.
+\begin{lstlisting}[caption=\texttt{is\_subgroup\_of} function in the simulator,
+label={lst:is-subgroup-of-cpp}, language=C++]
+      bool Qubits::is_subgroup_of(Qubits& other) {
+          if (other.N != N || other.mix > mix) return false;
+
+
+          // Signs
+          BYTE* comb_r = new BYTE[(2*N+1+7)/8];
+
+          for (int i=0; i<(2*N+1+7)/8; i++)
+              comb_r[i] = 0;
+
+          for (int g = 0; g<N-other.mix; g++) {
+              set_bit(comb_r,g,get_bit(other.r,2*g));
+          }
+          for (int g = N; g<2*N-mix; g++) {
+              set_bit(comb_r,g,get_bit(this->r,2*(g-N)));
+          }
+
+
+          // Table
+          int Nb = (2*N+1+7)/8; // N X stabilizer, N Z stabilizer
+
+          BYTE* loc_buf = new BYTE[2*N*Nb];
+          for (int i=0; i<2*N*Nb; i++) loc_buf[i]=0;
+          // 2N rows, since we're comparing two stabilizer matrices
+          BYTE** local = new BYTE*[2*N];
+          for (int r=0; r<2*N; r++) {
+              local[r] = loc_buf+Nb*r;
+          }
+          for (int i=0; i<2*N; i++) {
+              for (int j=0; j<((2*N+1)+7)/8; j++)
+                  local[i][j] = 0;
+          }
+
+          for (int c=0; c<N; c++) { // fill columns
+              for (int r=0; r<N-other.mix; r++) { // fill rows 1-N with other
+                  set_bit(local[r],2*c,other.has(X,c,2*r));
+                  set_bit(local[r],2*c+1,other.has(Z,c,2*r));
+              }
+              for (int r=N; r<2*N-mix; r++) { // fill rows N+1-2N with this
+                  set_bit(local[r],2*c,this->has(X,c,2*(r-N)));
+                  set_bit(local[r],2*c+1,this->has(Z,c,2*(r-N)));
+              }
+          }
+
+
+            int R=0;
+            for (int c=0; c<2*N; c++) {
+
+#if DEBUG_ES
+                /* print_bit_matrix(local,N,2*n); */
+#endif
+
+                // Find pivot
+                bool pivot = true;
+                for (int r=R; r<2*N; r++) {
+                    if (get_bit(local[r],c)) {
+                        // Swap pivot to top
+                        if (pivot && r<N) {
+                            swap_rows(local,R,r);
+                            swap_bits(comb_r,R,r);
+                            pivot = false;
+                        }
+                        // pivot should never be on the bottom,
+                        // since it is then no longer a subgroup
+                        else if (pivot && r>=N) {
+                            return false;
+                        }
+                        // Zero column below pivot
+                        else {
+                            add_row_to(local,Nb,R,r);
+                            // XOR the bit at position r in comb_r[r] with the bit at position R in comb_r[R]
+                            comb_r[r / 8] ^= ((comb_r[R / 8] >> (R % 8)) & 1) << (r % 8);
+                        }
+                    }
+                }
+                if (!pivot) R++;
+            }
+            // check that there is no hanging sign anywhere
+            // This would be the case if the groups matched perfectly up to
+            // sign differences
+            for (int i=N; i<2*N-mix; i++) {
+                if (get_bit(comb_r, i)) return false;
+            }
+
+            return true;
+
+
+            delete[] comb_r;
+            delete[] local;
+            delete[] buf;
+
+      }
+\end{lstlisting}
+
+\verb|C++| code for the \verb|cross_entropy| function.
+\begin{lstlisting}[caption=\texttt{cross\_entropy} function in the simulator,
+label={lst:cross-entropy-cpp}, language=C++]
+double Qubits::cross_entropy(Qubits& other) {
+    if (!(this->is_subgroup_of(other))) return std::numeric_limits<double>::quiet_NaN();
+    else return (double) mix;
+}
+\end{lstlisting}
+
+\verb|C++| code for the \verb|relative_entropy| function.
+\begin{lstlisting}[caption=\texttt{relative\_entropy} function in the simulator,
+label={lst:relative-entropy-cpp}, language=C++]
+double Qubits::relative_entropy(Qubits& other) {
+    if (!(this->is_subgroup_of(other))) return std::numeric_limits<double>::quiet_NaN();
+    else return (double) mix - other.mix;
+}
+\end{lstlisting}
+
 \verb|C++| code for the \verb|get_state_type| function.
 \begin{lstlisting}[caption=\texttt{get\_state\_type} function in the simulator,
 label={lst:get-state-type-cpp}, language=C++]

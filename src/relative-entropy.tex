@@ -384,8 +384,10 @@ of a density matrix to the stabilized subspace.
 
   \enquote{$\Rightarrow$} Let $V_{S,\rho} = \mathrm{supp}(\rho) \subseteq
   \mathrm{supp}(\sigma) = V_{S,\sigma}$. 
-
-  \begin{figure}[htpb]
+  For the proof of this direction, consider the relations between the subspaces
+  of the $N$-qubit Hilbert space $H^{\otimes N}$ outlined in the following
+  diagram.
+  \begin{figure}[h]
     \centering
   \begin{tikzpicture}
   \matrix (m) [matrix of math nodes,row sep=3em,column sep=4em,minimum width=2em]
@@ -399,7 +401,7 @@ of a density matrix to the stabilized subspace.
   \end{tikzpicture}
 \end{figure}
 
-  We can read above diagram as follows: From the $N$-qubit Hilbert space we can
+  We can read the diagram as follows: From the $N$-qubit Hilbert space we can
   project onto the vector space stabilized by $S_\sigma$, $V_\sigma$, by means of a
   projection operator. Likewise we can do the same for $V_\rho$. Since we
   require $V_{S,\rho} \subseteq V_{S,\sigma}$, the same projection that takes
@@ -442,84 +444,254 @@ of a density matrix to the stabilized subspace.
 \end{proof}
 We have thus shown that that the condition for finite values of the relative
 entropy is equivalent to a simple statement about the group structure of the
-respective stabilizer groups. Furthermore, we know from
+respective stabilizer groups. Furthermore, we know from 
 \cite{fattalEntanglementStabilizerFormalism2004} that the entropy of
 entanglement can be expressed in a simple way through group properties.
-We'd like to hope that this is also the case for 
+We'd like for this to also be the case for other entropic quantities,
+especially the cross and relative entropy, which are our main concern.
+
+It turns out that one can indeed derive expressions for the cross and relative
+entropy that put these information-theoretic quantities in a relation with
+abstract group properties. Confer with
+\cref{thm:cross-ent-stab,col:rel-ent-stab} for the precise statements. The
+resulting expressions are remarkable in their simplicity, as well as their
+similarity to each other and to previous results. As a warm-up for the proofs
+of \cref{thm:cross-ent-stab,col:rel-ent-stab} we will derive an expression for
+the von Neumann entropy in the stabilizer formalism first. This will also aid
+in the derivation of the expression for relative entropy, since it is a
+difference of the cross and von Neumann entropy.
+
+\begin{lem}[Von Neumann entropy -- stabilizers]\label{lem:vn-ent-stab}
+  Let $\rho$ be an $N$-qubit stabilizer density matrix with stabilizer group
+  $\mathcal{S}_\rho$ and rank $\abs{\mathcal{S}_\rho} \equiv r$. Then
+  \begin{align}
+    S\left( \rho \right) = N - r
+  .\end{align}
+\end{lem}
+\begin{proof}
+  Let $\mathcal{S}_\rho$ be an $N$-qubit stabilizer group of rank $r$ with
+  corresponding density matrix $\rho$.
+
+  By \cref{defn:vonneumann}, or \cref{eq:entropy-vn-sum} in particular, we have
+  \begin{align}\label{eq:entropy-vn-sum-proof}
+    S\left( \rho \right) = -\Tr[\rho\log\rho] = -\sum_k \lambda_k \log
+    \lambda_k
+  .\end{align}
+  Thus, we need to diagonalize, i.e. find the eigenvalues $\lambda_k$ of
+  $\rho$.
+
+  Since $\rho$ is a stabilizer density matrix, it can -- up to a constant
+  multiple -- also be written as a
+  product of projectors onto the $+1$ eigenspaces of group generators
+  \begin{align}
+    \rho = \frac{1}{2^N} \prod_{i=1}^r (\mathds{1} + g_i) = 2^{r-N} \mathbb{P}_\rho
+  .\end{align}
+  Knowing that projections are diagonalizable with eigenvalues of either $0$ or
+  $1$, we know that the diagonal form of $\rho$ is the diagonal form of
+  $\mathbb{P}_\rho$ with a constant multiple $2^{r-N}$, that is\footnote{Note that
+    the bottom right entry need not be zero. This specific choice was made for
+  illustratory purposes.}
+  \begin{align}
+    D_\rho = 2^{r-N} \mqty(\dmat{1,\ddots,0})
+  .\end{align}
+  With $\Tr[\rho] = 1$ it follows that the eigenvalues of $\rho$ must be
+  $\lambda_k = 2^{r-N}$ for $k =1,\ldots,2^{N-r}$ and
+  $\lambda_k = 0$ for all other $k$.
+  Inserting this back into \cref{eq:entropy-vn-sum-proof} yields
+  \begin{align*}
+    S\left( \rho \right) 
+      &= -\sum_{k=1}^{2^N} \lambda_k \log \lambda_k 
+      = -\sum_{k=1}^{2^{N-r}} 2^{r-N} \log 2^{r-N} 
+      = -2^{N-r} 2^{r-N} \log 2^{r-N} 
+      = -\log 2^{r-N} \\
+      &= N-r
+  .\end{align*}
+\end{proof}
+The expression of the von Neumann entropy is not only interesting going
+forward, e.g. in the derivation of the relative entropy, but also from a group
+theoretic perspective. That is, it should be noted that by asking an
+information-theoretic question, we got a group theoretic answer. Let us
+convince ourselves that it is a reasonable one, by testing it on our intuition
+on entropy.
+
+With $N$ qubits we have a generating set of size $N$, at most. In the case
+where we have $N$ generators, the state associated with the stabilizer group is
+a pure state, and the entropy should be $0$, which is the case for $r=N$. For
+the maximally mixed state, the generating set is the empty set and the
+stabilizer group the trivial group. In accordance to our expectations, this
+should yield $\log(2^N)= N$ for the von Neumann entropy. Indeed, since the size of
+the empty set is $0$, we have that $r=0$ and thus $S(\rho) = N$.
+
+Removing one generator thus increases entropy by $1$, or put differently,
+starting from the empty set and adding generators to it decreases entropy by
+$1$ for each generator added. This too should come to no surprise, as we know
+that for each generator removed (added) from a full set of stabilizers, we
+double (halve) the stabilized state space, effectively creating (purifying) a
+perfect mixture of stabilized states.
+
 \begin{thm}[Cross entropy -- stabilizers]\label{thm:cross-ent-stab}
   Let $\rho$ and $\sigma$ be $N$-qubit stabilizer density matrices with
-  respective stabilizer groups $S_\rho$ and $S_\sigma$, where $\abs{S_\sigma}
-  \equiv s$. Then
-  \begin{align}
+  respective stabilizer groups $S_\rho$ and $S_\sigma$ that satisfy $S_\sigma \leq
+  S_\rho$. Further, let $\abs{S_\sigma} \equiv s$. Then
+  \begin{align}\label{eq:cross-ent-stab}
     -\Tr[\rho\log\sigma] = N - s
   .\end{align}
 \end{thm}
 
+\begin{proof}
+   Let $\mathcal{S}_\rho$ and $\mathcal{S}_\sigma$ be $N$-qubit stabilizer
+   groups that satisfy $\mathcal{S}_\sigma \leq \mathcal{S}_\rho$. Their
+   respective density matrices can be written as
+   \begin{align}
+     \rho = \frac{1}{2^N} \prod_{i=1}^r (\mathds{1} + g_i) \quad{\text{and}}
+       \quad \sigma \frac{1}{2^N} \prod_{i=1}^s (\mathds{1} + h_i)
+   \end{align}
+   with $r \equiv \abs{\mathcal{S}_\rho}$ and $s \equiv
+   \abs{\mathcal{S}_\sigma}$. Since we require $\mathcal{S}_\sigma \leq
+   \mathcal{S}_\rho$, we can construct a generating set $G_\sigma$ of
+   $S_\sigma$, where each element of $G_\sigma$ commutes with the generating
+   set of $G_\rho$. Note that the generating sets are not necessarily
+   identical. However, since $\mathcal{S}_\sigma$ is by construction a subgroup
+   of $\mathcal{S}_\rho$, which in turn is an abelian subgroup of
+   $\mathcal{P}_N$, all elements of $\mathcal{S}_\sigma$ commute with all elements of
+   $\mathcal{S}_\rho$. It follows that the density matrices themselves also
+   commute, i.e.
+   \begin{align}
+      \left[\rho, \sigma\right] = 0
+   .\end{align}
+   It is a well-known fact from linear algebra and functional analysis that
+   commuting operators share a common eigenbasis and can be diagonalized
+   simultaneously. We therefore write $\rho = UD_\rho U^{-1}$ and $\sigma =
+   UD_\sigma U^{-1}$. We also have that the logarithm of a diagonalizable
+   matrix is \cite{hallElementaryIntroductionGroups2000}
+   $$\log \sigma = U \log D_\sigma U^{-1}$$. Consequently,
+   \begin{align}
+      -\Tr[\rho \log\sigma] = -\Tr[U D_\rho U^{-1} U \log D_\sigma U^{-1}] =
+      -\Tr[D_\rho \log D_\sigma] 
+   .\end{align}
+   With $D_\rho$ and $D_\sigma$ diagonal we can write the trace as
+   \begin{align}\label{eq:the-sum}
+      -\Tr[D_\rho \log D_\sigma] = -\sum_k \lambda_k \log \mu_k
+   \end{align}
+   with the eigenvalues $\lambda_k$ and $\mu_k$ of $\rho$ and $\sigma$,
+   respectively.
+
+   As we know from the previous proof, $\lambda_k = 2^{r-N}$ for
+   $k=1,\ldots,2^{N-r}$ and $0$ otherwise, and analogously, $\mu_k = 2^{s-N}$
+   for $k=1,\ldots,2^{N-s}$ and $0$ otherwise. Note that the subgroup condition
+   implies that $r\geq s$. This ensures that to every non-zero entry in
+   $D_\rho$ there is a corresponding non-zero entry in $D_\sigma$. In other
+   words, for all $k$, $\lambda_k \neq 0 \Rightarrow \mu_k \neq 0$. More
+   importantly for us, however, is the contrapositive, $\mu_k = 0 \Rightarrow
+   \lambda_k = 0$, which tells us that any divergence that could possibly occur
+   in the logarithm gets intercepted by a leading factor of $0$.
+
+   Inserting this into the sum in \cref{eq:the-sum} we get
+   \begin{align}
+      -\sum_i 2^{r-N} \log 2^{s-N} =
+      -2^{N-r}2^{r-N}\left(s-N\right)= N-s
+   ,\end{align}
+   which finishes the proof.
+\end{proof}
+
+Although \cref{thm:cross-ent-stab,eq:cross-ent-stab} are in dire need to be
+discussed, we do not want to fail to mention that the relative entropy between
+two stabilizer density matrices follows as a corollary.
+
 \begin{cor}[Relative entropy -- stabilizers]\label{col:rel-ent-stab}
   Let $\rho$ and $\sigma$ be $N$-qubit stabilizer density matrices with
   respective stabilizer groups $S_\rho$ and $S_\sigma$, where $\abs{S_\rho}
-  \equiv r$ and $\abs{S_\sigma} \equiv s$. The relative entropy of $\rho$ to
-  $\sigma$ then reads
+  \equiv r$ and $\abs{S_\sigma} \equiv s$. If $\mathcal{S}_\sigma \leq
+  \mathcal{S}_\rho$ then the relative entropy of $\rho$ to
+  $\sigma$ is
   \begin{align}
     S\left(\rho\mid\mid\sigma\right) = r - s
   .\end{align}
 \end{cor}
 
-This begs the question: Can we derive a simple expression for relative entropy
-in the case of $\rho$ and $\sigma$ being stabilizer density matrices?
-It turns out that we can.
+\begin{proof}
+  Let $\rho$ and $\sigma$ be density matrices satisfying the stated
+  requirements, $\mathcal{S}_\sigma \leq \mathcal{S}_\rho$ in particular. From \cref{defn:rel-ent},
+  or more precisely \cref{eq:rel-ent-defn}, we have
+  \begin{align}
+    S\left( \rho\mid\mid\sigma \right) = -S\left( \rho \right)
+    -\Tr[\rho\log\sigma]
+  .\end{align}
+  Inserting our results from \cref{lem:vn-ent-stab,thm:cross-ent-stab} yields
+  \begin{align}
+    -S\left( \rho \right) -\Tr[\rho\log\sigma] = -(N-r) + N - s = r - s
+  .\end{align}
+\end{proof}
 
-\begin{itemize}
-  \item $\rho$ and $\sigma$ are both stabilizer density matrices
-  \item We have a finite cross entropy iff. $S_\sigma \leq S_\rho$
-  \item Stabilizer density matrices can be written as a product of projectors
-    onto their generators, i.e.
-    \begin{align}
-    \rho = \frac{1}{2^N}\prod_{i=1}^r \left(\mathds{1} + g_i\right)
-    ,\end{align}
-    with $r\leq N$.
-  \item Since $S_\sigma \leq S_\rho$, we can construct a generating set
-    $G_\sigma$ of $S_\sigma$, where each element of $G_\sigma$ commutes with
-    the generating set of $G_\rho$.
-  \item Since the respective density matrices are constructed from the group
-    generators, it follows that
-    \begin{align}
-      \left[\rho, \sigma\right] = 0
-    .\end{align}
-  \item It is a well-known fact from linear algebra that matrices that commute
-    can be diagonalized simultaneously. A less-known fact is that the matrix
-    log of a diagonalizable matrix is $\log\sigma = U \log D_\sigma U^{-1}$. We
-    thus get
-    \begin{align}
-      -\Tr[\rho \log\sigma] = -\Tr[U D_\rho U^{-1} U \log D_\sigma U^{-1}] =
-      -\Tr[D_\rho \log D_\sigma] 
-    .\end{align}
-  \item With $D_\rho$ and $D_\sigma$ diagonal we can write the trace as
-    \begin{align}
-      -\Tr[D_\rho \log D_\sigma] = -\sum_i \lambda_i \log \mu_i
-    .\end{align}
-  \item $\lambda_i$ will be uniformly distributed ($\rho$ stabilizer), and thus
-    $\lambda_i = 2^{r-N}$ for $i=1,\ldots,2^{N-r}$ and $0$ otherwise.
-  \item Each non-zero entry in $D_\rho$ corresponds to a non-zero entry in
-    $D_\sigma$. 
-  \item The sum then becomes
-    \begin{align}
-      -\sum_i 2^{r-N} \log 2^{r'-N} \mathds{1} =
-      -2^{N-r}2^{r-N}\left(r'-N\right)= N-r'
-    .\end{align}
-  \item As a corollary we have a form for relative entropy in the stabilizer
-    formalism
-    \begin{align}
-      S(\rho \mid\mid \sigma) = r - r'
-    ,\end{align}
-    where $r$ is the rank of $S_\rho$ and $r'$ is the rank of $S_\sigma$.
-  \item The pertinent inequality for our problem, \cref{eq:kleins-ineq}, now
-    becomes
-    \begin{align}
-      S_E \leq N-r'
-    .\end{align}
-\end{itemize}
+%What are the information-theoretic implications of \cref{thm:cross-ent-stab}?
+Notice that although it is defined as a quantity relating $\rho$ to $\sigma$,
+there is no explicit dependence of $\rho$ in \cref{eq:cross-ent-stab}.
+What \cref{thm:cross-ent-stab} seems to imply is that the cross entropy between two stabilizer
+density matrices $\rho$ and $\sigma$ just amounts to the von Neumann entropy of
+$\sigma$. However, this is where one needs to be careful. While the resulting
+numerical value is entirely dependent on $\sigma$ and its stabilizer group
+alone, we have an implicit dependence through the requirement that
+$\mathcal{S}_\sigma \leq \mathcal{S}_\rho$. Since we were able to show that the
+cross entropy is infinite in the converse case (cf. \cref{prop:subgroup}), we
+could add the $\rho$ dependence back in, i.e.
+\begin{align}
+  -\Tr[\rho\log\sigma] = \begin{cases}
+    N - \abs{\mathcal{S}_\sigma} &\quad{\mathcal{S}_\sigma \leq
+    \mathcal{S}_\rho}\\
+      \infty &\quad{\mathcal{S}_\sigma \not\leq \mathcal{S}_\rho}
+  \end{cases}
+.\end{align}
+This detail will be important later on, as we try to avoid explicit
+dependences on $\rho$, which would take us back to the sampling problem.
 
+The independence of $\rho$ in the first case, however, is still quite a
+remarkable result. Let's examine the expression and convince ourselves that
+this simplicity is no accident. Consider the information-theoretic implication
+of \cref{eq:cross-ent-stab}. For the cross entropy to have a finite value, 
+
+\textcolor{red}{Something something, cross entropy independent of $\rho$,
+  essentially the von neumann entropy of $\sigma$, which is, dare I say,
+rather trivial compared to what one expects from a logarithmic quantity}
+
+With the mathematics out of the way, let us not lose sight of the physical
+implications of these statements and why we went through deriving these
+expressions. Our ultimate goal is an upper bound on the half-system
+entanglement entropy, $S_E\left( \rho \right)$,\footnote{Here, $\rho$ refers to
+  the reduced density matrix of half the system, where the entire system is in
+the pure state $\ket{\phi}$} which can be derived
+from \cref{eq:kleins-ineq}. With that, we try to detect a signature of the
+critical point of the phase transition found by classical simulations. Recall
+that
+the half-system entanglement entropy is non-linear in the density matrix, that
+is, it is an observable of the state itself, requiring exponentially many
+copies of the same state. Therefore, it is infeasible, and practically
+impossible, to perform measurements of the entanglement entropy. However, if we
+apply \cref{eq:kleins-ineq} we can at least obtain an upper bound, $S_E\leq
+-\Tr[\rho\log\sigma]$. The
+choice of $\sigma$ has some degree of arbitraryness; as long as
+$\mathrm{supp}\left( \rho \right) \subseteq \mathrm{supp}\left( \sigma \right)$
+we get a finite upper bound, and even have equality if $\rho = \sigma$.
+But this is not the whole picture. It stands to
+reason that we \emph{should} be picky with our choice of $\sigma$ and be
+consistent with it. In particular, we ideally would like to 
+relate $\sigma$ to the experimentally obtained state $\rho$ in some way or
+another. This can be done by classically reconstructing $\rho$ by means of
+projecting the measurement outcomes from the record $\mathbf{m}$.
+Then, by tracing out half of the system, we obtain some $\sigma$, which we can
+use in the upper bound. The classical post-processing of the measurement record
+requires us to efficiently simulate the system, as well as to be able to
+project onto specific outcomes. To this end, we prefer to use stabilizer
+simulations, as they allow the efficient simulation and post-processing of our
+system. With \cref{thm:cross-ent-stab} we now additionally have an efficient
+method of computing the upper bound to the entanglement entropy, such that the
+inequality becomes
+\begin{align}
+  S_E \leq N-s
+.\end{align}
+
+The following sections therefore pertain to the various possible
+post-processing algorithms one might make use of, starting with the obvious (or
+naive) choice: complete classical reconstruction without further intervention.
 %\subsection{Shadow Tomography}
 %these papers are cited in
 %\cite{garrattProbingPostmeasurementEntanglement2023} for shadow tomography:

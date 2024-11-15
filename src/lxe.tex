@@ -24,6 +24,54 @@ specifically apply it to the projective transverse-field Ising model (PTIM). We
 will first go over the definition and some properties before moving on to the
 computation of the linear cross entropy and the numerical implementation. We
 further discuss some interesting features
+
+Ich bin aktuell recht unzufrieden mit der strutkur. besserer roter faden ist
+vielleicht:
+\begin{enumerate}
+  \item The idea \& stabilizers
+  \item application to default PTIM
+
+    hier numerik & methoden im default case ohne fehler, dann erster plot mit
+    verschiedenen system sizes
+
+  \item faulty gates
+
+    wir haben gesehen, dass das ziemlich gut aussieht im default case, aber wie
+    robust ist die im bezug auf fehler
+    
+    Fehlermodell aus \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024}
+    
+    wie sieht das dann in der linear cross entropy aus? neuer circuit, aber
+    measurement record aus altem
+
+    Da gibts ja dann auch neue mechanismen, die rudiment\"are upper bound kann
+    auch hier gezogen werden.
+
+    plots mit $X$ errors, $ZZ$ errors und beide (am besten in eine figure)
+
+    dann plots mit der ancilla entropy, weil dann sieht man was mit dem
+    kritischen punkt passiert
+  \item tracking only one kind of measurement
+
+    wir haben gesehen, dass die ziemlich crap ist, sobald fehler involviert
+    sind. kann man aber sonst irgendwie utility aus der LXE ziehen? Bzw, hier
+    mit der gruppenstruktur argumentieren
+
+    hier das mit der independent random variable, dann wie das ganze
+    implementiert wird in der simulation. 
+
+    dann ist der richtige zeitpunkt f\"ur den dicken tableau plot
+\end{enumerate}
+Hoffnung ist, dass mir das dann leichter f\"allt das kapitel fertig zu bringen.
+Der Didakt in mir findet den approach wie er jetzt geplant ist ziemlich
+backwards, da passiert zu viel auf einmal und die sachen werden nicht wirklich
+gescheit nacheinander motiviert. Kurzum, der rote faden ist nicht wirklich
+erkennbar.
+
+Tradeoff ist, dass meine contributions zu dem ganzen spa\ss n bisschen
+verstreut sind auf die geplanten sections und subsections. Andererseits liest
+sich das dann deutlich angenehmer glaub ich.
+
 \section{Linear Cross Entropy \& Stabilizer}
 In this section we provide a definition for the linear cross entropy (LXE)
 $\chi$ and a detailed derivation for its computation in Clifford circuits.
@@ -142,7 +190,14 @@ simulate the PTIM with a stabilizer simulator, we will also introduce a way to
 compute the LXE in Clifford circuits, which will be implemented in the
 simulator.
 
-To find an expression for $\chi$ in Clifford circuits, we first derive an
+In \cref{eq:lxe-c-defn}, the choice of placement of the individual
+probabilities is a deliberate one. It is to highlight the fact that we are
+averaging a quantity depending on $\sigma$ over a probability distribution that
+depends on $\rho$. As a means of cirumventing the sampling problem, we'd like
+$\sigma$ to correspond to a classical simulator and $\rho$ to the experiment.
+It will therefore prove useful to examine the part dependent on $\sigma$ more
+closely, as it will later enable us to efficiently. 
+As intermediate step we first derive an
 expression for the probabilities $P\left( \mathbf{m} \mid C, \rho \right)$,
 laid out in \cref{lem:prob-traj-cliff}.
 \begin{lem}[Probability of a trajectory in measurement-only Clifford circuits]\label{lem:prob-traj-cliff}
@@ -154,6 +209,7 @@ laid out in \cref{lem:prob-traj-cliff}.
   where $N_\mathrm{rand} \leq N$ is the number of random outcomes for the
   measurement gates.
 \end{lem}
+
 \begin{proof}
 Suppose we have a Clifford circuit $C$ with $N$ measurement gates and an
 $n$-qubit initial stabilizer state $\rho$. We already
@@ -203,10 +259,10 @@ stabilizer group. If we let $g_1=M$ w.l.o.g., we have
 \begin{align}
   P\left(\mathbf{m} \mid C, \rho\right) 
   &= \Tr[ \mathbb{P}_N \cdots \mathbb{P}_i \rho ] \nonumber\\
-  &= \frac{1}{2^n}\Tr[\mathbb{P}_N \cdots \frac{1}{2} (I + M) (I + g_1)
+  &= \frac{1}{2^{n-1}}\Tr[\mathbb{P}_N \cdots \frac{1}{2} (I + M)\frac{1}{2} (I + g_1)
   \prod_{i=2}^n (I + g_i)] \nonumber\\
-  &= \frac{1}{2^n}\Tr[\mathbb{P}_N\cdots (I+M) \prod_{i=2}^n (I+g_i)] \nonumber\\
-  &= \frac{1}{2^n}\Tr[\mathbb{P}_N\cdots \mathbb{P}_{i+1} \prod_{i=1}^n
+  &= \frac{1}{2^{n-1}}\Tr[\mathbb{P}_N\cdots \frac{1}{2}(I+M) \prod_{i=2}^n (I+g_i)] \nonumber\\
+  &= \frac{1}{2^n}\TR[\mathbb{P}_N\cdots \mathbb{P}_{i+1} \prod_{i=1}^n
   (I+g_i)] \label{eq:prob-determ}
 ,\end{align}
 where we used the fact that $\mathbb{P}^2 =\mathbb{P}$. The last line of
@@ -236,7 +292,7 @@ Combining cases 1 and 2, knowing that measurements with deterministic outcomes
 don't alter the state at all, we have
 \begin{align}
   P\left(\mathbf{m} \mid C, \rho\right) 
-  &= \Tr[\frac{2}{2^{n+N_\mathrm{rand}}} \sum_{g\in\mathrm{Stab}(\rho)}
+  &= \Tr[\frac{1}{2^{n+N_\mathrm{rand}}} \sum_{g\in\mathrm{Stab}(\rho)}
   g]\nonumber\\
   &= \frac{1}{2^{N_\mathrm{rand}}} = 2^{-N_\mathrm{rand}}
 .\end{align}
@@ -247,14 +303,206 @@ don't alter the state at all, we have
 %act as identity on $\rho$. Consequently, we are left with $N_\mathrm{rand}$
 %random outcomes to measurements, each of them with probability $1/2$. 
 \end{proof}
+
 We can now use this result to find a nice expression for the linear cross
 entropy in Clifford circuits, and in particular the projective transverse-field
 Ising model.
 \begin{thm}[LXE for Clifford circuits]\label{thm:lxe-cliff}
-  Let $\rho$ and $\sigma$ be initial states for a clifford circuit $C$. 
-  
+  Let $C$ be a Clifford circuit with $N$ measurement gates and a measurement
+  record $\mathbf{m}$ obtained from a realization of $C$ with some initial
+  state $\rho$. Furthermore, let
+  $\sigma \neq \rho$ be a different state, where $\mathbf{m}'$ are all possible
+  measurement records from applying $C$ on $\sigma$. Then
+  \begin{align}\label{eq:diesesding}
+      \frac{P(\mathbf{m} |
+      C,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C,\sigma)\right)^2}
+      = \begin{cases}
+        1 & \qquad{\sigma\text{ is compatible with }C \text{ and }
+        \mathbf{m}}\\
+        0 & \qquad{\sigma\text{ is not compatible with }C \text{ and }
+        \mathbf{m}}\\
+      \end{cases}
+  .\end{align}
 \end{thm}
 
+\begin{proof}
+  We can consider two (disjoint) cases:
+  \begin{enumerate}
+    \item No projection in $C_\mathbf{m}$ is orthogonal to $\sigma$, meaning
+      that $\sigma$ is compatible with $C$ and $\mathbf{m}$.
+
+      This implies that the trace in the computation of $P\left(\mathbf{m} \mid
+      C,\sigma\right)$ will always be strictly above $0$. In fact, the
+      probability will be $2^{N_\mathrm{rand}}$, since each projection was
+      successful. Together with the fact that there are $2^{N_\mathrm{rand}}$
+      measurement gates we have
+      \begin{align}
+      \frac{P(\mathbf{m} |
+      C,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C,\sigma)\right)^2} =
+      \frac{2^{-N_\mathrm{rand}}}{\sum_{\mathbf{m}'} 2^{-2N_\mathrm{rand}}}
+      = \frac{2^{-N_\mathrm{rand}}}{2^{-N_\mathrm{rand}}} = 1
+      .\end{align}
+
+    \item At least one projection in $C_\mathbf{m}$ is orthogonal to $\sigma$,
+      meaning that $\sigma$ is not compatible with $C$ and $\mathbf{m}$.
+
+      Here we have at least one projection in $C_\mathbf{m}$, which projects
+      $\sigma$ onto the $0$-vector. Incidentally, we require \emph{exactly} one
+      projection to be orthogonal, since we then have no object that can be
+      projected to anything. Thus, the trace becomes $0$, and as a consequence
+      we have
+      \begin{align}
+      \frac{P(\mathbf{m} |
+      C,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C,\sigma)\right)^2} = 0
+      .\end{align}
+  \end{enumerate}
+\end{proof}
+
+The second case in the proof of \cref{thm:lxe-cliff} is an interesting one to
+consider, especially in the context of the PTIM. Suppose we run a PTIM circuit
+on some $n$-qubit platform with an initial state of $\ket{\phi_0} = \left( \ket{0\cdots 0} +
+\ket{1\cdots 1} \right) / \sqrt{2}$ or $\rho = \dyad{\phi_0}$. This produces a measurement record, which we
+then feed into a classical simulator with an orthogonal Bell state
+$\ket{\varphi_0} = \left( \ket{0\cdots 0} - \ket{1\cdots 1} \right) / \sqrt{2}$
+or $\sigma = \dyad{\varphi_0}$.
+There are of course other orthogonal Bell states we could choose as initial
+state for our simulator. However, these two states are additionally orthogonal
+in the logical basis. That is, if we encode information in $\ket{\phi_0}$, the
+opposite information is encoded in $\ket{\varphi_0}$. That this choice is a
+reasonable one gets even more apparent when considering generating sets of the
+respective stabilizers,
+\begin{align}\label{eq:rhosigmagenerators-lxe}
+  G_\rho = \langle X\ldots X, Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle \quad{\text{and}}
+  \quad
+  G_\sigma = \langle -X\ldots X, Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle
+.\end{align}
+Notice that they are almost identical with a different sign in front of the
+global $X$ stabilizer, implying orthogonality in the logical basis. In the
+hypothetical, measurement outcomes of $\rho$ are projected onto $\sigma$.
+Let us consider the two types of measurement, pairwise $ZZ$ and single-site
+$X$. Performing a pairwise $ZZ$ measurement is a stabilizer measurement,
+apparent from the generating sets given in \cref{eq:rhosigmagenerators-lxe}. A
+measurement thereof will (at least initially) produce deterministic measurement
+outcomes with $m = +1$. This is different for the $X$ measurements. Initially,
+an $X$ measurement will not have an outcome we can infer beforehand. This,
+however, is the case for both of them, up to a certain degree, since the
+pairwise $Z$ stabilizers anticommute with the single-site $X$ measurement. This
+also provides an explanation on why this is not always the case. If $X$
+measurements are sufficiently frequent, there will be a point where there are
+no $ZZ$ generators left, as all of them were replaced by $X$ by means of
+measuring. Consequently, subsequent measurements of $X$ are deterministic,
+which will detect the sign difference of the global $X$ stabilizer. This
+detection would correspond to the point where the initial cluster dies in the
+colored cluster model.
+
+It turns out that this is the only case for the circuit-level linear cross
+entropy to be $0$, i.e. $\chi_C = 0$. One can argue from the structure of the
+stabilizer group, or just the generating set, that any measurements producing a
+random outcome will produce a random outcome no matter what the previous
+results were.\footnote{They are \enquote{Markovian} in that sense.} For an
+outcome to be random, the measurement operator may not be contained in the
+stabilizer of the state. Conversely, for an outcome to be deterministic, the
+operator is a stabilizer. After measuring, the operator is guaranteed to be in
+the stabilizer group of the state and subsequent measurements of this operator
+produce the same result with unit probability. With the structure of the group
+changed, we also have new anticommuting measurement operators, and so on. This
+boils down to the conclusion that once the circuit $C$ is fixed, the
+\emph{type} of measurement outcome is fixed. One could tell, without knowing
+the actual outcomes to measurements, which of them were random and which were
+deterministic. As such, a given circuit, which detects the sign difference
+between $\sigma$ and $\rho$, does so in all of the runs, as deterministic
+measurement outcomes stay so regardless of the previous history. Consequently,
+the circuit-level linear cross entropy is $0$ regardless of measurement record
+$\mathbf{m}$, if $C$ contains a deterministic measurement in $X$, where the
+outcome is not given by a previous measurement, but by the sign of the initial
+global $X$ stabilizer.
+
+We will henceforth refer to this mechanism of
+the linear cross entropy going to $0$ as mechanism \textsf{A}. As a
+visualization of this mechanism, confer with \cref{fig:mechanism-a}, showing a
+minimal example of a circuit detecting the sign difference.
+
+\begin{figure}[t]
+  \centering
+  \input{fig/tikz/mechanism_a.tex}
+  \caption{Minimal example of a PTIM setup showcasing mechanism \textsf{A} with $L=2$, $T=2$, and $p\neq
+  0$. The experimental circuit is shown on the left side.
+  In this particular circuit the initial Bell cluster dies in the first measurement layer by
+measuring $X$, and thus removing the singular $ZZ$ stabilizers. 
+ The $+1$ in the box refers to the actual
+outcome of the result.
+The circuit on the right corresponds
+to the post-processing algorithm with orthogonal initial state in the logical
+basis. Here we project onto the measurement results given by the measurement
+record, represented by $\mathbb{P}(+X)$. The second projection is unsuccessful,
+since we had a sign difference initially.}
+  \label{fig:mechanism-a}
+\end{figure}
+
+The group theoretic arguments leading to mechanism \textsf{A} also give rise to
+another insight into the linear cross entropy. Since the sign difference in the
+initial states is in the global $X$ stabilizer, we can be certain of the fact
+that it must be an $X$ measurement, which failed to project, thus leading to a
+vanishing linear cross entropy. Furthermore, we argued that the type of a
+measurement (random or deterministic) is not altered by previous measurements.
+It will therefore prove useful to write the entire measurement record as
+$\mathbf{m} = \mathbf{m}_X \cap \mathbf{m}_Z$, where $\mathbf{m}_{X/Z}$ are the
+measurement records of $X$ and $ZZ$. The individual outcomes in $\mathbf{m}$
+are independent of their preceeding outcomes. It follows that $\mathbf{m}_X$
+and $\mathbf{m}_Z$ independent random variables. We could then, theoretically,
+marginalize over $\mathbf{m}_Z$ and should arrive at the same linear cross
+entropy.
+
+Let us consider what this implies mathematically to have independent random
+variables.
+Probability theory tells us that for independent random varaibles $A$ and $B$
+we have $P(A, B) = P(A)P(B)$, which gives us
+\begin{align}
+      P(\mathbf{m} | C, \rho) = P(\mathbf{m}_X \cap \mathbf{m}_Z | C, \rho) =
+    P(\mathbf{m}_X | C, \rho)\cdot P(\mathbf{m}_Z | C, \rho)
+.\end{align}
+Since 
+This spearation can then be inserted into \cref{eq:lxe-c-defn} to yield
+\begin{align}
+      \label{eq:lxe-subset}
+      \chi_C &= \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
+      C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
+      C, \sigma)\right)^2} \nonumber\\
+      \nonumber\\
+      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X \cap \mathbf{m}_Z |
+        C, \rho) \frac{P(\mathbf{m}_X \cap \mathbf{m}_Z| C,
+        \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'} \left(P(\mathbf{m}_X' \cap
+        \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
+        \nonumber\\
+      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X | C, \rho) P(
+        \mathbf{m}_Z | C, \rho) \frac{P(\mathbf{m}_X | C, \sigma) P( \mathbf{m}_Z|
+        C, \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'}
+          \left(P(\mathbf{m}_X' | C,
+        \sigma) P( \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
+        \nonumber\\
+      &= \underbrace{\frac{\sum_{\mathbf{m}_Z} P(\mathbf{m}_Z | C, \rho)
+          P(\mathbf{m}_Z | C, \sigma)}{\sum_{\mathbf{m}_Z'}
+          \left(P(\mathbf{m}_Z' |
+          C, \sigma)\right)^2}}_{\text{Subset ZZ}}
+          \underbrace{\frac{\sum_{\mathbf{m}_X} P(\mathbf{m}_X | C, \rho)
+          P(\mathbf{m}_X | C, \sigma)}{\sum_{\mathbf{m}_X'}
+          \left(P(\mathbf{m}_X' |
+          C, \sigma)\right)^2}}_{\text{Subset X}}
+\end{align}
+with the 
+
+It would therefore not make a difference if we
+would replace all projections onto $ZZ$ results to an identity. This argument
+boils down to a marginalization over $ZZ$ results, 
+This argument
+can be shown mathematically by considering the 
+\begin{align}
+  P\left( \mathbf{m} \mid C, \sigma \right) = \Tr[\mathbb{P}_N \cdots
+  \frac{1}{2} \left( \mathds{1} + ZZ \right) ]
+.\end{align}
+Thus, it would not make a difference if the
+results of $ZZ$ measurements in the circuit are projected onto $\sigma$ or if
+we 
 
 \section{Numerik \& Methoden}
 \label{sec:lxe-numeric}
@@ -265,7 +513,7 @@ Tracking hier genauer beschreiben, i guess?
 
 \section{Auswertung PTIM \& Fehler}
 \subsection{Keine Fehler}
-\subsection{Fehler}
+\subsection{Fehler}\label{sec:lxe-errors}
 \begin{itemize}
   \item Mit Fehlermodell aus \cite{tikhanovskayaUniversalityCrossEntropy2023}
     k\"onnen wir schauen wie schlecht unser experiment ist. Wenn
@@ -338,7 +586,7 @@ where the sums $\sum_\mathbf{m}$ go over measurement outcomes
 within the circuit $C$, and $\rho$ and $\sigma$ are two initial
 states. In particular, we suppose $\rho$ to be the initial state of a quantum
 simulator, with which we realize $C$, and $\sigma$ to be the initial state of a
-classical --- e.g. stabilizer --- simulation, which also realizes $C$. The
+classical -- e.g. stabilizer -- simulation, which also realizes $C$. The
 states will be chosen to be orthogonal in the logical basis 
 %$\left(\rho = \dyad{\mathrm{GHZ}+},\ \ \sigma = \dyad{\mathrm{GHZ}-}\right)$,
 but they need not necessarily be orthogonal. 
@@ -504,7 +752,7 @@ measurements
     P(\mathbf{m}_X | C, \rho)\cdot P(\mathbf{m}_Z | C, \rho) \]
   \item We can perform this separation for $\chi_C$ as well:
     \begin{align}
-      \label{eq:lxe-subset}
+      \label{eq:lxe-subset-fake}
       \chi_C &= \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
       C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
       C, \sigma)\right)^2} \nonumber\\

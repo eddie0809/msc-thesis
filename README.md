@@ -14,25 +14,25 @@ The file structure is as follows:
 ```bash
 .
 ├── bib/
-│   └── msc.bib <- This is my zotero library exported to .bib with BetterBibTeX
+│   └── msc.bib  # This is my zotero library exported to .bib with BetterBibTeX
 ├── build/
 │   └── build files, not tracked by git
 ├── fig/
 │   ├── Here are all the plots as .pdf files
 │   ├── tikz/
 │   │   └── Here are tikz figures as .tex files
-│   └── Untitled.png <- friendly figure reminding me of whats missing
+│   └── Untitled.png  # friendly figure reminding me of whats missing
 ├── include/
-│   ├── msc-thesis.sty <- layout file
-│   ├── packages.tex <- packages
-│   └── settings.tex <- settings
+│   ├── msc-thesis.sty  # layout file
+│   ├── packages.tex  # packages
+│   └── settings.tex  # settings
 ├── src/
 │   └── Here are all the chapters as individual .tex files
-├── .gitignore <- The reason you don't see the ./build/ directory here
-├── build.sh <- shell script for compilation; ./build.sh new compiles from scratch
-├── msc.pdf <- this is the output of running build.sh
-├── msc.tex <- main .tex file that gets compiled, should only contain \input{.}
-└── README.md <- The file you're looking at right now
+├── .gitignore  # The reason you don't see the ./build/ directory here
+├── build.sh  # shell script for compilation; ./build.sh new compiles from scratch
+├── msc.pdf  # this is the output of running build.sh
+├── msc.tex  # main .tex file that gets compiled, should only contain \input{.}
+└── README.md  # The file you're looking at right now
 ```
 
 ## The layout

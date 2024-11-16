@@ -17,62 +17,29 @@ gemacht hab zum zitieren. \cite{baoTheoryPhaseTransition2020}
 
 Sampling stuff aus appendix von \cite{roserDecodingProjectiveTransverse2023}
 
-As already touched upon in \cref{sec:sampling}, entanglement transitions elude
-any measurement we could perform in an experiment. In this chapter we will
-investigate a measure proposed by \citeauthor{liCrossEntropyBenchmark2023} and
-specifically apply it to the projective transverse-field Ising model (PTIM). We
-will first go over the definition and some properties before moving on to the
-computation of the linear cross entropy and the numerical implementation. We
-further discuss some interesting features
+In this chapter we examine a measure proposed by
+\citeauthor{liCrossEntropyBenchmark2023} in \cite{liCrossEntropyBenchmark2023}
+to circumvent the sampling problem. This measure is called the \emph{linear
+cross entropy} (abbreviated as LXE). Although it is a novel quantity, its properties in hybrid
+circuits, and general random circuits, have already been explored in varying
+degrees of detail. Even for the projective transverse-field Ising model (PTIM),
+a study has been conducted (cf. ref.
+\cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024}). In the present
+chapter, we will investigate the properties of the linear cross entropy in
+general and for the projective transverse-field Ising model. We will also
+evaluate its quality as an order parameter for the phase transition of the
+PTIM.
 
-Ich bin aktuell recht unzufrieden mit der strutkur. besserer roter faden ist
-vielleicht:
-\begin{enumerate}
-  \item The idea \& stabilizers
-  \item application to default PTIM
+The chapter is structured as follows. We will first introduce the quantity
+itself in \cref{sec:lxe-defn}, where we also provide a shortcut for computing
+the LXE in clifford circuits. We then investigate the behavior of it in the
+PTIM, comparing it to the entanglement entropy of an ancilla qubit attached to
+the system. Next, we introduce faulty gates to the process and examine the LXE
+for a system with errors. Lastly, we motivate the discarding of either $X$ or
+$ZZ$ measurement results with probability-theoretic arguments and evaluate the
+utility of the LXE for the different cases.
 
-    hier numerik & methoden im default case ohne fehler, dann erster plot mit
-    verschiedenen system sizes
-
-  \item faulty gates
-
-    wir haben gesehen, dass das ziemlich gut aussieht im default case, aber wie
-    robust ist die im bezug auf fehler
-    
-    Fehlermodell aus \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024}
-    
-    wie sieht das dann in der linear cross entropy aus? neuer circuit, aber
-    measurement record aus altem
-
-    Da gibts ja dann auch neue mechanismen, die rudiment\"are upper bound kann
-    auch hier gezogen werden.
-
-    plots mit $X$ errors, $ZZ$ errors und beide (am besten in eine figure)
-
-    dann plots mit der ancilla entropy, weil dann sieht man was mit dem
-    kritischen punkt passiert
-  \item tracking only one kind of measurement
-
-    wir haben gesehen, dass die ziemlich crap ist, sobald fehler involviert
-    sind. kann man aber sonst irgendwie utility aus der LXE ziehen? Bzw, hier
-    mit der gruppenstruktur argumentieren
-
-    hier das mit der independent random variable, dann wie das ganze
-    implementiert wird in der simulation. 
-
-    dann ist der richtige zeitpunkt f\"ur den dicken tableau plot
-\end{enumerate}
-Hoffnung ist, dass mir das dann leichter f\"allt das kapitel fertig zu bringen.
-Der Didakt in mir findet den approach wie er jetzt geplant ist ziemlich
-backwards, da passiert zu viel auf einmal und die sachen werden nicht wirklich
-gescheit nacheinander motiviert. Kurzum, der rote faden ist nicht wirklich
-erkennbar.
-
-Tradeoff ist, dass meine contributions zu dem ganzen spa\ss n bisschen
-verstreut sind auf die geplanten sections und subsections. Andererseits liest
-sich das dann deutlich angenehmer glaub ich.
-
-\section{Linear Cross Entropy \& Stabilizer}
+\section{Definition and properties}\label{sec:lxe-defn}
 In this section we provide a definition for the linear cross entropy (LXE)
 $\chi$ and a detailed derivation for its computation in Clifford circuits.
 
@@ -81,7 +48,7 @@ stabilizer (mit dieser projection und so)
 
 Auch verschiedene Trackings?
 
-\subsection{Definition and properties}
+\subsection{General random circuits}
 We first introduce the linear cross entropy (also abbreviated as LXE) in the
 context of general random quantum circuits. We then provide a concrete
 description and expression of the LXE for our system, the projective
@@ -182,7 +149,7 @@ suited to distinguish between the initial states $\rho$ and $\sigma$. On the
 other hand, if $\chi=0$, we have no measurement record, which is compatible
 with $\rho$ and $\sigma$ simultaneously.
 
-\subsection{LXE and the PTIM}\label{sec:lxe-for-ptim}
+\subsection{Clifford circuits and PTIM}\label{sec:lxe-for-ptim}
 Now that we have introduced the general concept of the linear cross entropy and
 defined the relevant quantities formally, we will examine it more closely in
 the context of the projective transverse-field Ising model. As we are able to
@@ -417,28 +384,113 @@ $\mathbf{m}$, if $C$ contains a deterministic measurement in $X$, where the
 outcome is not given by a previous measurement, but by the sign of the initial
 global $X$ stabilizer.
 
-We will henceforth refer to this mechanism of
-the linear cross entropy going to $0$ as mechanism \textsf{A}. As a
-visualization of this mechanism, confer with \cref{fig:mechanism-a}, showing a
-minimal example of a circuit detecting the sign difference.
+%We will henceforth refer to this mechanism of
+%the linear cross entropy going to $0$ as mechanism \textsf{A}. As a
+%visualization of this mechanism, confer with \cref{fig:mechanism-a}, showing a
+%minimal example of a circuit detecting the sign difference.
+\Cref{fig:mechanism-a} shows a minimal example of vanishing linear cross
+entropy on the circuit level with initial states chosen as orthogonal Bell
+states.
 
 \begin{figure}[t]
   \centering
   \input{fig/tikz/mechanism_a.tex}
-  \caption{Minimal example of a PTIM setup showcasing mechanism \textsf{A} with $L=2$, $T=2$, and $p\neq
-  0$. The experimental circuit is shown on the left side.
-  In this particular circuit the initial Bell cluster dies in the first measurement layer by
-measuring $X$, and thus removing the singular $ZZ$ stabilizers. 
- The $+1$ in the box refers to the actual
-outcome of the result.
-The circuit on the right corresponds
-to the post-processing algorithm with orthogonal initial state in the logical
-basis. Here we project onto the measurement results given by the measurement
-record, represented by $\mathbb{P}(+X)$. The second projection is unsuccessful,
-since we had a sign difference initially.}
+  \caption{Minimal example of a PTIM setup showcasing the mechanism behind
+    vanishing LXE with
+  $L=2$, $T=2$, and $p\neq 0$. The experimental circuit is shown on the left
+  side.  In this particular circuit the initial Bell cluster dies in the first
+  measurement layer by measuring $X$, and thus removing the singular $ZZ$
+  stabilizers.  The $+1$ in the box refers to the actual outcome of the result.
+  The circuit on the right corresponds to the post-processing algorithm with
+  orthogonal initial state in the logical basis. Here we project onto the
+  measurement results given by the measurement record, represented by
+  $\mathbb{P}(+X)$. The second projection is unsuccessful, since we had a sign
+  difference initially.}
   \label{fig:mechanism-a}
 \end{figure}
 
+\section{A first PTIM simulation}
+\textcolor{red}{hier ein LXE vs $S_E$ bildchen nicht vergessen, i guess?}
+
+\subsection{Methods}
+\begin{itemize}
+  \item From \cite{roserDecodingProjectiveTransverse2023}:
+    For any system, the sample average is
+    \begin{align}\label{eq:decoder}
+      \expval{\expval{f_D}} = \sum_{\mathcal{T} \in \{
+    \mathcal{T} \} } P\left(\mathcal{T}\right) \cdot
+    f\left(\mathcal{T} ; D(S)\right)
+    ,\end{align}
+  where $\mathcal{T}$ indicates a trajectory in the system and
+  $\{ \mathcal{T} \}$ is the set of all possible trajectories for a given
+  initial state.
+  \item Transferleistung time! Let's see if we can apply \cref{eq:decoder} to our
+    problem/our notational conventions:
+  \item A trajectory is defined as the circuit $C$, i.e. the measurement pattern,
+    and the outcomes of said measurements, $\mathbf{m}$, including the initial
+    state. 
+  \item The probability of a trajectory is
+    \begin{align}
+      P(\mathcal{T}) &=
+      p^{\abs{\mathbf{m}_X}}(1-p)^{LT-\abs{\mathbf{m}_X}}\cdot
+      p^{(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{\abs{\mathbf{m}_Z}}\cdot
+      2^{-N_\mathrm{rand}} \nonumber\\ &= 
+      p^{\abs{\mathbf{m}_X}+(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{LT-\abs{\mathbf{m}_X}+\abs{\mathbf{m}_Z}}\cdot2^{-N_\mathrm{rand}}
+    .\end{align}
+  \item \textcolor{kw-olive}{Kommentar Felix: \enquote{$2^{-N_\mathrm{rand}}$ hier noch
+    nicht definiert!}}
+  
+  \item In analogy to \cref{eq:decoder}, here we would have the quantity
+    \[
+      f(\mathbf{m}, C_p, \sigma) = \frac{P(\mathbf{m} |
+     C_p,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C_p,\sigma)\right)^2}
+    \]
+    for a PTIM with circuit $C_p$ with probability $p$ for $X$-measurements. This
+    lets us define a system-average for the PTIM with initial state $\rho$ and
+    probability $p$,
+    \begin{align}
+      \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p) \sum_\mathbf{m}
+      P(\mathbf{m} |C_p,\rho)\cdot f(\mathbf{m},C_p, \sigma)
+    .\end{align}
+  \item In principle, the sums over $C_p$ and $\mathbf{m}$, i.e. the sum over
+    $\mathcal{T}$, include \emph{all possible} circuits $C_p$ and
+    corresponding measurement outcomes $\mathbf{m}$.
+  \item With stabilizers, each $\mathbf{m}$ contributes the same factor of
+    $2^{-\abs{N_\mathrm{rand}}}$ to the total probability, it doesn't change
+    anything to sample over it. Thus, we can instead opt for generating random
+    circuits, applying it to $\rho$ once, and check for compatibility. 
+  \item That is, we technically compute the quantity
+    \begin{align}\label{eq:sample-f-C}
+      \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p)
+      \cdot f(\mathbf{m},C_p, \sigma)
+    ,\end{align}
+    when sampling for the linear cross entropy numerically.
+  \item We will, in the following, drop the index $_p$ from $C_p$. It is
+    nonetheless implied that $C$ is a circuit randomly generated from a probability
+    parameter $p$. However, for the current discussion it will be dropped as a
+    subscript for the sake of readability.
+\end{itemize}
+
+\subsection{Results}
+
+\Cref{fig:lxe-vs-se-default} shows the linear cross entropy and the
+entanglement entropy for different system sizes.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Untitled.png}
+  \caption{LXE vs $S_E$, sollte schon irgendwo existieren, aber mit shit daten.
+  Mittlerweile existieren genug daten, dass du dir die zusammen klauen kannst,
+aber es gibt auch ein skript, das die dann an verschiedene achsen plottet (also
+links LXE, rechts SE)}
+  \label{fig:lxe-vs-se-default}
+\end{figure}
+
+\section{Marinalizing over probabilities}
+The probability $P(\mathbf{m} \mid C, \bullet)$ is a joint probability
+distribution of two discrete random variables $\mathbf{m}_X$ and
+$\mathbf{m}_Z$. 
+
+\subsection{Methods?}
 The group theoretic arguments leading to mechanism \textsf{A} also give rise to
 another insight into the linear cross entropy. Since the sign difference in the
 initial states is in the global $X$ stabilizer, we can be certain of the fact
@@ -504,307 +556,27 @@ Thus, it would not make a difference if the
 results of $ZZ$ measurements in the circuit are projected onto $\sigma$ or if
 we 
 
-\section{Numerik \& Methoden}
-\label{sec:lxe-numeric}
-Hier numerische Implementierung der LXE (also die project funktion. evtl
-flowchart für algorithmus). Besser beschreiben als die in ihrem appendix.
+\subsection{Results}
 
-Tracking hier genauer beschreiben, i guess?
+\Cref{fig:lxe-no-error-tracks} shows the LXE for different marginalized
+probability distributions.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Untitled.png}
+  \caption{Hier erste zeile vom grossen tableau, damit klar ist, dass track
+  $ZZ$ identisch 1 ist und das dann beim actual tableau auff\"allt}
+  \label{fig:lxe-no-error-tracks}
+\end{figure}
+\section{PTIM with faulty gates}
+So far, the LXE appears to be a promising candidate for the order parameter of
+the phase transition in the projective transverse-field Ising model.
+Nevertheless, it is a well known fact that the world is not perfect. It is
+utopian to imagine a quantum simulator going through a circuit without any
+errors. Hence it seems a worthwile endeavor to investigate the behavior of
+$\chi$ when the 'experimentally realized' circuit with initial state $\rho$ is
+subjected to noise.
 
-\section{Auswertung PTIM \& Fehler}
-\subsection{Keine Fehler}
-\subsection{Fehler}\label{sec:lxe-errors}
-\begin{itemize}
-  \item Mit Fehlermodell aus \cite{tikhanovskayaUniversalityCrossEntropy2023}
-    k\"onnen wir schauen wie schlecht unser experiment ist. Wenn
-    \enquote{Track $ZZ$} spalte von 1 verschieden ist haben wir ein faulty
-    experiment in $X$.
-  \item Geht mit $ZZ$ fehlern nicht so prickelnd,%aber wenn keine $X$-Fehler da sind,
-    aber aus der kombination der tracks kann man inferieren. 
-  \item Warum fehlt hier die absch\"atzung? da war doch mal eine am start?
-  \item Folgende ist gemeint:
-
-    Wenn man annimmt, dass \textsf{B1} der einzige mechanismus ist, der die LXE
-    nach unten dr\"uckt (wie bspw. bei Track $ZZ$, $X$ Error), dann kann man
-    folgende absch\"atzung machen:
-    \begin{align}
-      \chi \leq \left( 1-q\left( 1-p \right)^4  \right)^{(L-1)(T-1)}
-    .\end{align}
-    Recht simple explanation dazu: in der ersten klammer ist die
-    wahrscheinlichkeit, dass mechanismus \textsf{B1} \emph{nicht} passiert.
-    $\left( 1-p \right)^2$ von den zwei im circuit chillenden $ZZ$ messungen,
-    $\left( 1-p \right)^2$ von den zwei nicht im circuit chillenden $X$
-    messungen, und $\frac{2}{2} q$ von den zwei m\"oglichen fehlerpositionen
-    mit je $\frac{1}{2}$ wahrscheinlichkeit die LXE zu bricken.
-
-  \item Das sollte ich vielleicht noch plotten, oder?
-  \item gleiche \"Uberlegung gilt auch mit track $X$. hier muss halt die upper
-    bound mit der \enquote{Track $X$} LXE multipliziert werden.
-\end{itemize}
-
-\section{Summary}
-
-\section{old stuff}
-Before stating the definition of the linear cross entropy, we will first
-introduce some notational conventions.
-
-Suppose we run a PTIM simulation on some platform, either classically with
-stabilizer circuits or on a quantum simulator. The system is initially in some
-state $\rho$ and will subsequently be subjected to local projective $X$ and
-$ZZ$ measurements.  After having applied the circuit on $\rho$, we find
-ourselves with recorded measurement outcomes. We write $\mathbf{m}$ for the
-mathematical object representing this measurement record. It can be
-thought of as a vector of all outcomes in order of recording.
-Since quantum measurements are generally probabilistic, any full
-measurement record $\mathbf{m}$ might contain an arbitrary number of outcomes
-$m$ with probability $0\leq P(m=\pm 1 | C, \rho)\leq 1$. A given
-measurement pattern therefore has many possible records, each with some
-probability.  We write this probability of a measurement record $\mathbf{m}$
-given a measurement pattern $C$ and an initial state $\rho$ as $P(\mathbf{m}
-\mid C, \rho)$. As we specifically investigate the PTIM, our measurement record
-$\mathbf{m}$ can equivalently be written as the combination of two measurement
-records, $\mathbf{m}_X$ and $\mathbf{m}_{Z}$, e.g. as a sum of two vectors
-\[
-  \mathbf{m} = \begin{pmatrix} \mathbf{m}_X \\ \mathbf{m}_Z \end{pmatrix} 
-  = \begin{pmatrix} \mathbf{m}_X \\ 0 \end{pmatrix} + \begin{pmatrix}
-0 \\ \mathbf{m}_Z \end{pmatrix} 
-\]
-By themselves, $\mathbf{m}_{X/Z}$ are also random variables.
-It is therefore also valid, and will later prove useful, to
-write the probability of a measurement record as the joint probability of
-outcomes in $X$ and outcomes in $ZZ$, i.e.  $P\left(\mathbf{m} \mid C,
-\rho\right) = P\left(\mathbf{m}_X\cap \mathbf{m}_Z\mid C,\rho\right)$.
-
-Employing the notation from above, the (normalized) linear cross entropy is
-then defined as \cite{liCrossEntropyBenchmark2023}
-\begin{align}\label{eq:lxe-c-def}
-  \chi_C = \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
-    C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
-    C, \sigma)\right)^2}
-,\end{align}
-where the sums $\sum_\mathbf{m}$ go over measurement outcomes
-within the circuit $C$, and $\rho$ and $\sigma$ are two initial
-states. In particular, we suppose $\rho$ to be the initial state of a quantum
-simulator, with which we realize $C$, and $\sigma$ to be the initial state of a
-classical -- e.g. stabilizer -- simulation, which also realizes $C$. The
-states will be chosen to be orthogonal in the logical basis 
-%$\left(\rho = \dyad{\mathrm{GHZ}+},\ \ \sigma = \dyad{\mathrm{GHZ}-}\right)$,
-but they need not necessarily be orthogonal. 
-The first sum in \cref{eq:lxe-c-def} is then a sum over all measurement
-histories recorded by the quantum simulation. The sum in the denominator is a
-normalizing factor, which will be further discussed in \cref{sec:lxe-numeric}.
-
-We can interpret $\chi_C$ as the measurement-averaged probability that the two
-initial states $\rho$ and $\sigma$ cannot be distinguished by the measurement
-pattern $C$. That being said, $\chi_C$ alone lets us make statements about one circuit
-$C$ only.
-
-
-
-
-\subsection{Numerical implementation}
-\textcolor{red}{notiz an den autor: \"uberleg dir nochmal genauer, was wo hinpasst}
-
-\subsubsection{Sampling:}
-\begin{itemize}
-  \item From \cite{roserDecodingProjectiveTransverse2023}:
-    For any system, the sample average is
-    \begin{align}\label{eq:decoder}
-      \expval{\expval{f_D}} = \sum_{\mathcal{T} \in \{
-    \mathcal{T} \} } P\left(\mathcal{T}\right) \cdot
-    f\left(\mathcal{T} ; D(S)\right)
-    ,\end{align}
-  where $\mathcal{T}$ indicates a trajectory in the system and
-  $\{ \mathcal{T} \}$ is the set of all possible trajectories for a given
-  initial state.
-  \item Transferleistung time! Let's see if we can apply \cref{eq:decoder} to our
-    problem/our notational conventions:
-  \item A trajectory is defined as the circuit $C$, i.e. the measurement pattern,
-    and the outcomes of said measurements, $\mathbf{m}$, including the initial
-    state. 
-  \item The probability of a trajectory is
-    \begin{align}
-      P(\mathcal{T}) &=
-      p^{\abs{\mathbf{m}_X}}(1-p)^{LT-\abs{\mathbf{m}_X}}\cdot
-      p^{(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{\abs{\mathbf{m}_Z}}\cdot
-      2^{-N_\mathrm{rand}} \nonumber\\ &= 
-      p^{\abs{\mathbf{m}_X}+(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{LT-\abs{\mathbf{m}_X}+\abs{\mathbf{m}_Z}}\cdot2^{-N_\mathrm{rand}}
-    .\end{align}
-  \item \textcolor{kw-olive}{Kommentar Felix: \enquote{$2^{-N_\mathrm{rand}}$ hier noch
-    nicht definiert!}}
-  
-  \item In analogy to \cref{eq:decoder}, here we would have the quantity
-    \[
-      f(\mathbf{m}, C_p, \sigma) = \frac{P(\mathbf{m} |
-     C_p,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C_p,\sigma)\right)^2}
-    \]
-    for a PTIM with circuit $C_p$ with probability $p$ for $X$-measurements. This
-    lets us define a system-average for the PTIM with initial state $\rho$ and
-    probability $p$,
-    \begin{align}
-      \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p) \sum_\mathbf{m}
-      P(\mathbf{m} |C_p,\rho)\cdot f(\mathbf{m},C_p, \sigma)
-    .\end{align}
-  \item In principle, the sums over $C_p$ and $\mathbf{m}$, i.e. the sum over
-    $\mathcal{T}$, include \emph{all possible} circuits $C_p$ and
-    corresponding measurement outcomes $\mathbf{m}$.
-  \item With stabilizers, each $\mathbf{m}$ contributes the same factor of
-    $2^{-\abs{N_\mathrm{rand}}}$ to the total probability, it doesn't change
-    anything to sample over it. Thus, we can instead opt for generating random
-    circuits, applying it to $\rho$ once, and check for compatibility. 
-  \item That is, we technically compute the quantity
-    \begin{align}\label{eq:sample-f-C}
-      \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p)
-      \cdot f(\mathbf{m},C_p, \sigma)
-    ,\end{align}
-    when sampling for the linear cross entropy numerically.
-  \item We will, in the following, drop the index $_p$ from $C_p$. It is
-    nonetheless implied that $C$ is a circuit randomly generated from a probability
-    parameter $p$. However, for the current discussion it will be dropped as a
-    subscript for the sake of readability.
-\end{itemize}
-
-\subsubsection{"methods"}
-\begin{itemize} 
-  \item The $\sigma$ circuit is simulated with stabilizers
-  \item As a consequence, the quantity
-      \begin{align}
-      f(\mathbf{m},C, \sigma) = \frac{P(\mathbf{m} | C,
-    \sigma)}{\sum_{\mathbf{m}'} \left(P(\mathbf{m}' | C, \sigma \right)^2} 
-      .\end{align}
-   is
-    either 0 or 1, 0 if $\mathbf{m}$ is incompatible with $\sigma$ and 1 if it
-    is compatible \item since for a given circuit it is fixed which
-    measurements are deterministic and which are random, it is possible to
-      equivalently consider a reduced measurement pattern, consisting of random
-      measurements only.
-    \item For an initial state $\rho$ undergoing a circuit $C$ with $N_\mathrm{rand}$ random measurements, whose
-      respective results have probability $\frac{1}{2}$ (stabilizers), there are
-      $2^{N_\mathrm{rand}}$ possible trajectories, each with probability
-      $2^{-N_\mathrm{rand}}$.  \item summing $P(\mathbf{m}' | C, \sigma)$ over all
-      measurement outcomes thus sums over all $2^{N_\mathrm{rand}}$ possible
-      random outcomes, each with above given probability.  \item the mathematical
-      argumentation is then as follows:\\
-      case 1, the given measurement record $\mathbf{m}$ contains an
-      incompatible outcome with $\sigma$:
-      \begin{align} \frac{P(\mathbf{m} | C,
-          \sigma)}{\sum_{\mathbf{m}'} \left(P(\mathbf{m}' | C, \sigma \right)^2} = 0
-      .\end{align} 
-      case 2, $\sigma$ complies with the given measurement record $\mathbf{m}$, i.e.
-      $\mathbf{m}$ is compatible with $C$ and $\sigma$
-        \begin{align} \frac{P(\mathbf{m} | C, \sigma)}{\sum_{\mathbf{m}'}
-              \left(P(\mathbf{m}' | C, \sigma)\right)^2} &= \frac{
-              2^{-N_\mathrm{rand}}}{\sum_{\mathbf{m}'}\left(2^{-N_\mathrm{rand}}\right)^2}
-              \nonumber \\ &= \frac{2^{-N_\mathrm{rand}}}{2^{N_\mathrm{rand}}
-          2^{-2N_\mathrm{rand}}} \nonumber\\ &= 1 
-        .\end{align} 
-    \item To compute $\chi_C$ we then only project onto the measurement outcome,
-      and if it projects onto $0$, we don't add anything. only if we can
-      successfully project each measurement outcome onto $\sigma$ does 
-      $f(\mathbf{m},C_p, \sigma)$ go to $1$.
-
-    \item NOTE: the $\rho$ circuit is also a stabilizer simulation.  As such, for
-      a given circuit $C$, the same argument holds, and we can forego doing
-      multiple runs of the same circuit. If a circuit is incompatible anywhere,
-      it won't be at a random measurement.  Because the 'class' of a measurement
-      is fixed with the circuit architecture, the same circuit will be
-      incompatible regardless of measurement history.
-  \end{itemize}
-
-  This raises the question: what causes a record $\mathbf{m}$ to be incompatible
-  with $C$ and $\sigma$?
-  \begin{itemize}
-    \item Since $\rho$ and $\sigma$ are orthogonal GHZ states, their generators
-      differ only by a sign. That is, $S_\rho = \langle X\ldots X,
-      Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle$ and $S_\sigma = \langle -X\ldots X,
-      Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle$
-    \item The circuit-level LXE will be $0$ iff. there is a deterministic $X$
-      measurement, where the sign difference is noticed.
-
-    \item \textcolor{kw-olive}{Kommentar Felix: \enquote{see: initial cluster dies in
-      the CCM}}
-
-  \item We will henceforth label this mechanism \textsf{A} to refer to this way of
-    $\chi_C$ going to $0$.
-\end{itemize}
-
-\subsection{Tracking only a subset of measurements}
-\label{sec:lxe-indep}
-Here we define what we do when we only track a subset of measurements, first
-going into the maths behind separating the treatment of $X$ and $ZZ$
-measurements
-\begin{itemize}
-  \item We remind ourselves of the fact that in a given circuit, each
-    measurement is either random or deterministic. The type of each measurement
-    does not change with outcome.
-  \item A deterministic outcome has probability $1$ or $0$, a random outcome has
-    probability $\frac{1}{2}$.
-  \item Remember that the probability of a measurement record given a circuit
-    and an initial state $P(\mathbf{m} | C, \rho)$ can be expressed as the
-    intersection of the $X$ and $ZZ$ outcomes, i.e. $P(\mathbf{m}_X \cap
-    \mathbf{m}_Z | C, \rho)$
-  \item Since these are the probabilities of certain outcomes conditioned on
-    the ciruit and initial state, and since the type does not change with the outcome
-    of random measurements, $\mathbf{m}_X$ and $\mathbf{m}_Z$ are independent random
-    variables
-  \item Mathematically, this allows us to separate the probabilities, i.e. \[
-      P(\mathbf{m} | C, \rho) = P(\mathbf{m}_X \cap \mathbf{m}_Z | C, \rho) =
-    P(\mathbf{m}_X | C, \rho)\cdot P(\mathbf{m}_Z | C, \rho) \]
-  \item We can perform this separation for $\chi_C$ as well:
-    \begin{align}
-      \label{eq:lxe-subset-fake}
-      \chi_C &= \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
-      C, \sigma)}{\sum_{\mathbf{m}'}\left(P(\mathbf{m}' \mid
-      C, \sigma)\right)^2} \nonumber\\
-      \nonumber\\
-      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X \cap \mathbf{m}_Z |
-        C, \rho) \frac{P(\mathbf{m}_X \cap \mathbf{m}_Z| C,
-        \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'} \left(P(\mathbf{m}_X' \cap
-        \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
-        \nonumber\\
-      &= \sum_{\mathbf{m}_X \cap \mathbf{m}_Z} P(\mathbf{m}_X | C, \rho) P(
-        \mathbf{m}_Z | C, \rho) \frac{P(\mathbf{m}_X | C, \sigma) P( \mathbf{m}_Z|
-        C, \sigma)}{\sum_{\mathbf{m}_X' \cap \mathbf{m}_Z'}
-          \left(P(\mathbf{m}_X' | C,
-        \sigma) P( \mathbf{m}_Z'|C,\sigma)\right)^2}\nonumber\\
-        \nonumber\\
-      &= \underbrace{\frac{\sum_{\mathbf{m}_Z} P(\mathbf{m}_Z | C, \rho)
-          P(\mathbf{m}_Z | C, \sigma)}{\sum_{\mathbf{m}_Z'}
-          \left(P(\mathbf{m}_Z' |
-          C, \sigma)\right)^2}}_{\text{Subset ZZ}}
-          \underbrace{\frac{\sum_{\mathbf{m}_X} P(\mathbf{m}_X | C, \rho)
-          P(\mathbf{m}_X | C, \sigma)}{\sum_{\mathbf{m}_X'}
-          \left(P(\mathbf{m}_X' |
-          C, \sigma)\right)^2}}_{\text{Subset X}}
-    \end{align}
-  \item Tracking only the outcomes of $X$ or $ZZ$ respectively practically
-    amounts to considering only Subset X or ZZ in \cref{eq:lxe-subset} and
-    setting the other to $1$.
-  \item Numerically this is done by measuring appropriately according to $C$,
-    instead of projecting onto the measurement outcome in the measurement
-    history $\mathbf{m}$ of $\rho$.
-  \item Note that \textsf{A} does not 'see' $ZZ$ generators. However, the
-    stabilizer's generating sets of the two initial states differ exclusively in the subset
-    containing only $X$. As such, tracking only $ZZ$ will not feature any
-    circuit going to $0$, i.e. Subset ZZ $\equiv 1$.
-  \item As shown in \cref{eq:lxe-subset} we can obtain the circuit-level LXE by
-    multiplying Subset X with Subset ZZ. However, we just argued that Subset ZZ
-    will be identically $1$. It follows that tracking $X$ alone is tantamount
-    to tracking everything.
-  \item This mathematical argument reflects itself in the simulation. The first
-    row of plots in \cref{fig:err-vs-tra} shows the ideal case for different
-    system sizes as a function of $p$, where $p$ is the probability of
-    measuring $X$ and $1-p$ the probability of measuring $ZZ$ for each qubit.
-\end{itemize}
-    
-\section{WIP: Faulty measurements}
-It is a well known fact that the world is not perfect. It is utopian to imagine
-a quantum simulator going through a circuit without any errors. Hence it seems
-a worthwile endeavor to investigate the behavior of $\chi$ when the
-'experimentally realized' circuit with initial state $\rho$ is subjected to
-noise.
-
-\par{What happens in the physics?}
+\subsection{Error model}
 \begin{itemize}
   \item We start with our usual scheme of designing a random circuit $C$ and
     measuring accordingly. However, this time we measure additionally on
@@ -820,7 +592,7 @@ noise.
 \begin{itemize}
   \item By introducing errors to the circuit, we subject it to quite impactful
     alterations; previously we could consider the reduced measurement
-    pattern --- which we had access to --- and apply it to both initial states.
+    pattern -- which we had access to -- and apply it to both initial states.
   \item Now we need to consider the designed, albeit still random, pattern $C$
     and the faulty pattern $\tilde{C}$. Note that $C\subseteq\tilde{C}$.
   \item HOWEVER: Within $\tilde{C}$ and $C$ the same argument as in
@@ -863,7 +635,7 @@ noise.
 \end{itemize}
 
 Mechanism \textsf{B1} tikz figure
-\begin{figure}[h]
+\begin{figure}[t]
   \centering
   \input{fig/tikz/mechanism_b1.tex}
   \caption{Excerpt of a possible PTIM circuit with non-zero probability of
@@ -879,16 +651,72 @@ Mechanism \textsf{B1} tikz figure
 \end{figure}
 
 Mechanism \textsf{B2} tikz figure
-\begin{figure}[h]
+\begin{figure}[t]
   \centering
   \input{fig/tikz/mechanism_b2.tex}
-  \caption{mechanism \textsf{B2}}
+  \caption{Excerpt of a possible PTIM circuit with non-zero probability of
+  $ZZ$-errors occuring showcasing mechanism \textsf{B2}. At timestep $t=i$, 
+  we perform an $X$ measurement on the left qubit with result $+1$,
+  and a $ZZ$ error occurs on the shown pair after the measurement. Then in the next
+  timestep, we measure $X$ on the left qubit once more. As a consequence of the
+  error, this $X$
+  measurement does not yield $+1$ deterministically, but $\pm 1$ with
+  probability $\frac{1}{2}$ for either result. When trying to project in the classical
+  simulation, this discrepancy gets noticed, since we do not have access to the
+  precise nature of the errors. Upon failed projection we have $\chi=0$.}
   \label{fig:mech-b2-lxe}
 \end{figure}
 
+\subsection{tracking everything}
+\begin{itemize}
+  \item Mit Fehlermodell aus \cite{tikhanovskayaUniversalityCrossEntropy2023}
+    k\"onnen wir schauen wie schlecht unser experiment ist. Wenn
+    \enquote{Track $ZZ$} spalte von 1 verschieden ist haben wir ein faulty
+    experiment in $X$.
+  \item Geht mit $ZZ$ fehlern nicht so prickelnd,%aber wenn keine $X$-Fehler da sind,
+    aber aus der kombination der tracks kann man inferieren. 
+  \item Warum fehlt hier die absch\"atzung? da war doch mal eine am start?
+  \item Folgende ist gemeint:
 
+    Wenn man annimmt, dass \textsf{B1} der einzige mechanismus ist, der die LXE
+    nach unten dr\"uckt (wie bspw. bei Track $ZZ$, $X$ Error), dann kann man
+    folgende absch\"atzung machen:
+    \begin{align}
+      \chi \leq \left( 1-q\left( 1-p \right)^4  \right)^{(L-1)(T-1)}
+    .\end{align}
+    Recht simple explanation dazu: in der ersten klammer ist die
+    wahrscheinlichkeit, dass mechanismus \textsf{B1} \emph{nicht} passiert.
+    $\left( 1-p \right)^2$ von den zwei im circuit chillenden $ZZ$ messungen,
+    $\left( 1-p \right)^2$ von den zwei nicht im circuit chillenden $X$
+    messungen, und $\frac{2}{2} q$ von den zwei m\"oglichen fehlerpositionen
+    mit je $\frac{1}{2}$ wahrscheinlichkeit die LXE zu bricken.
+
+  \item Das sollte ich vielleicht noch plotten, oder?
+  \item gleiche \"Uberlegung gilt auch mit track $X$. hier muss halt die upper
+    bound mit der \enquote{Track $X$} LXE multipliziert werden.
+\end{itemize}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Untitled.png}
+  \caption{Spalte 3 vom grossen tableau? kann auch optional sein, aber ich
+  denke, dass didaktischer mehrwert existiert.}
+  \label{fig:lxe-errors-track-all}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics{anc_vs_lxe_new.pdf}
+  \caption{Ancilla entanglement entropy and linear cross entropy for an error
+  rate of $q=0.1$ to highlight the behavior of $S_\mathrm{anc}$. The system sizes are chosen smaller compared to
+\cref{fig:err-vs-tra} since $\chi$ would be $0$ for larger systems. Note that
+this is shown for the region around the critical point $p=.5$ in the ideal
+case. This was done to make the shift of $S_\mathrm{anc}$ in $p$ more
+noticeable without having the cross entropy be $0$ for ridiculously small
+system sizes. Grey vertical dots indicate the critical point in the ideal case
+of no errors.}
+  \label{fig:large-q-anc-vs-lxe}
+\end{figure}
 what happens if we only track a subset of measurements?
-\subsection{Tracking only a subset of measurements}
+\subsection{Marginalization}
 \label{sec:lxe-err-subset}
 Despite the fact that $\rho$ and $\sigma$ are being subjected to physically
 different circuits, we can still separate the respective probabilities as we
@@ -955,29 +783,15 @@ entanglement entropy of the ancilla. It is $1$ if the cluster survived and $0$
 otherwise. Its critical point should be lower for $X$ errors, higher for $ZZ$
 errors and roughly equal to the ideal case for $X$ and $ZZ$ errors.
 \Cref{fig:large-q-anc-vs-lxe} offers a visualization of this phenomenon.
- 
 
 \Cref{fig:err-vs-tra} hopefully looks nice. Maybe it also floats to the correct
 place!
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
   \includegraphics{errors-vs-tracked.pdf}
   \caption{Which measurement outcomes have been tracked and used to compute the
   linear cross entropy, vs the type of errors simulated.}
   \label{fig:err-vs-tra}
 \end{figure}
-It didn't seem to do so, so i passed \texttt{[h!]}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics{anc_vs_lxe.pdf}
-  \caption{Ancilla entanglement entropy and linear cross entropy for an error
-  rate of $q=0.1$ to highlight the behavior of $S_\mathrm{anc}$. The system sizes are chosen smaller compared to
-\cref{fig:err-vs-tra} since $\chi$ would be $0$ for larger systems. Note that
-this is shown for the region around the critical point $p=.5$ in the ideal
-case. This was done to make the shift of $S_\mathrm{anc}$ in $p$ more
-noticeable without having the cross entropy be $0$ for ridiculously small
-system sizes. Grey vertical dots indicate the critical point in the ideal case
-of no errors.}
-  \label{fig:large-q-anc-vs-lxe}
-\end{figure}
+%It didn't seem to do so, so i passed \texttt{[h!]}
+\section{Summary}

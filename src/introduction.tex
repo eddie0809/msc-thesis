@@ -22,6 +22,8 @@ Aaronson's quantum information theory I and II lecture notes:
 \cite{aaronsonIntroductionQuantumInformation,aaronsonIntroductionQuantumInformationa}.
 This one's a huge find!
 
+Zee Group Theory in a nutshell: \cite{zeeGroupTheoryNutshell2016}
+
 This chapter serves to familiarize the reader with the core concepts relevant
 to this thesis. We will first introduce the stabilizer formalism, as it will
 later enable us to perform efficient numerical experiments on a classical
@@ -34,7 +36,42 @@ formalism.
 Section adapted from \cite{nielsenQuantumComputationQuantum2010} and
 \cite{gottesmanStabilizerCodesQuantum1997}
 \subsection{Basic notions of group theory}
-blabla
+Group theory is one of the most important algebraic notions in theoretical
+phyiscs. From classifying crystalline structures (cite Ashcroft Mermin),
+(gauge) symmetries in the standard model (cite some yang mills stuff), to the
+classification of (topological) phase transitions (cite nicolai phd?), group
+theory perpetually permeates theoretical physiscs.
+
+The stabilizer formalism makes no exception. It is a clever application of
+group theory, allowing for a more compact representation of quantum states,
+compared to the state vector. We therefore introduce necessary prerequesites of
+group theory needed for the stabilizer formalism and its role in this thesis,
+starting with the notion of a group.
+
+A group $G$ is a collection of some particulars $g$ that can be composed
+according to some convention. To be called a group, the set of entities
+$\{g\}$ and the operation\footnote{In the discussion on groups and group
+  theory, the words composition, group operation, and multiplication are used
+interchangibly} with which we compose them, need to obey a certain
+ruleset. This ruleset, called the group axioms, reads as follows.
+\begin{defn}[Group]\label{defn:group}
+  A group $G$ is a non-empty set equipped with a binary operation (here denoted
+  with $\cdot$) that satisfy
+  \begin{description}
+    \item[Associativity] The group operation is associative, i.e.
+      $$\forall a,b,c \in G:\ (a\cdot b) \cdot c = a \cdot
+      (b \cdot c)$$
+    \item[Identity element] The group contains an identity element, which does
+      nothing with respect to composition, i.e.
+      $$\exists I\in G \forall g \in G : I\cdot g = g \cdot I = g$$
+    \item[Inverse element] Each group element has a unique element associated
+      to it that when composed with it gives the identity. In other words,
+      $$\forall g \in G \exists g^{-1} \in G : g g^{-1} = g^{-1} g = I $$
+  \end{description}
+\end{defn}
+\begin{itemize}
+  \item group definition
+\end{itemize}
 
 \begin{defn}\label{defn:fixpointgroup}
   Let $G$ be a group acting on a set $M$. Let $a\in M$. We then call the

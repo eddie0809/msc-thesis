@@ -30,7 +30,7 @@ The file structure is as follows:
 │   └── Here are all the chapters as individual .tex files
 ├── .gitignore  # The reason you don't see the ./build/ directory here
 ├── .latexmkrc  # config file for latexmk; current pdf viewer is zathura, change to your liking
-├── build.sh  # shell script for compilation; ./build.sh new compiles from scratch
+├── build.sh  # shell script for compilation; './build.sh new' compiles from scratch
 ├── msc.pdf  # this is the output of running build.sh
 ├── msc.tex  # main .tex file that gets compiled, should only contain \input{.}
 └── README.md  # The file you're looking at right now

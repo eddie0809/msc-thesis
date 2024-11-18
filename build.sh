@@ -8,11 +8,11 @@ function exit_with_error {
 }
 
 if [ "$1" = "new" ]; then
-  rm -rf $BUILD_DIR
+  rm -rf $BUILD_DIR fig/tikz/*.pdf || exit_with_error "Failed to clean build directory."
 fi
 
 if [ ! -d $BUILD_DIR ]; then
-  mkdir $BUILD_DIR || exit_with_error "failed to create build directory."
+  mkdir $BUILD_DIR || exit_with_error "Failed to create build directory."
 fi
 
 if [ ! -e .latexmkrc ]; then
@@ -20,5 +20,5 @@ if [ ! -e .latexmkrc ]; then
 fi
 
 # -f enables what i call the "overleaf mode"
-exec latexmk -auxdir=$BUILD_DIR -pvc -f
+exec latexmk -auxdir=$BUILD_DIR -pvc -f msc.tex
 

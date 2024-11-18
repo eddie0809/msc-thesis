@@ -32,17 +32,33 @@ to this thesis. We will first introduce the stabilizer formalism, as it will
 later enable us to perform efficient numerical experiments on a classical
 computer. We then provide a general introduction to the field of entanglement
 transitions and go over some important examples. 
-\section{The Stabilizer Formalism}\label{sec:stab-basics}
-In this section we review the most important concepts of the stabilizer
-formalism. 
+\newpage
+\section{The stabilizer formalism}\label{sec:stab-basics}
+In quantum computation and quantum computing we are exposed to a multitude of
+obstacles to overcome. Two obvious ones are the issues of quantum error
+correction and the exponential space complexity of genuine quantum simulations
+on classical computers. While it seems almost absurd to suggest that these two
+problems would be dealt with by the same formalism, we nevertheless want to
+wash out doubts about this fact in the present section and present an
+introduction to the stabilizer formalism.
 
-Section adapted from \cite{nielsenQuantumComputationQuantum2010} and
-\cite{gottesmanStabilizerCodesQuantum1997}
+Although it was originally introduced as an alternative approach to quantum error
+correction
+\cite{gottesmanStabilizerCodesQuantum1997,gottesmanSurvivingQuantumComputer2024}, the notion of
+stabilizers has become synonymous with efficient classical simulability in the
+world of quantum information theory
+\cite{nielsenQuantumComputationQuantum2010,aaronsonImprovedSimulationStabilizer2004,fisherRandomQuantumCircuits2023}.
+
+As the stabilizer formalism relies heavily on group theoretic arguments, we
+will first begin by giving a brief overview of the foundational algebra.
 \subsection{Basic notions of group theory}
 Group theory is one of the most important algebraic notions in theoretical
-phyiscs. From classifying crystalline structures (cite Ashcroft Mermin),
-(gauge) symmetries in the standard model (cite some yang mills stuff), to the
-classification of (topological) phase transitions (cite nicolai phd?), group
+phyiscs. From classifying crystalline structures
+\cite{ashcroftSolidStatePhysics1978},
+(gauge) symmetries in the standard model \textcolor{orange}{(cite some yang
+mills stuff)}, to the
+classification of (topological) phase transitions \textcolor{orange}{(cite
+nicolai phd?)}, group
 theory perpetually permeates theoretical physiscs.
 
 The stabilizer formalism makes no exception. It is a clever application of
@@ -56,7 +72,8 @@ according to some convention. To be called a group, the set of entities
 $\{g\}$ and the operation\footnote{In the discussion on groups and group
   theory, the words composition, group operation, and multiplication are used
 interchangibly} with which we compose them, need to obey a certain
-ruleset. This ruleset, called the group axioms, reads as follows.
+ruleset \cite{zeeGroupTheoryNutshell2016}. This ruleset, called the group axioms, reads as follows
+\cite{stroppelHoehereMathematik12023}.
 
 \begin{defn}[Group]\label{defn:group}
   A group $G$ is a non-empty set equipped with a binary operation (here denoted
@@ -93,7 +110,8 @@ called the \emph{order} of a group, which we write as $\mathrm{ord}(G)$.
 For larger finite groups, it can become cumbersome to keep track of all the
 elements and their relation to each other. Luckily, there is a way we can
 condense all the information to construct the whole group in its
-\emph{presentation}, also known as its \emph{generating set}. The elements of
+\emph{presentation}, also known as its \emph{generating set}
+\cite{zeeGroupTheoryNutshell2016}. The elements of
 such a generating set are referred to as \emph{generators}.
 \begin{defn}[Generating set and generators]\label{defn:generators}
   Let $G$ be a finite group and $S$ a subset of $G$. $S$ is called a generating
@@ -126,9 +144,9 @@ seen that $g=-1$ and $g=-i$ are redundant in this context.
 \Cref{thm:maxsize-generators} gives a lower bound on the number of generators
 needed to generate finite groups.
 
-\begin{thm}\label{thm:maxsize-generators} 
+\begin{thm}[\cite{nielsenQuantumComputationQuantum2010}]\label{thm:maxsize-generators} 
   The minimum size of a generating set for a finite group $G$ of generators is
-  at most $\log_2(\mathrm{ord}(G))$
+  at most $\log_2(\mathrm{ord}(G))$.
 \end{thm}
 
 %\begin{proof} We prove the theorem by induction over the size of 
@@ -144,13 +162,13 @@ we only needed one generator. A way of quantifying this quality is the
 \emph{rank} of a group.  It is defined as the size of the smallest generating
 set of $G$ and is denoted by $\abs{G}$. Thus, for the example of $Z_4$ we have
 $\abs{Z_4}=1$. 
-\newpage
+
 When discussing subsets of groups, one naturally arising concept is the notion
 of subgroups. Suppose we take some set of elements $\{g\}$ forming a group $G$
 under multiplication and take a subset $\{h\}$ thereof. If the subset also
 forms a group $H$, we call it a subgroup of $G$ and write $H \leq G$.
 
-\begin{defn}[Subgroup]\label{defn:subgroup}
+\begin{defn}[Subgroup \cite{zeeGroupTheoryNutshell2016}]\label{defn:subgroup}
   A subgroup $H$ of $G$, written as $H \leq G$, is a non-empty subset $H$ of $G$, which forms
   a group under the same group operation as $G$. 
 \end{defn}
@@ -187,7 +205,7 @@ if there are some $g$, which leave $H$ invariant under conjugation, we say that
 these $g$ \emph{normalize} $H$. A collection of these normalizing elements can
 be compiled together to form yet another subgroup of $G$, called the
 normalizer.
-\begin{defn}[Normalizer]\label{defn:normalizer}
+\begin{defn}[Normalizer \cite{gottesmanSurvivingQuantumComputer2024}]\label{defn:normalizer}
   Let $G$ be a group and $H < G$ a proper subgroup of $G$. The normalizer of
   $H$ in $G$ is the subgroup of $G$ that leaves $H$ invariant under
   conjugation, i.e.
@@ -196,7 +214,8 @@ normalizer.
   .\end{align}
 \end{defn}
 In the special case of every element of $G$ normalizing $H$, that is $N_G(H) =
-G$, $H$ is called an \emph{invariant subgroup} of $G$. In the next section we
+G$, $H$ is called an \emph{invariant subgroup} of $G$
+\cite{zeeGroupTheoryNutshell2016}. In the next section we
 will introduce an important example of a finite group and its normalizer. 
 %However,
 %if, for an arbitrary choice of $g$, they are the same, then $H$ is called
@@ -247,7 +266,7 @@ with phases $\pm 1$ and $\pm i$,
   Z \}
 .\end{align}
 This definition can also be generalized to $n$ qubits.
-\begin{defn}[Pauli group]\label{defn:pauligroup}
+\begin{defn}[Pauli group \cite{gottesmanSurvivingQuantumComputer2024}]\label{defn:pauligroup}
   The Pauli group $\mathcal{P}_n$ is composed of tensor products of $I,\ X,\
   Y,$ and $Z$ on $n$ qubits with an overall phase of $\pm 1$ and $\pm i$.
 \end{defn}
@@ -274,15 +293,16 @@ group defined in this way is continuous. By defining it in terms of a finite
 subgroup of the above definition, the physical significance of the Clifford
 group also becomes apparent.
 
-\begin{defn}[Clifford gates]\label{defn:cliffords}
+\begin{defn}[Clifford gates \cite{gottesmanSurvivingQuantumComputer2024}]\label{defn:cliffords}
   The Clifford group is the group generated by the Hadamard, Phase and CNOT
   gates. These are called the Clifford gates. 
 \end{defn}
 
 The Clifford gates form an important subset of gates in quantum computing and
-especially quantum error correction (\textcolor{orange}{hier ein paar citations
-vielleicht}). However, it should be noted that they do not form a universal set
-of quantum gates. While the gates in the Clifford group can create entangled
+especially quantum error correction
+\cite{calderbankQuantumErrorCorrection1997,calderbankGoodQuantumErrorcorrecting1996,steaneMultipleParticleInterferenceQuantum1996,bennettQuantumCryptographyPublic2020,bennettCommunicationOneTwoparticle1992}.
+However, it should be noted that they do not form a universal set
+of quantum gates . While the gates in the Clifford group can create entangled
 states with the Hadamard and CNOT gates, one needs an additional gate to
 achieve universal quantum computation.
 \subsection{The stabilizer group}
@@ -326,7 +346,9 @@ symmetry group.
 \end{defn}
 
 In our example, we have the group of $2$-qubit Pauli matrices, $\mathcal{P}_2$,
-acting on the $2$-qubit Hilbert space $H^{\otimes 2}$.
+acting on the $2$-qubit Hilbert space $H^{\otimes 2}$, with a subgroup of this
+group, $\mathcal{S} = \{I, X_1X_2, -Y_1Y_2, Z_1Z_2\} \leq \mathcal{P}_2$, being
+a symmetry of the state $\ket{\phi} \in H^{\otimes 2}$.
 %The symmetry group of
 %$\ket{\phi} \in H^{\otimes 2}$ is the subgroup of Pauli matrices that have the
 %state as eigenvector with eigenvalue $+1$. 
@@ -437,14 +459,32 @@ generators from the generating set.
   Let $\mathcal{S}$ be an $n$-qubit stabilizer group with generating set
   $\langle g_1, \ldots, g_l \rangle$ with $0 \leq l \leq n$. The density matrix
   corresponding to this stabilizer group is given by
-  \begin{align}
+  \begin{align}\label{eq:densitymatrix-proj-defn}
     \rho = \frac{1}{2^n} \prod_{i=1}^l (I + g_i)
   \end{align}
   or alternatively as
-  \begin{align}
+  \begin{align}\label{eq:densitymatrix-sum-defn}
     \rho = \frac{1}{2^n} \sum_{s \in \mathcal{S}} s
   .\end{align}
 \end{defn}
+We can convince ourselves that this definition is consistent with the general
+properties we demand density matrices to fulfil. 
+\begin{enumerate}
+  \item $\Tr[\rho] = 1$, which is given by the fact that every matrix in the
+    product of \cref{eq:densitymatrix-proj-defn} or the sum of
+    \cref{eq:densitymatrix-sum-defn} is either a traceless Pauli matrix, or the
+    identity of dimension $2^n$. The trace of the latter thus gets absorbed by
+    the leading factor.
+  \item $\Tr[\rho^2] \leq 1$ is given by the fact that $\rho = c\mathbb{P}_S$
+    with $c\leq 1$, and $\mathbb{P}_S$ the projector onto the code space of the
+    stabilizer group. We have
+    \begin{align}
+       \Tr[\rho^2]=\Tr[c^2 \mathbb{P}^2_S] =\Tr[c^2\mathbb{P}_S]
+        \leq \Tr[c\mathbb{P}_S] = \Tr[\rho] = 1
+    .\end{align}
+  \item $\rho = \rho^\dagger$, which is given by the hermiticity of the Pauli
+    matrices.
+\end{enumerate}
 
 \subsubsection{Entropy of entanglement}
 
@@ -487,13 +527,22 @@ the 2-qubit Bell state we once again have $\mathcal{S} = \langle XX,
 ZZ\rangle$. Notice that $\mathcal{S}_A = \mathcal{S}_B = \{I\}$ and $\mathcal{S}_{AB} =
 \mathcal{S}$. 
 The entropy of entanglement between $A$ and $B$ should be $1$
-since there is only 1 independent entangled pair. We could additionally compute
+since there is only one independent entangled pair. We could additionally compute
 the reduced density matrices and the matrix logarithm instead, arriving at the
 same result.
 
 With \cref{eq:entent} we find that this result is also obtained by counting the
 generators in $\mathcal{S}_{AB}$, which is $2$, then dividing by $2$, which
 gives the correct result of $1$. 
+
+How this is done in practice is rather involved. The interested reader is
+invited to consult ref. \cite{fattalEntanglementStabilizerFormalism2004}, where
+the method is introduced. For now, it suffices to say that the generating set
+can be brought into a canonical form, consisting of two sets generating $A$ and
+$B$, respectively, and two sets of generators, which pairwise anticommute, that
+generate $AB$. The size of this last set is the one which gives the
+entanglement entropy.
+
 \subsection{Stabilizer circuits}
 
 Finally, we discuss the dynamics of stabilizer states in quantum circuits. This
@@ -651,7 +700,7 @@ error appropriately and flip it back by means of applying a Pauli-$X$.
 %to the measurement. However, after the measurement we are guaranteed to have
 %stabilizers in the form of $\mathcal{S} = \langle \pm Z_1, Z_1Z_2,
 %Z_2Z_3\rangle$.
-
+\clearpage
 \subsubsection{Simulation of stabilizer circuits}
 Simulating stabilizer circuits can thus be done by keeping track of all the
 generators and updating them accordingly. As we have seen in above example, we
@@ -746,7 +795,7 @@ more curated MIPT collection:
   \item Colored Cluster Model!
   \item There should be a Skinner paper, but I don't have it in my zotero
     library (yet)
-  \item Its \cite{nahumEntanglementDynamicsDiffusionannihilation2020}
+  \item Its \cite{nahumEntanglementDynamicsDiffusionannihilation2020}.
 \end{itemize}
 
 \begin{figure}[t]
@@ -756,7 +805,7 @@ more curated MIPT collection:
   \label{fig:ptim-circuit}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
   \includegraphics{Untitled.png}
   \caption{plot of entanglement entropy (and mutual information??) as a

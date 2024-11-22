@@ -7,25 +7,25 @@
 
 Was hier useful werden kann:
 
-Nielsen: \cite{nielsenQuantumComputationQuantum2010}
-
-Stabilizer Formalism, Gottesman PhD thesis: \cite{gottesmanStabilizerCodesQuantum1997}
-
-Algorithm for simulating stabilizer circuits:
-\cite{aaronsonImprovedSimulationStabilizer2004}
+%Nielsen: \cite{nielsenQuantumComputationQuantum2010}
+%
+%Stabilizer Formalism, Gottesman PhD thesis: \cite{gottesmanStabilizerCodesQuantum1997}
+%
+%Algorithm for simulating stabilizer circuits:
+%\cite{aaronsonImprovedSimulationStabilizer2004}
 
 stabilizer lecture notes: \cite{arabLectureNotesQuantum2024}
 
-Entanglement with Stabilizers: \cite{fattalEntanglementStabilizerFormalism2004}
-
-Aaronson's quantum information theory I and II lecture notes:
-\cite{aaronsonIntroductionQuantumInformation,aaronsonIntroductionQuantumInformationa}.
-This one's a huge find!
-
-another huge find! gottesman lecture notes on quantum error correction:
-\cite{gottesmanSurvivingQuantumComputer2024}
-
-Zee Group Theory in a nutshell: \cite{zeeGroupTheoryNutshell2016}
+%Entanglement with Stabilizers: \cite{fattalEntanglementStabilizerFormalism2004}
+%
+%Aaronson's quantum information theory I and II lecture notes:
+%\cite{aaronsonIntroductionQuantumInformation,aaronsonIntroductionQuantumInformationa}.
+%This one's a huge find!
+%
+%another huge find! gottesman lecture notes on quantum error correction:
+%\cite{gottesmanSurvivingQuantumComputer2024}
+%
+%Zee Group Theory in a nutshell: \cite{zeeGroupTheoryNutshell2016}
 
 This chapter serves to familiarize the reader with the core concepts relevant
 to this thesis. We will first introduce the stabilizer formalism, as it will
@@ -42,18 +42,19 @@ problems would be dealt with by the same formalism, we nevertheless want to
 wash out doubts about this fact in the present section and present an
 introduction to the stabilizer formalism.
 
-Although it was originally introduced as an alternative approach to quantum error
+Although it was originally introduced as an approach to quantum error
 correction
-\cite{gottesmanStabilizerCodesQuantum1997,gottesmanSurvivingQuantumComputer2024}, the notion of
+\cite{nielsenQuantumComputationQuantum2010,gottesmanStabilizerCodesQuantum1997,gottesmanClassQuantumErrorcorrecting1996,gottesmanSurvivingQuantumComputer2024}, the notion of
 stabilizers has become synonymous with efficient classical simulability in the
 world of quantum information theory
-\cite{nielsenQuantumComputationQuantum2010,aaronsonImprovedSimulationStabilizer2004,fisherRandomQuantumCircuits2023}.
+\cite{nielsenQuantumComputationQuantum2010,aaronsonImprovedSimulationStabilizer2004,aaronsonIntroductionQuantumInformation,aaronsonIntroductionQuantumInformationa,fisherRandomQuantumCircuits2023}.
 
 As the stabilizer formalism relies heavily on group theoretic arguments, we
 will first begin by giving a brief overview of the foundational algebra.
 \subsection{Basic notions of group theory}
-Group theory is one of the most important algebraic notions in theoretical
-phyiscs. From classifying crystalline structures
+Group theory is one of the most important concepts from algebra in the toolset
+of theoretical physicists.
+From classifying crystalline structures
 \cite{ashcroftSolidStatePhysics1978},
 (gauge) symmetries in the standard model \textcolor{orange}{(cite some yang
 mills stuff)}, to the
@@ -62,7 +63,7 @@ nicolai phd?)}, group
 theory perpetually permeates theoretical physiscs.
 
 The stabilizer formalism makes no exception. It is a clever application of
-group theory, allowing for a more compact representation of quantum states,
+group theory, allowing for a more compact representation of quantum states
 compared to the state vector. We therefore introduce necessary prerequesites of
 group theory needed for the stabilizer formalism and its role in this thesis,
 starting with the notion of a group.
@@ -71,13 +72,13 @@ A group $G$ is a collection of some particulars $g$ that can be composed
 according to some convention. To be called a group, the set of entities
 $\{g\}$ and the operation\footnote{In the discussion on groups and group
   theory, the words composition, group operation, and multiplication are used
-interchangibly} with which we compose them, need to obey a certain
+interchangeably} with which we compose them, need to obey a certain
 ruleset \cite{zeeGroupTheoryNutshell2016}. This ruleset, called the group axioms, reads as follows
 \cite{stroppelHoehereMathematik12023}.
 
 \begin{defn}[Group]\label{defn:group}
   A group $G$ is a non-empty set equipped with a binary operation (here denoted
-  with $\cdot$) that satisfy
+  with $\cdot$) that satisfies
   \begin{description}
     \item[Associativity] The group operation is associative, i.e.
       $$\forall a,b,c \in G:\ (a\cdot b) \cdot c = a \cdot
@@ -141,7 +142,7 @@ of generators possible to build up the rest of the group. This restriction is
 one we impose on ourselves rather than one imposed on us by necessity. Choosing
 $S=\{-1, i, -i\}$ as generators also recovers $Z_4$, however, we have already
 seen that $g=-1$ and $g=-i$ are redundant in this context.
-\Cref{thm:maxsize-generators} gives a lower bound on the number of generators
+\Cref{thm:maxsize-generators} gives an upper bound on the number of generators
 needed to generate finite groups.
 
 \begin{thm}[\cite{nielsenQuantumComputationQuantum2010}]\label{thm:maxsize-generators} 
@@ -201,7 +202,7 @@ subgroup $H$ with $g$, written as
   g^{-1}Hg = \{ g^{-1} h g \ \mid \ h \in H \}
 .\end{align}
 In general, the two subgroups $H$ and $g^{-1}Hg$ need not be the same. However,
-if there are some $g$, which leave $H$ invariant under conjugation, we say that
+if there are some $g$ which leave $H$ invariant under conjugation, we say that
 these $g$ \emph{normalize} $H$. A collection of these normalizing elements can
 be compiled together to form yet another subgroup of $G$, called the
 normalizer.
@@ -270,7 +271,7 @@ This definition can also be generalized to $n$ qubits.
   The Pauli group $\mathcal{P}_n$ is composed of tensor products of $I,\ X,\
   Y,$ and $Z$ on $n$ qubits with an overall phase of $\pm 1$ and $\pm i$.
 \end{defn}
-From \cref{eq:pauli-comm} it follows that $\mathcal{P}_n$ is not Abelian.
+We can deduce from \cref{eq:pauli-comm} that $\mathcal{P}_n$ is not Abelian.
 The commutation relations can be extended for the tensor products of Paulis,
 but there are some cases that then commute non-trivially. For instance,
 $X_1\otimes X_2 \equiv X_1X_2$ commutes with $Z_1\otimes Z_2\equiv Z_1Z_2$, even though the individual
@@ -287,9 +288,9 @@ often defined as the subgroup of unitary matrices with dimension $2^n$ that
 normalize (cf. \cref{defn:normalizer}) the $n$-qubit Pauli group,
 $$\mathsf{C}_n = \{ u \in U\left(2^n\right) \mid u^\dagger \mathcal{P}_n u
 = \mathcal{P}_n \}.$$
-Instead of being a finite group, since it includes all matrices of the form
-$u= e^{i\varphi} I$ with some phase $\varphi \in \mathbb{R}$, the Clifford
-group defined in this way is continuous. By defining it in terms of a finite
+Instead of being a finite group the Clifford group defined in this way is
+continuous, since it includes all matrices of the form $u= e^{i\varphi} I$ with
+some phase $\varphi \in \mathbb{R}$. By defining it in terms of a finite
 subgroup of the above definition, the physical significance of the Clifford
 group also becomes apparent.
 
@@ -302,17 +303,17 @@ The Clifford gates form an important subset of gates in quantum computing and
 especially quantum error correction
 \cite{calderbankQuantumErrorCorrection1997,calderbankGoodQuantumErrorcorrecting1996,steaneMultipleParticleInterferenceQuantum1996,bennettQuantumCryptographyPublic2020,bennettCommunicationOneTwoparticle1992}.
 However, it should be noted that they do not form a universal set
-of quantum gates . While the gates in the Clifford group can create entangled
+of quantum gates. While the gates in the Clifford group can create entangled
 states with the Hadamard and CNOT gates, one needs an additional gate to
 achieve universal quantum computation.
-\subsection{The stabilizer group}
+\subsection{The stabilizer group}\label{sec:stabilizergroup}
 
 So far we have only examined groups in isolation. Among other things, we have
 shown that the group generated by the Clifford gates normalizes the Pauli
 group.  However, the major role group theory plays in physics can best be
 demonstrated if one considers the action of group elements on other
 mathematical objects outside of the group. These could be, for example,
-Lagrangians, or more relevant for us, state vectors. If we consider the
+Lagrangians, or more relevant for us, state vectors. Consider the
 two-qubit state vector $\ket{+} = \left( \ket{0} + \ket{1} \right) / \sqrt{2}$.
 As an eigenstate of the Pauli operator $X$, we can tell that this state is
 resistant to bitflips.  The group-theoretic way to put this is to say that
@@ -326,7 +327,7 @@ consider the 2-qubit Bell state
 
 Note that the unitary operations $X_1 X_2$ and $Z_1 Z_2$ both have $\ket{\phi}$
 as eigenstate with eigenvalue $+1$. Since $$X_1X_2Z_1Z_2\ket{\phi} = \ket{\phi} =
-Z_1Z_2X_1X_2\ket{\phi}$$ we can also see how these two operators commute with each
+Z_1Z_2X_1X_2\ket{\phi},$$ we can also see how these two operators commute with each
 other. The operators $X_1X_2$ and $Z_1Z_2$ are then said to \emph{stabilize} the
 state $\ket{\phi}$. It is easy to convince oneself that these operations
 stabilizing the state $\ket{\phi}$ should form a group. Doing nothing, i.e. the
@@ -335,8 +336,8 @@ to the identity, each element of this stabilizer group is its own inverse (we
 omit verifying associativity, as this is inherited from $\mathcal{P}_n$). The
 matrices $X_1X_2$ and $Z_1Z_2$ therefore generate a symmetry group of
 $\ket{\phi}$, since their product is clearly also a symmetry transformation on
-$\ket{\phi}$. We therefore introduce the final group theoretic notion, the
-symmetry group.
+$\ket{\phi}$. Therefore, the final concept of group theory we introduce is that
+of a symmetry group.
 
 \begin{defn}[Symmetry group]\label{defn:fixpointgroup}
   Let $G$ be a group acting on a set $M$. Let $a\in M$. We then call the
@@ -402,6 +403,9 @@ deduce the subspace stabilized by this subgroup.
     V_S = \{ \ket{\phi} \mid g\ket{\phi} = \ket{\phi} \ \forall g \in
     \mathcal{S} \}
   .\end{align}
+  In the literature this space
+  is also sometimes equivalently referred to as the code space of the
+  stabilizer.
 \end{defn}
 
 So far, it is not entirely obvious how keeping track of operators growing
@@ -419,8 +423,8 @@ group is given by the generating set $G = \langle X_1X_2, Z_1Z_2\rangle$.
 Note that while the generating set is explicitly not the entire group, the
 distinction between the two is kept rather loosely. Oftentimes we will write
 that some stabilizer group $\mathcal{S}$ is equal to its generating set. This is mostly a matter of
-convenience and reabability. If context does not explicitly demand it, we write
-the generating set and the group interchangibly.
+convenience and readability. If context does not explicitly demand it, we write
+the generating set and the group interchangeably.
 
 The second fact is a more subtle one. It uses the commutation relations
 laid out in \cref{eq:pauli-comm}. If we briefly neglect the phases again, or keep
@@ -535,11 +539,12 @@ With \cref{eq:entent} we find that this result is also obtained by counting the
 generators in $\mathcal{S}_{AB}$, which is $2$, then dividing by $2$, which
 gives the correct result of $1$. 
 
-How this is done in practice is rather involved. The interested reader is
-invited to consult ref. \cite{fattalEntanglementStabilizerFormalism2004}, where
-the method is introduced. For now, it suffices to say that the generating set
-can be brought into a canonical form, consisting of two sets generating $A$ and
-$B$, respectively, and two sets of generators, which pairwise anticommute, that
+The proof of \cref{thm:entent} and the practical computational implementation
+are rather involved. The interested reader is invited to consult ref.
+\cite{fattalEntanglementStabilizerFormalism2004}, where the method is
+introduced. For now, it suffices to say that the generating set can be brought
+into a canonical form, consisting of two sets generating $A$ and $B$,
+respectively, and two sets of generators, which anticommute in pairs, that
 generate $AB$. The size of this last set is the one which gives the
 entanglement entropy.
 
@@ -614,7 +619,7 @@ To answer both of these, we first need to realize the two distinct
 possibilities:
 \begin{enumerate}
   \item $M$ commutes with all the generators of the stabilizer group.
-  \item $M$ anti-commutes with at least one of the generators. By restructuring
+  \item $M$ anticommutes with at least one of the generators. By restructuring
     the generating set, we can ensure that there is at most one generator
     anticommuting with $M$. We thus assume without loss of generality that $M$
     anticommutes with $g_1$.
@@ -648,13 +653,13 @@ With $g_1 \ket{\phi} = \ket{\phi}$ and $\{g_1, M\} =0$ we have
 Since we can only measure $+1$ or $-1$ and the probabilities for either are
 equal, we can deduce that $P(\pm 1) = 1 / 2$. After the measurement, the
 generating set gets affected such that it is now
-$\rangle \pm M, g_2, \ldots, g_n\rangle$ depending on the measurement outcome.
+$\langle \pm M, g_2, \ldots, g_n\rangle$ depending on the measurement outcome.
 
 \subsubsection{Stabilizer circuits and error correction}
 
 No discussion of the stabilizer formalism would be complete without as much as
 a mention of its applications in quantum error correction. To this end,
-consider the following quantum circuit shown in
+consider the quantum circuit shown in
 \cref{fig:error-detection-circuit}. A variation of this circuit will play
 an important role in our discussion of the projective transverse-field Ising
 model in \cref{sec:intro-ptim}.
@@ -671,7 +676,8 @@ model in \cref{sec:intro-ptim}.
 \end{figure}
 
 Initially, we have the state $\ket{000}$, which is stabilized by $\mathcal{S} =
-\langle Z_1, Z_2, Z_3 \rangle$. At the first vertical line our generators were
+\langle Z_1, Z_2, Z_3 \rangle$. After applying $H$ to qubit 1 in the circuit,
+the stabilizer generators are
 conjugated with $H_1$, such that we now have $\mathcal{S} = \langle X_1, Z_2,
 Z_3 \rangle$. The corrresponding state stabilized by $\mathcal{S}$ is
 $\ket{+}\otimes\ket{00}=\frac{\ket{0}+\ket{1}}{\sqrt{2}} \otimes \ket{00}$.
@@ -785,8 +791,211 @@ more curated MIPT collection:
 \end{figure}
 
 \subsection{Phenomenology}
-
+\newpage
 \section{The Projective Transverse-Field Ising Model}\label{sec:intro-ptim}
+In this section we introduce the model investigated in the main part of the
+thesis, known as the projective transverse-field Ising model (abbreviated as
+PTIM). We want to give the introduction by going backwards through each of the
+concepts constituting the name \enquote{PTIM}, starting with the Ising model.
+\subsection{The Ising model}
+Hier nur kurz, criticality in 2d, lars onsager whatever, einfach kurz back to
+the roots, was sind die origins von dem was folgt
+\subsection{The transverse-field Ising model}
+
+The Ising model as conceived by Ernst Ising is a model from classical
+statistical mechanics. The spins that constitute it can only take on discrete
+values, yes, but they cannot exist in a coherent superposition of up and down,
+but only up. For a quantum mechanical analogue to the classical Ising model, we
+look towards the \emph{transverse-field} Ising model, which we briefly want to
+introduce in this section, following its introduction in ref.
+\cite{langLectureNotesTopological2021}.  The transverse-field Ising model is
+especially interesting in the context of quantum phases and quantum phase
+transitions, where we examine ground states of the Hamiltonian, i.e. at $0$
+temperature. The phases and phase transitions are then with respect to
+parameters of the Hamiltonian, or more precisely, the coefficients of
+non-commuting terms within the Hamiltonian.
+
+In the one-dimensional
+case for $L$ spin-$1 /2$ degrees of freedom, the Hamiltonian of the
+transverse-field Ising model (TIM) reads
+\begin{align}\label{eq:tim-hamiltonian}
+  H = -J\sum_{i=1}^L \sigma_i^z \sigma_{i+1}^z - h\sum_{i=1}^L \sigma_i^x
+,\end{align}
+where we choose $J>0$ (ferromagnetic coupling) and a magnetic field $h>0$. With
+positive $h$, the magnetic field it points in $x$-direction, which is transverse to the
+$z$-direction, hence the name \emph{transverse-field}. 
+Notice that in \cref{eq:tim-hamiltonian}, the terms $\sigma_i^z\sigma_{i+1}^z$
+and $\sigma_i^x$ do not commute, $[\sigma_i^z\sigma_{i+1}^z,\sigma_i^x]\neq 0$.
+Thus, they do not have a shared eigenbasis, and the ground state of the
+Hamiltonian will in general be a superposition of eigenstates of one of the
+operators. Conventionally, one chooses the basis of $\sigma_i^z\sigma_{i+1}^z$.
+Note that the ferromagnetic coupling implies aligned spins, where nearest
+neighbours tend to share directions, while the transverse magnetic field will
+flip some spins arbitrarily in the evolution.
+
+If we now consider the two limits of $J \ll h$, i.e. $J\to 0$,  and $h \ll J$,
+i.e. $h \to 0$. In the former, we have a weaker coupling between the spins, and
+thus a higher tendency for individual spins to flip. The ground state is then
+the product state of local ground states of $\sigma_i^x$, $\ket{G_+} =
+\ket{++\cdots +}$. This ground state is unique, since each constituent is a
+unique ground state. One further feature of it is that is possesses no
+long-range order. The spin on site $i$ is completely agnostic to the happenings
+of the spin on site $j$, if $i$ and $j$ are sufficiently far apart, and are on
+average not aligned (similar to the classical ising model for higher
+temperatures). Mathematically, this expresses as 
+\begin{align}
+\lim_{\abs{i-j}\to\infty} \expval{\sigma_i^z\sigma_j^z}{G_+} \to 0
+.\end{align}
+
+The converse case turns out to be rather different. Here, we have that the
+coupling is strong, and thus the spins tend to align. Crucially however,
+alignment is the only quality of relevance in the context of the ground state,
+since the $+1$ eigenvalue of $\sigma_i^z\sigma_{i+1}^z$ is two-fold degenerate
+with the eigenstate spanned by $\ket{00}$ and $\ket{11}$. The full Hamiltonian
+then inherits this degeneracy, such that its ground state space is spanned by
+two states $\ket{G_0} = \ket{00\cdots 0}$ and $\ket{G_1} = \ket{11\cdots 1}$.
+The ground state $\ket{G}$ is then an arbitrary coherent superposition of $\ket{G_0}$ and
+$\ket{G_1}$,
+\begin{align}
+  \ket{G} = \alpha \ket{G_0} + \beta \ket{G_1}
+.\end{align}
+Note that we here do have long-range order, since we are in the
+regime, where ferromagnetic coupling is strong. This corresponds to the
+0-temperature limit of the classical Ising model. Analogously to the
+paramagnetic phase we can write
+\begin{align}
+  \lim_{\abs{i-j}\to\infty} \expval{\sigma_i^z\sigma_j^z}{G} \to 1
+.\end{align}
+
+Note that $\sigma_i^z$ thus corresponds to a local order parameter for the
+ferromagnetic phase. Once we were in the paramagnetic regime, we had
+$\expval{\sigma_i^z\sigma_j^z}\to 0$ in the long-range limit. A natural
+question to follow is, what happens between the regimes of
+$h /J \to 0$ and $h /J \to \infty$? The answer is, of course, that there is a phase
+transition. Remarkably, this phase transition happens already in the
+one-dimensional case, whereas the classical Ising model did not have a phase
+transition in one dimension. To understand what happens at the phase
+transition, consider the symmetry group of the Hamiltonian, $\mathcal{G}_H =
+\{I, X\} \cong \mathbb{Z}_2$ with $X = \prod_i \sigma_i^x$, which
+corresponds to flipping all spins. In the paramagnetic phase, the ground state
+shares this symmetry, since $X\ket{G_+} = \ket{G_+}$. In the ferromagnetic
+phase, we do not have this symmetry in general, since flipping all spins would
+transform one ground state into the other. Thus, the symmetry of the
+Hamiltonian is spontaneously broken. 
+\subsection{The projective transverse-field Ising model}\label{sec:the-ptim}
+We now have the baseline set to introduce the \emph{projective}
+transverse-field Ising model. Our detailed introduction follows ref.
+\cite{langEntanglementTransitionProjective2020}. 
+The initial setup of the model is similar to the
+TIM, in that we have a linear chain of $L$ spin-$1 /2$ degrees of freedom on sites
+$i\leq L$. However, in the PTIM we do not consider time evolution generated by
+a Hamiltonian, such as the one in \cref{eq:tim-hamiltonian}, but rather as time
+evolution in discrete steps of a quantum circuit consisting of projective
+measurements. The action of a measurement of observable $O$ on a state
+$\ket{\phi}$ is given by
+\begin{align}
+  \mathcal{M}[O](\ket{\phi}) =
+  \frac{\mathbb{P}_\lambda}{\sqrt{\expval{\mathbb{P}_\lambda}{\phi}}}
+\end{align}
+with the eigenvalue $\lambda$ of $O$ and probability $P(\lambda;
+\ket{\phi}) = \expval{\mathbb{P}_\lambda}{\phi}$.
+
+The connection to the TIM is through the choice of observables $O$ and the
+measurement scheme; by choosing
+observables $\sigma^x_i$ and $\sigma_i^z\sigma_{i+1}^z$ for each site $i$ and
+edge between adjacent sites $e=(i,i+1)$, we have the same non-commuting observables that
+constitute the Hamiltonian in \cref{eq:tim-hamiltonian}. Repeated measurements
+on the same site thus lead to nontrivial dynamics.
+
+As initial state, we choose the product state of $\ket{+} = (\ket{0} + \ket{1})
+/ \sqrt{2}$,
+\begin{align}
+  \ket{\phi(0)} = \ket{++\cdots +}
+.\end{align}
+The circuit governing the (discrete) time evolution is then constructed as
+follows. (This is also the protocol for circuit generation in upcoming numerical
+experiments, i.e. simulations.) For each time step, we go through each site and
+set the site variable $x_i$ to 1 with probability $p$, and 0 otherwise.
+Independently from this we set the edge variable $z_e=1$ with probability
+$1-p$, and 0 otherwise. These vectors correspond to the sites and edges where
+$X$ and $ZZ$ measurements will be performed in the circuit. In each timestep we
+perform the corresponding measurements, thus evolving the state. An example of
+a circuit generated by such a protocol is shown in \cref{fig:ptim-circuit} for
+$p=1 /2$. The full circuit defines a (discrete time) quantum trajectory
+$\ket{\phi(t)}$.
+
+\begin{figure}[t]
+  \centering
+  \input{fig/tikz/intro-ptim.tex}
+  \caption{Tikz sketch of PTIM setup with $\approx 10$ qubits}
+  \label{fig:ptim-circuit}
+\end{figure}
+
+With this dynamics of the system, we can probe different quantities, such as
+the entanglement entropy $S_E(A)$ of a subsystem $A$, over many trajectories.
+Averaging them defines the sample average,
+\begin{align}
+  X = \frac{1}{M} \sum_{\ket{\phi} \in N} \mathcal{X}(\ket{\phi})
+,\end{align}
+where $N$ is a set of $M$ randomly generated trajectories. Note that we
+typically fix a parameter $p$ and a time $t$ when sampling specific quantities,
+where the circuit generation and application defines a classical probability
+distribution. 
+
+In spirit of the TIM, we are interested in (sample averaged) quantities as a
+function of the probability parameter $p$ characterizing the relative strength
+between the non-commuting observables. Varying $p$ in the interval $[0,1]$ is
+thus analogous to the limits of $h /J \to 0$ or  $h /J \to \infty$ in the TIM.
+As the example most relevant to entanglement transitions, we highlight the
+behavior of the entanglement entropy as a function of $p$. This is shown in
+\cref{fig:phase-transition}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics{Untitled.png}
+  \caption{plot of entanglement entropy (and mutual information??) as a
+  function of $p$. multiple system sizes, possibly rather large ($\approx 512$
+qubits?, maybe $N=\{128,256,512\}$ just for the fun of it). Would need to
+include mutual information in the source code.}
+  \label{fig:phase-transition}
+\end{figure}
+
+As a final note we interpret \cref{fig:phase-transition} in the context of
+quantum error correction. The specific choice of observables is not only
+interesting in their connection to the TIM.
+Recall the circuit shown in
+\cref{fig:error-detection-circuit}. If we have an entangled state over multiple
+qubits, we can think of $ZZ$ measurements as stabilizer (syndrome) measurements
+and projective $X$ erors in the circuit. Due to the projective dynamics,
+we not only detect, but also sometimes correct the error. More importantly, the
+entanglement structure stays the same no matter what. (This is also manifest in
+the fact that the local observables commute with the symmetry operator
+$U=\prod_i X_i$, which generates a global $\mathbb{Z}_2$ symmetry.)
+For $p\to 0$, we thus
+have a lot of effective entangling gates, which are stabilized by sufficiently
+frequent $ZZ$ measurements. As a consequence, each qubit is entangled with
+every other qubit, giving a half-system entanglement entropy of $1$ (as there
+is only one independent Bell pair).
+
+For $p \to 1 /2$ we approach the critical point,
+where entanglement clusters are sporadically created and merged together. The
+dynamics at this point is nontrivial, and can be characterized by a mapping to
+a conformal field theory. Interestingly, the PTIM and its phase transition is
+identical to 2d percolation, which is analytically solvable and has a
+well-known critical point of $1 /2$. The interested reader is invited to
+consult refs.
+\cite{aharonyIntroductionPercolationTheory2017,difrancescoConformalFieldTheory1997}
+for further details on percolation and conformal field theories, which go
+beyond the scope of this work. For now, we can see that the emergence of new
+entanglement clusters peaks at $p = 1 /2$.
+
+In the $p\to 1$ regime, we do not stabilize any entanglement, but rather
+have a product state of $X$ eigenstates. The more frequent $X$ measurements are
+(and conversely, less frequent $ZZ$ measurements), the more we stabilize a
+product state.
+
+
+Hier basically PTIM paper zusammenfassen
 \begin{itemize}
   \item PTIM paper: \citetitle{langEntanglementTransitionProjective2020}
     \cite{langEntanglementTransitionProjective2020}
@@ -798,32 +1007,15 @@ more curated MIPT collection:
   \item Its \cite{nahumEntanglementDynamicsDiffusionannihilation2020}.
 \end{itemize}
 
-\begin{figure}[t]
-  \centering
-  \input{fig/tikz/intro-ptim.tex}
-  \caption{Tikz sketch of PTIM setup with $\approx 10$ qubits}
-  \label{fig:ptim-circuit}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics{Untitled.png}
-  \caption{plot of entanglement entropy (and mutual information??) as a
-  function of $p$. multiple system sizes, possibly rather large ($\approx 512$
-qubits?, maybe $N=\{128,256,512\}$ just for the fun of it). Would need to
-include mutual information in the source code.}
-  \label{fig:phase-transition}
-\end{figure}
-
 \section{Sampling Problem}\label{sec:sampling}
-The metaphysics of this endeavour can
+The metaphysics of this endeavour (i.e. this thesis) can
 be condensed in the following way; we (a) know from experiments how quantum
 systems behave under certain conditions, and (b) predict through theoretical
 calculations what these systems might do in another experimental setting. In
 the latter case however, there is an uncanny regime of utility, where we either
 (a) cannot precisely pass predictions or (b) cannot perform the experiment on
 the grounds of hardware limitations\footnote{The Higgs particle was predicted
-40 years before it was discovered \textcolor{red}{citation}} or (c) try to
+40 years before it was discovered \textcolor{orange}{citation}} or (c) try to
 predict the behavior of quantities not directly measurable. In the case of
 quantum computation, and especially in the field of entanglement transitions,
 we face these bottlenecks in increasing severity. To make do with them, we

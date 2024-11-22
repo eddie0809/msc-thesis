@@ -81,7 +81,7 @@ probability of a certian measurement record.
   Given a random circuit $C$ and an initial state $\rho$ with corresponding
   measurement record $\mathbf{m}$, the probability of $\mathbf{m}$ is denoted
   by
-  \begin{align}
+  \begin{align}\label{eq:prob-traj-defn}
     P\left( \mathbf{m} \mid C, \rho \right) \equiv \Tr[\rho_\mathbf{m}] =
     \Tr[C_\mathbf{m} \rho C^\dagger_\mathbf{m}]
   .\end{align}
@@ -412,102 +412,231 @@ states.
 \end{figure}
 
 \section{A first PTIM simulation}
-\textcolor{red}{hier ein LXE vs $S_E$ bildchen nicht vergessen, i guess?}
+%\textcolor{red}{hier ein LXE vs $S_E$ bildchen nicht vergessen, i guess?}
 
+In this section we will examine the linear cross entropy in the context of our
+model system, the projective transverse-field Ising model. In particular, we
+will perform numerical experiments with stabilizer simulations, as we have now
+worked out how it can be computed in the context of stabilizer circuits. As we
+also know an efficient method of computing the (experimentally inaccessible)
+entanglement entropy, we will also compare the LXE with the entropy of
+entanglement.
 \subsection{Methods}
-\begin{itemize}
-  \item From \cite{roserDecodingProjectiveTransverse2023}:
-    For any system, the sample average is
-    \begin{align}\label{eq:decoder}
+Before we discuss the linear cross entropy in detail, we introduce the setup
+for our simulations. If not explicitly stated otherwise, the simulations were
+performed with a stabilizer simulator written in \verb|C++| using the algorithm detailed in
+\cref{ch:mixed,sec:tableau}.
+Previous numerical investigations of the projective transverse-field Ising
+model have that the sample average of a system is
+\cite{roserDecodingProjectiveTransverse2023}
+\begin{align}\label{eq:decoder}
       \expval{\expval{f_D}} = \sum_{\mathcal{T} \in \{
     \mathcal{T} \} } P\left(\mathcal{T}\right) \cdot
     f\left(\mathcal{T} ; D(S)\right)
-    ,\end{align}
-  where $\mathcal{T}$ indicates a trajectory in the system and
-  $\{ \mathcal{T} \}$ is the set of all possible trajectories for a given
-  initial state.
-  \item Transferleistung time! Let's see if we can apply \cref{eq:decoder} to our
-    problem/our notational conventions:
-  \item A trajectory is defined as the circuit $C$, i.e. the measurement pattern,
-    and the outcomes of said measurements, $\mathbf{m}$, including the initial
-    state. 
-  \item The probability of a trajectory is
-    \begin{align}
+,\end{align}
+where $\mathcal{T}$ indicates a trajectory in the system and
+$\{ \mathcal{T} \}$ is the set of all possible trajectories for a given
+initial state. The double angled braces 
+denote the average over both measurement records within one circuit as well as
+circuits of a given probability. In the following we discuss how we should go
+about sampling the circuits in order to get a sensible ensemble average, such
+that we arrive at something of the form in \cref{eq:decoder}.
+
+In \cref{eq:decoder}, a trajectory is defined as the circuit $C$, i.e. the measurement pattern,
+and the outcomes of said measurements, $\mathbf{m}$, including the initial
+state. A reasonable place to start is to find a probability we average over.
+If we split the measurement record into disjoint records of $X$
+measurements $\mathbb{m}_X$ and $ZZ$ measurements $\mathbb{m}_Z$, we have that
+the probability of a trajectory is
+\begin{align}
       P(\mathcal{T}) &=
       p^{\abs{\mathbf{m}_X}}(1-p)^{LT-\abs{\mathbf{m}_X}}\cdot
       p^{(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{\abs{\mathbf{m}_Z}}\cdot
       2^{-N_\mathrm{rand}} \nonumber\\ &= 
       p^{\abs{\mathbf{m}_X}+(L-1)T-\abs{\mathbf{m}_Z}}(1-p)^{LT-\abs{\mathbf{m}_X}+\abs{\mathbf{m}_Z}}\cdot2^{-N_\mathrm{rand}}
-    .\end{align}
-  \item \textcolor{kw-olive}{Kommentar Felix: \enquote{$2^{-N_\mathrm{rand}}$ hier noch
-    nicht definiert!}}
-  
-  \item In analogy to \cref{eq:decoder}, here we would have the quantity
-    \[
+,\end{align}
+where $L$ is the number of qubits (without periodic boundary conditions) and
+$T$ the number of timesteps. This follows from the fact that we have
+probability $p$ of $X$ measurements occuring and probability $1-(1-p) = p$ of
+$ZZ$ no measurements occuring, with the converse for the exponent of $(1-p)$.
+The factor $2^{-N_\mathrm{rand}}$ is from the fact that $N_\mathrm{rand}$ of
+the occuring measurements are random in nature and thus contribute a
+probability of $1 /2$ each.
+
+However, recall that the quantity we really want to average (first over the
+measurement records, then over circuits), is the quantity defined in
+\cref{eq:diesesding}. From \cref{thm:lxe-cliff} we know that we can consider
+each circuit exactly once, since for each circuit it will either give $0$ or
+$1$. We should therefore think about how to average the quantity
+\begin{align}
       f(\mathbf{m}, C_p, \sigma) = \frac{P(\mathbf{m} |
      C_p,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C_p,\sigma)\right)^2}
-    \]
-    for a PTIM with circuit $C_p$ with probability $p$ for $X$-measurements. This
-    lets us define a system-average for the PTIM with initial state $\rho$ and
-    probability $p$,
-    \begin{align}
+.\end{align}
+for a PTIM circuit $C_p$ with probability parameter $p$, giving the probability
+of $X$ measurements being performed on each site. We thus have a system average
+for the PTIM with initial state $\rho$ and probability parameter $p$,
+\begin{align}
       \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p) \sum_\mathbf{m}
       P(\mathbf{m} |C_p,\rho)\cdot f(\mathbf{m},C_p, \sigma)
-    .\end{align}
-  \item In principle, the sums over $C_p$ and $\mathbf{m}$, i.e. the sum over
-    $\mathcal{T}$, include \emph{all possible} circuits $C_p$ and
-    corresponding measurement outcomes $\mathbf{m}$.
-  \item With stabilizers, each $\mathbf{m}$ contributes the same factor of
-    $2^{-\abs{N_\mathrm{rand}}}$ to the total probability, it doesn't change
-    anything to sample over it. Thus, we can instead opt for generating random
-    circuits, applying it to $\rho$ once, and check for compatibility. 
-  \item That is, we technically compute the quantity
-    \begin{align}\label{eq:sample-f-C}
-      \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p)
-      \cdot f(\mathbf{m},C_p, \sigma)
-    ,\end{align}
-    when sampling for the linear cross entropy numerically.
-  \item We will, in the following, drop the index $_p$ from $C_p$. It is
-    nonetheless implied that $C$ is a circuit randomly generated from a probability
-    parameter $p$. However, for the current discussion it will be dropped as a
-    subscript for the sake of readability.
-\end{itemize}
+.\end{align}
+
+In principle, the sums over $C_p$ and $\mathbf{m}$, i.e. the sum over
+$\mathcal{T}$, include \emph{all possible} circuits $C_p$ and
+corresponding measurement outcomes $\mathbf{m}$. However, as already discussed,
+this creates a lot of unnecessary redundancy; with stabilizer circuits, each
+$\mathbf{m}$ contributes 
+the same factor of
+$2^{-\abs{N_\mathrm{rand}}}$ to the total probability, it doesn't change
+anything to sample over it. Thus, we can instead opt for the generation of
+random circuits and subjecting $\rho$ to them once. We then use a project
+function (cf. \cref{alg:projection}) to verify if a diffferent initial state
+$\sigma$ is compatible with the measurement record obtained from applying $C$
+on $\rho$.
+
+In the stabilizer
+formalism, projections can be done as efficiently as applying measurement
+gates,
+since the mechanism behind it is similar. However, we do not get a measurement
+result, but rather obtain feedback on the success of the projection.
+For a detailed introduction into the
+simulation algorithm used in the numerical experiments, consult \cref{ch:mixed}
+and in particular \cref{sec:purestates}, as well as \cref{alg:projection}.
+
+The actual simulation of the PTIM with the computation of the linear cross
+entropy is then done as follows. First, as outlined in \cref{sec:the-ptim},
+we generate two binary matrices of size $T\times L$, representing the
+locations of $X$ and $ZZ$ measurements, respectively. We also initialize two
+additional matrices of the same size to 0, where the measurement outcomes of
+the respective run is stored. We then simulate a PTIM with a stabilizer
+simulator (cf. ref. \cite{langCliffordCircuitSimulator2022} and
+\cref{ch:mixed}). Afterwards we repeat the
+circuit for the other initial state, but use the measurement results in the
+\enquote{outcome matrices} as argument for the project function. If at any
+point during the simulation we encounter a failed projection, the loop over the
+circuit stops and continue with the next one. If it successfully completes, we
+add $1$ to the total and repeat the procedure for the next circuit.
+
+Consequently, we technically compute the quantity
+\begin{align}\label{eq:sample-f-C}
+  \expval{\expval{f}}_{p,\rho} = \sum_{C_p} P(C_p) \cdot f(\mathbf{m},C_p,
+  \sigma)
+,\end{align}
+when sampling for the linear cross entropy numerically, where we generate $C_p$
+as a random circuit in our simulator. 
+
+In the following, we will drop the index $p$ from the labelling of the circuit
+$C_p$ for the sake of readability. It is nonetheless implied, and should be
+clear from context that $C$ is a circuit randomly generated from a probability
+parameter $p$.
 
 \subsection{Results}
+
+\textcolor{red}{vielleicht hier nicht der erste hinweis darauf, dass da schon
+  peer-reviewed stuff in der welt rumgeistert, auf dem die ganze analyse
+basiert}
+
+As \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024} already explored
+the linear cross entropy on the projective transverse-field Ising model, we
+choose the setup with the maximally entangled states $\rho = \dyad{GHZ+}$ and
+$\sigma = \dyad{GHZ-}$ as initial states with $L=T$ for better comparability
+with their results and for the upcoming sections in this chapter.
 
 \Cref{fig:lxe-vs-se-default} shows the linear cross entropy and the
 entanglement entropy for different system sizes.
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{Untitled.png}
-  \caption{LXE vs $S_E$, sollte schon irgendwo existieren, aber mit shit daten.
-  Mittlerweile existieren genug daten, dass du dir die zusammen klauen kannst,
-aber es gibt auch ein skript, das die dann an verschiedene achsen plottet (also
-links LXE, rechts SE)}
+  \includegraphics{no_error-track_all-lxe_vs_se.pdf}
+  \caption{Linear cross entropy and entanglement entropy in the projective
+  transverse-field Ising model and for $L=T$ and initial states $\rho =
+  \dyad{GHZ+}$ for the actual system and $\sigma=\dyad{GHZ-}$ for the classical
+  replica. Note that we here use open boundary conditions. For each probability
+  parameter $p$, we sampled over $\sim 10^5$ circuit realizations.}
   \label{fig:lxe-vs-se-default}
 \end{figure}
 
+From \cref{fig:lxe-vs-se-default} one can see that the linear cross entropy
+acts as an order parameter for the phase transition, with every line coinciding
+at the critical point. One can also see that the linear cross entropy converges
+faster towards the critical point than the entanglement entropy. The
+entanglement entropy is still somewhat smooth at the critical point, while the
+linear cross entropy is already smoothed out. This is due to the fact that the
+LXE probes the survival of an initial entanglement cluster, while the
+entanglement entropy quantifies independent entanglement pairs at the very end
+of the circuit. As such, the linear cross entropy in this form is equivalent to
+the entanglement entropy of an ancilla qubit entangled initially to the rest of
+the system. We will make use of this fact later to test the reliability of the
+LXE in the presence of noise.
+
+A more subtle fact we do not want to fail to mention is that the entanglement
+entropy is off-center in the case of open boundary conditions. In case of
+periodic boundary conditions, we have the transition in the entanglement
+entropy centered at the critical point.
+We highlight both the convergence behavior and the shift of the critical point
+in \cref{fig:lxe-closer-at-crit}. Note that we also use larger system sizes
+compared to \cref{fig:lxe-vs-se-default}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics{lxe_closer_at_crit_pbc.pdf}
+  \caption{Linear cross entropy and entanglement entropy zoomed in at the
+  critical point for periodic boundary conditions. The dotted vertical line
+corresponds to the theoretical critical point of the PTIM in the steady state.}
+  \label{fig:lxe-closer-at-crit}
+\end{figure}
+
+What \cref{fig:lxe-closer-at-crit} also remarkably shows is that with periodic
+boundary conditions $\chi(p=1 /2) > 1 /2$, whereas with open boundary
+conditions it was $\chi(p=1 /2) = 1 /2$. The latter implies that half of the
+initial clusters do not survive at the critical point, while the other half
+does. With periodic boundary conditions, we add another source for stabilizer
+measurements, thus leading to a more stable cluster towards the critical point,
+which is still $p_c = 1 /2$. 
+%\begin{itemize}
+%  \item LXE converges faster than entanglement entropy, since the logarithmic
+%    divergence at the critical point is not yet reached, but is rather smoothed
+%    out
+%  \item PBC vs OBC alter the behavior of the LXE slightly, as can be seen by a
+%    more closer inspection in the regime, where one expects the critical point
+%
+%  \item Plot the above point (plot exists almost)
+%    
+%  \item Interpretation of fisher and the likes
+%    \cite{liCrossEntropyBenchmark2023}: $-\log \chi$ is something like
+%    a free energy difference, which would make the LXE something like a
+%    partition function, since $F = \expval{E} - \beta^{-1}S = -\beta^{-1}\ln
+%    Z$.
+%
+%  \item exponential scaling at critical point, also from fisher
+%\end{itemize}
+
 \section{Marinalizing over probabilities}
-The probability $P(\mathbf{m} \mid C, \bullet)$ is a joint probability
+In \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024} they argue that
+by tracking only the outcomes of $X$ measurements, one obtains the identical
+results for the linear cross entropy compared to tracking all results.
+In this section, we will
+prove this statement with arguments from classical probability theory,
+using that the probability $P(\mathbf{m} \mid C, \bullet)$ is a joint probability
 distribution of two discrete random variables $\mathbf{m}_X$ and
 $\mathbf{m}_Z$. 
 
-\subsection{Methods?}
-The group theoretic arguments leading to mechanism \textsf{A} also give rise to
-another insight into the linear cross entropy. Since the sign difference in the
-initial states is in the global $X$ stabilizer, we can be certain of the fact
-that it must be an $X$ measurement, which failed to project, thus leading to a
-vanishing linear cross entropy. Furthermore, we argued that the type of a
-measurement (random or deterministic) is not altered by previous measurements.
-It will therefore prove useful to write the entire measurement record as
-$\mathbf{m} = \mathbf{m}_X \cap \mathbf{m}_Z$, where $\mathbf{m}_{X/Z}$ are the
-measurement records of $X$ and $ZZ$. The individual outcomes in $\mathbf{m}$
-are independent of their preceeding outcomes. It follows that $\mathbf{m}_X$
-and $\mathbf{m}_Z$ independent random variables. We could then, theoretically,
-marginalize over $\mathbf{m}_Z$ and should arrive at the same linear cross
-entropy.
+The group theoretic arguments leading to vanishing linear cross entropy also
+give rise to another insight into a more subtle property thereof. Since the
+sign difference in the initial states is in the global $X$ stabilizer, we can
+be certain of the fact that it must be an $X$ measurement, which failed to
+project, thus leading to a vanishing linear cross entropy. Furthermore, we
+argued that the type of a measurement (random or deterministic) is not altered
+by previous measurements. (Note that this fact is completely independent of the
+initial state!)
+It will therefore prove useful to write the entire
+measurement record as $\mathbf{m} = \mathbf{m}_X \cap \mathbf{m}_Z$, where
+$\mathbf{m}_{X/Z}$ are the measurement records of $X$ and $ZZ$. The individual
+outcomes in $\mathbf{m}$ are independent of their preceeding outcomes. It
+follows that $\mathbf{m}_X$ and $\mathbf{m}_Z$ are independent random variables. 
+Starting with orthogonal $GHZ$ states, we
+could then, theoretically, marginalize over $\mathbf{m}_Z$ and should arrive at
+the same linear cross entropy.
 
-Let us consider what this implies mathematically to have independent random
+Let us consider what it implies to have independent random
 variables.
 Probability theory tells us that for independent random varaibles $A$ and $B$
 we have $P(A, B) = P(A)P(B)$, which gives us
@@ -515,8 +644,18 @@ we have $P(A, B) = P(A)P(B)$, which gives us
       P(\mathbf{m} | C, \rho) = P(\mathbf{m}_X \cap \mathbf{m}_Z | C, \rho) =
     P(\mathbf{m}_X | C, \rho)\cdot P(\mathbf{m}_Z | C, \rho)
 .\end{align}
-Since 
-This spearation can then be inserted into \cref{eq:lxe-c-defn} to yield
+
+Note that this argument relies on the fact that in \cref{eq:prob-traj-defn} we replace each measurement we
+want to marginalize by an identity of the form
+\begin{align}
+  \mathds{1} = \mathbb{P}_+ + \mathbb{P}_-
+,\end{align}
+with the projectors onto measurement results $m_{X /Z} = \pm 1$. The sum that
+emerges when all $X$ ($ZZ$) projections are replaced by this identity is then
+the marginalized probability distribution of $ZZ$ ($X$).
+
+Since the linear cross entropy solely consists of probabilities of this form,
+we can insert above separation into \cref{eq:lxe-c-defn} to yield
 \begin{align}
       \label{eq:lxe-subset}
       \chi_C &= \sum_{\mathbf{m}} P(\mathbf{m} \mid C, \rho) \frac{P(\mathbf{m} \mid
@@ -543,20 +682,35 @@ This spearation can then be inserted into \cref{eq:lxe-c-defn} to yield
           \left(P(\mathbf{m}_X' |
           C, \sigma)\right)^2}}_{\text{Subset X}}
 \end{align}
-with the 
+with \enquote{Subset ZZ} and \enquote{Subset X} being the marginalized versions
+of the linear cross entropy, where the other type of measurement is traced out.
 
-It would therefore not make a difference if we
-would replace all projections onto $ZZ$ results to an identity. This argument
-boils down to a marginalization over $ZZ$ results, 
-This argument
-can be shown mathematically by considering the 
-\begin{align}
-  P\left( \mathbf{m} \mid C, \sigma \right) = \Tr[\mathbb{P}_N \cdots
-  \frac{1}{2} \left( \mathds{1} + ZZ \right) ]
-.\end{align}
-Thus, it would not make a difference if the
-results of $ZZ$ measurements in the circuit are projected onto $\sigma$ or if
-we 
+As of yet, we have not proven the statement that tracking the outcomes of $X$
+measurements yields the same linear cross entropy as tracking all outcomes of
+all measurements. We have only shown that when tracking only a subset of
+measurements, we can multiply it by the complement to obtain the full linear
+cross entropy.
+
+However, if we paradigmatically start the circuit in orthogonal GHZ states,
+where the only difference between the two initial states (the one of the
+quantum and the one of the classical simulator) is the sign of the global $X$
+stabilizer, we can deduce that there will never be a difference in the
+\enquote{Subset ZZ} linear cross entropy, since replacing the projectors onto
+$X$ measurement results by an identity will never project onto $0$. Therefore,
+it should be identically $1$.
+
+%It would therefore not make a difference if we
+%would replace all projections onto $ZZ$ results to an identity. This argument
+%boils down to a marginalization over $ZZ$ results, 
+%This argument
+%can be shown mathematically by considering the 
+%\begin{align}
+%  P\left( \mathbf{m} \mid C, \sigma \right) = \Tr[\mathbb{P}_N \cdots
+%  \frac{1}{2} \left( \mathds{1} + ZZ \right) ]
+%.\end{align}
+%Thus, it would not make a difference if the
+%results of $ZZ$ measurements in the circuit are projected onto $\sigma$ or if
+%we 
 
 \subsection{Results}
 
@@ -569,13 +723,14 @@ probability distributions.
   $ZZ$ identisch 1 ist und das dann beim actual tableau auff\"allt}
   \label{fig:lxe-no-error-tracks}
 \end{figure}
+
 \section{PTIM with faulty gates}
 So far, the LXE appears to be a promising candidate for the order parameter of
 the phase transition in the projective transverse-field Ising model.
 Nevertheless, it is a well known fact that the world is not perfect. It is
 utopian to imagine a quantum simulator going through a circuit without any
-errors. Hence it seems a worthwile endeavor to investigate the behavior of
-$\chi$ when the 'experimentally realized' circuit with initial state $\rho$ is
+errors. Hence it seems a worthwile endeavor to investigate the robustness of the
+linear cross entropy when the 'experimentally realized' circuit with initial state $\rho$ is
 subjected to noise.
 
 \subsection{Error model}
@@ -697,13 +852,13 @@ Mechanism \textsf{B2} tikz figure
   \item gleiche \"Uberlegung gilt auch mit track $X$. hier muss halt die upper
     bound mit der \enquote{Track $X$} LXE multipliziert werden.
 \end{itemize}
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\textwidth]{Untitled.png}
-  \caption{Spalte 3 vom grossen tableau? kann auch optional sein, aber ich
-  denke, dass didaktischer mehrwert existiert.}
-  \label{fig:lxe-errors-track-all}
-\end{figure}
+%\begin{figure}[h]
+%  \centering
+%  \includegraphics[width=0.8\textwidth]{Untitled.png}
+%  \caption{Spalte 3 vom grossen tableau? kann auch optional sein, aber ich
+%  denke, dass didaktischer mehrwert existiert.}
+%  \label{fig:lxe-errors-track-all}
+%\end{figure}
 \begin{figure}[H]
   \centering
   \includegraphics{anc_vs_lxe_new.pdf}
@@ -714,7 +869,7 @@ this is shown for the region around the critical point $p=.5$ in the ideal
 case. This was done to make the shift of $S_\mathrm{anc}$ in $p$ more
 noticeable without having the cross entropy be $0$ for ridiculously small
 system sizes. Grey vertical dots indicate the critical point in the ideal case
-of no errors.}
+of no errors at $p = 1 /2$.}
   \label{fig:large-q-anc-vs-lxe}
 \end{figure}
 what happens if we only track a subset of measurements?

@@ -1,4 +1,4 @@
-\chapter{Classical Simulation of Clifford Circuits}
+\chapter{Classical \ Simulation \ of \ Stabilizer \ Circuits}
 \label{ch:mixed}
 \epigraph{Always programming a new type of antidote in your perimeter}{
 \citeauthor{quasimotoDiscipline99Pt2000}
@@ -6,7 +6,8 @@
 }
 
 In this chapter we present the simulation algorithm and 
-the modifications to the existing infrastructure that
+the modifications to the existing infrastructure (cf. ref.
+\cite{langCliffordCircuitSimulator2022}) that
 were necessary for the numerical experiments of this thesis. Usually, these
 would fall into the \emph{Methods} sections of the respective
 chapters. However, the modifications were extensive enough to warrant the
@@ -471,7 +472,7 @@ tableau.
 
 %\section{Expanding the Tableau algorithm}\label{sec:expanding}
 %
-\section{New functions on pure states}
+\section{New functions on pure states}\label{sec:purestates}
 The first function implemented is the \emph{project} function. It is used in
 the algorithm for computing the linear cross entropy, as successful projections
 in the circuit yield $\chi = 1$ and $\chi = 0$ otherwise. Luckily for us,
@@ -740,7 +741,7 @@ augmentations of \cref{alg:tab-measure} is given in \cref{alg:sim-meas-mixed}.
   this might include a swap of an antistabilizer to the stabilizers.) Then, we
   decrement \verb|mix| by 1.
 \end{alg}
-\subsection{Entropies}
+\subsection{Entropies}\label{sec:sim-entropies}
 By taking a broader class of quantum states into our consideration, we unlock a
 broader set of entropic quantities to be investigated and computed. We will
 here introduce the functions that compute the von Neumann, cross and relative
@@ -848,7 +849,7 @@ becomes the von Neumann entropy of $\sigma$, while the relative entropy becomes
 the difference between \verb|sigma.mix| and \verb|rho.mix|.
 
 \newpage
-\subsection{Partial trace}
+\subsection{Partial trace}\label{sec:ptrace}
 The next item on the list is a function that implements the partial tracing
 over a subsystem. The function itself is rather short, but relies on two
 auxiliary functions, which hide the work required. We first introduce the
@@ -981,7 +982,13 @@ applying the tableau algorithm on the rowreduced tableau. To this end, cf.
 %  Modifying $S$ by multiplication of two generators $g_i$
 %  and $g_j$ needs to be accompanied by an appropriate modification of $A$
 \end{prop}
-\begin{proof}
+\begin{figure}[H]
+  \centering
+  \input{fig/tikz/rowreduce.tex}
+  \caption{Flowchart representation of the rowreduce subroutine}
+  \label{fig:rowreduce-diag}
+\end{figure}
+\begin{proof}[Proof of \cref{prop:comm-tab-2}]
   We will first recall the invariants as given in \cref{prop:comm-tab}.
   They read
   \begin{enumerate}
@@ -1110,14 +1117,9 @@ as a flowchart in \cref{fig:rowreduce-diag}.
 %\end{algorithmic}
 %\end{algorithm}
 
-\begin{figure}[H]
-  \centering
-  \input{fig/tikz/rowreduce.tex}
-  \caption{Flowchart representation of the rowreduce subroutine}
-  \label{fig:rowreduce-diag}
-\end{figure}
 
-\subsubsection{Partial trace}\label{sec:ptrace}
+
+\subsubsection{Partial trace}
 We can now combine the two previous subroutines to an algorithm realizing the
 partial trace, also refered to as \verb|ptrace| for short. The algorithm traces
 out one qubit and modifies the remaining stabilizers accordingly. For instance,
@@ -1220,7 +1222,6 @@ whole algorithm is summarized in \cref{alg:minimal-mixing}
   mix by 1.
 \end{alg}
 
-\newpage
 \subsubsection{Maximal mixing}
 The second algorithm is rather simple. As we discard the entire generating set
 once a projection fails, there is no complex manipulation of the tableau in the

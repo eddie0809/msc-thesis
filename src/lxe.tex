@@ -580,7 +580,9 @@ compared to \cref{fig:lxe-vs-se-default}.
   \includegraphics{lxe_closer_at_crit_pbc.pdf}
   \caption{Linear cross entropy and entanglement entropy zoomed in at the
   critical point for periodic boundary conditions. The dotted vertical line
-corresponds to the theoretical critical point of the PTIM in the steady state.}
+corresponds to the theoretical critical point of the PTIM in the steady state.
+Each datapoint corresponds to $\sim 10^5$ circuit realizations per probability
+parameter}
   \label{fig:lxe-closer-at-crit}
 \end{figure}
 
@@ -609,7 +611,7 @@ which is still $p_c = 1 /2$.
 %  \item exponential scaling at critical point, also from fisher
 %\end{itemize}
 
-\section{Marinalizing over probabilities}
+\section{Marinalizing over probabilities}\label{sec:lxe-indep}
 In \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024} they argue that
 by tracking only the outcomes of $X$ measurements, one obtains the identical
 results for the linear cross entropy compared to tracking all results.
@@ -712,17 +714,58 @@ it should be identically $1$.
 %results of $ZZ$ measurements in the circuit are projected onto $\sigma$ or if
 %we 
 
-\subsection{Results}
+\subsection{Methods and results}
 
-\Cref{fig:lxe-no-error-tracks} shows the LXE for different marginalized
-probability distributions.
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\textwidth]{Untitled.png}
-  \caption{Hier erste zeile vom grossen tableau, damit klar ist, dass track
-  $ZZ$ identisch 1 ist und das dann beim actual tableau auff\"allt}
-  \label{fig:lxe-no-error-tracks}
-\end{figure}
+To implement a marginalized version of the linear cross entropy, we need to
+replace each projection we would perform in the replicated circuit by an
+identity operation. Naively, we could then just remove all complementary
+measurement gates in the numerical implementation. For a more accurate
+description, or simulation, of what we actually want to achieve, we replace
+each projection we would do when tracking all outcomes with a measurement gate,
+where we choose to be agnostic to the outcome. This is done to keep the
+underlying group structure intact. Note that contrary to the projection
+operation we implemented, a measurement can always be performed and always has
+an outcome.
+
+For the results of a simulation implemented this way, consider the first row of subplots in
+\cref{fig:err-vs-tra}. In this figure, we show the linear cross entropy as a
+function of the probability parameter $p$, where the different columns
+correspond to different marginalizations. We additionally plot the entanglement
+entropy of an ancilla qubit entangled to the initial Bell cluster of the
+system, as we already noted that this is a physically equivalent quantity in
+this case.
+In column \enquote{Track $X$ ($ZZ$)}
+we only store the measurement outcomes of $X$ ($ZZ$) measurements and perform a
+measurement of $ZZ$ ($X$) instead of a projection in the \enquote{classical
+version} of the circuit. 
+
+Note that the label \textsf{A} in the subplot of
+columns $X$ and all correspond to the mechanism, which leads to a vanishing
+cross entropy we discussed earlier and which is depicted schematically in
+\cref{fig:mechanism-a}. The reason we introduce this becomes apparent in the
+next section, where we examine the behavior of the linear cross entropy in the
+presence of symmetric (projective) noise. For the noiseless case, the
+previously introduced mechanism, which we will refer to as mechanism
+\textsf{A}, is the only way where the linear cross entropy vanishes.
+
+The first row in \cref{fig:err-vs-tra} clearly shows that only tracking the outcomes
+of $ZZ$ measurements yields a (marginalized) linear cross entropy that is
+identically 1. Conversely, the tracking of only the outcomes of $X$
+measurements yields the same curve as the one where we track everything. This
+is an indicator that the probability theoretic argument that $\mathbf{m}_X$ and
+$\mathbf{m}_Z$ are independent random variables holds water. By our choice of
+initial states, there is no mechanism present in the circuit, where the
+marginalized cross entropy of $ZZ$ goes to 0. We will take special note of this
+fact when we introduce noise to the circuit.
+%\Cref{fig:lxe-no-error-tracks} shows the LXE for different marginalized
+%probability distributions.
+%\begin{figure}[h]
+%  \centering
+%  \includegraphics[width=0.8\textwidth]{Untitled.png}
+%  \caption{Hier erste zeile vom grossen tableau, damit klar ist, dass track
+%  $ZZ$ identisch 1 ist und das dann beim actual tableau auff\"allt}
+%  \label{fig:lxe-no-error-tracks}
+%\end{figure}
 
 \section{PTIM with faulty gates}
 So far, the LXE appears to be a promising candidate for the order parameter of
@@ -733,65 +776,105 @@ errors. Hence it seems a worthwile endeavor to investigate the robustness of the
 linear cross entropy when the 'experimentally realized' circuit with initial state $\rho$ is
 subjected to noise.
 
-\subsection{Error model}
-\begin{itemize}
-  \item We start with our usual scheme of designing a random circuit $C$ and
-    measuring accordingly. However, this time we measure additionally on
-    each qubit after each timestep with an error rate $q$.
-  \item This scheme is generic, we use it for $X$ and $ZZ$ errors, both
-    separately and together. 
-  \item For $X$ Errors, the entanglement cluster dies earlier, since we measure
-    $X$ more often.\\
-    For $ZZ$ Errors, the entanglement cluster dies later, analogous to $X$\\
-\end{itemize}
+In this section and the remainder of this chapter we investigate the
+impact of a type of error model on the linear cross entropy and see verify its
+robustness to noise. We build on and critique the work of ref.
+\cite{tikhanovskayaUniversalityCrossEntropy2023} insofar as we
+implement their error model in our simulations, expand it to include also $ZZ$
+noise, as well as the marginalized linear cross entropies, and contextualize
+the results.
+\clearpage
+\subsection{Error model}\label{sec:errormodel}
 
-\par{What happens in the mathematics?}
-\begin{itemize}
-  \item By introducing errors to the circuit, we subject it to quite impactful
-    alterations; previously we could consider the reduced measurement
-    pattern -- which we had access to -- and apply it to both initial states.
-  \item Now we need to consider the designed, albeit still random, pattern $C$
-    and the faulty pattern $\tilde{C}$. Note that $C\subseteq\tilde{C}$.
-  \item HOWEVER: Within $\tilde{C}$ and $C$ the same argument as in
-    \cref{sec:lxe-indep} holds. The outcomes we track are still independent
-    random variables, now only with a different circuit that produces them,
-    i.e. \[ P(\mathbf{m}_X \cap \mathbf{m}_Z | \tilde{C}, \rho) = 
-    P(\mathbf{m}_X | \tilde{C}, \rho)\cdot P(\mathbf{m}_Z | \tilde{C}, \rho) \]
-  \item Note that the types of the measurements might swap. What has been
-    deterministic previously could now be random and vice versa. The only way
-    this can be bypassed is if an error directly precedes or is directly preceeded by a
-    measurement of the same observable natively contained in $C$. That way the
-    error is not 'seen' by the measurement history, since then the error either
-    does nothing or fixes an outcome of a measurement.
-  \item The fraction in \cref{eq:lxe-c-def}, that is, $f(\mathbf{m}, C_p,
-    \sigma)$, is still the same object as before;
-    we are still trying to find the compatibility between classical simulation
-    $(C, \sigma)$ and 'quantum' experiment $(\tilde{C}, \rho)$.
-  \item However, $\expval{\expval{f}}_{p,\rho}$, i.e. \cref{eq:sample-f-C},
-    will alter slightly. As we are trying to realistically model errors, we
-    should be unaware of the location they happen in, but assume that they
-    happened. As such, $\tilde{C}$ is a random circuit with probability
-    parameters $p$ and $q$ for measurements we see and don't see respectively.
-    \Cref{eq:sample-f-C} then becomes a sum over $\tilde{C}_{p,q}$,
-    \begin{align} \label{eq:sample-f-Ctilde}
-      \expval{\expval{f}}_{p,q,\rho} = \sum_{\tilde{C}_{p,q}} P(\tilde{C}_{p,q})
-      \cdot f(\mathbf{m},C_p, \sigma)
-    .\end{align}
-  \item Although $f$ is the same mathematical object as before, we can now identify another
-    cause of $f$ going to $0$: An error is not bypassed by the mechanism
-    described above, but is entrapped by the competing measurement.
-  \item Take, for instance, the minimal example of two qubits with $X$-Errors.
-    A valid measurement pattern would be $(Z_1Z_2, Z_1Z_2)$. Starting with a
-    Bell state, this would yield the outcomes $(+1, +1)$ deterministically. If
-    we now squeeze an error inbetween the two measurements, we have halved the
-    probability of getting $+1$ at the second timestep. \textcolor{red}{hier
-    tikz bildchen einf\"ugen}
-    \item The mechanism of $\chi$ going to $0$ due to errors which fail to not 
-    get noticed will henceforth be denoted with \textsf{B1} and \textsf{B2} for
-    $X$ errors and $ZZ$ errors respectively.
-\end{itemize}
+As error model, we implement the model from
+\cite{tikhanovskayaUniversalityCrossEntropy2023}, where they
+considered symmetric noise in $X$. The protocol to introduce errors is as
+follows. Between each timestep, apply a quantum channel of the form
+\begin{align}
+  \varepsilon(\rho) = \frac{1}{2}\rho + \frac{1}{2}X\rho X^\dagger
+\end{align}
+on each qubit with an error rate $q$.\footnote{We refer to this quantum channel
+as \enquote{error} and \enquote{noise} interchangeably.} That is, after each timestep, before
+applying the measurement gates of the next one, we construct an additional
+measurement layer, where measurements of certain types are performed with
+probability $q$.  This scheme is generic insofar as we can also imagine $ZZ$
+errors happening in this way, as well as errors on both observables.
 
-Mechanism \textsf{B1} tikz figure
+This type of error can be interpreted as additional measurements we failed to
+keep track of in general, and not by choice. Another way of interpreting it is
+that they constitute projective errors, akin to the one shown in a minimal
+example in \cref{fig:error-detecting-circuit}. Our expectation from the
+interpretation of the survival rate of the initial cluster would be that for
+$X$ noise, we have the phase transition at a smaller probability, since the
+initial cluster dies earlier due to the presence of more frequent $X$
+measurements. In the converse we expect the cluster to survive longer, since we
+artificially introduce stabilizer measurements at a rate $q$.
+
+Before we put this expectation to the test, we need to consider how we go about
+sampling this quantity. We implement this noise in a way closest to what one
+could consider noise in a real experiment starting with our usual scheme of
+designing a random circuit $C$ and measuring accordingly. However, this time we
+measure additionally on each qubit after each timestep with an error rate $q$.
+These measurements we don't keep track of and seed randomly in the simulation
+of $\rho$.
+
+By introducing errors to the circuit, we subject it to quite impactful
+alterations; previously we could consider the reduced measurement
+pattern -- which we had access to -- and apply it to both initial states, with
+mechanism \textsf{A} being the only source of vanishing terms in the sampling.
+Now we need to consider the designed, albeit still randomly generated, circuit $C$
+and the faulty pattern $\tilde{C}$, where $\tilde{C}$ is parametrized by both
+$p$ and $q$. Crucially, the new faulty circuit $\tilde{C}$ constitutes a
+superset of $C$, since each measurement of $C$ is performed regardless. That
+is, we have $C\subseteq\tilde{C}$. 
+
+Note that this leaves the fraction in \cref{eq:lxe-c-defn,eq:diesesding}, that
+is,
+\begin{align}
+      f(\mathbf{m}, C, \sigma) = \frac{P(\mathbf{m} |
+     C,\sigma)}{\sum_{\mathbf{m'}}\left(P(\mathbf{m}'|C,\sigma)\right)^2}
+\end{align}
+invariant;
+we are still trying to find the compatibility
+between classical simulation $(C, \sigma)$ and 'quantum' experiment
+$(\tilde{C}, \rho)$.  However, we will obtain a different expression for the
+sample average, \cref{eq:sample-f-C}. As we are trying to realistically
+model errors, we should be unaware of the location they happen in, but assume
+that they happened. As such, $\tilde{C}$ is a random circuit with probability
+parameters $p$ and $q$ for measurements we do and do not have control over, respectively.
+\Cref{eq:sample-f-C} then becomes a sum over $\tilde{C}_{p,q}$,
+\begin{align}
+  \label{eq:sample-f-Ctilde} \expval{\expval{f}}_{p,q,\rho} =
+\sum_{\tilde{C}_{p,q}} P(\tilde{C}_{p,q}) \cdot f(\mathbf{m},C_p, \sigma)
+.\end{align}
+
+With the sampling scheme defined in a more precise way, we can refine our
+predictions on the results in the simulation. Although the $f$ in \cref{eq:sample-f-Ctilde} and \cref{eq:sample-f-C} are
+identical, the measurement record we take as input is not generated from the
+same circuit. Consequently, we can now identify other
+causes of the function going to $0$.
+
+Previously we argued that the probability of a
+measurement outcome is not influenced by preceeding measurements, that is, they
+are independent random variables. While this is still the case, the argument
+only holds on a circuit-level. The only way where an error does not alter the
+probability of the succceeding measurements is, if it commutes with the
+measurement operators on the same site that directly preceed or succeed the
+error. For instance, if the circuit dictates a measurement of $X$, which is
+then followed by the noise channel, the state is not altered and nothing is
+affected.
+
+Thus, we argue that there is an additional mechanism for vanishing
+circuit-level linear cross entropy, where an error is not bypassed by the
+mechanism described above, but is entrapped by the competing measurement.
+
+Take, for instance, the minimal example of two qubits with $X$-Errors.
+A valid measurement pattern would be $(Z_1Z_2, Z_1Z_2)$. Starting with a
+Bell state, this would yield the outcomes $(+1, +1)$ deterministically. If
+we now squeeze an error inbetween the two measurements, we have halved the
+probability of getting $+1$ at the second timestep. Thus, for half of the runs
+we would get an unsuccessful projection. 
+
 \begin{figure}[t]
   \centering
   \input{fig/tikz/mechanism_b1.tex}
@@ -807,51 +890,151 @@ Mechanism \textsf{B1} tikz figure
   \label{fig:mech-b1-lxe}
 \end{figure}
 
-Mechanism \textsf{B2} tikz figure
 \begin{figure}[t]
   \centering
   \input{fig/tikz/mechanism_b2.tex}
   \caption{Excerpt of a possible PTIM circuit with non-zero probability of
-  $ZZ$-errors occuring showcasing mechanism \textsf{B2}. At timestep $t=i$, 
-  we perform an $X$ measurement on the left qubit with result $+1$,
-  and a $ZZ$ error occurs on the shown pair after the measurement. Then in the next
-  timestep, we measure $X$ on the left qubit once more. As a consequence of the
-  error, this $X$
-  measurement does not yield $+1$ deterministically, but $\pm 1$ with
-  probability $\frac{1}{2}$ for either result. When trying to project in the classical
-  simulation, this discrepancy gets noticed, since we do not have access to the
-  precise nature of the errors. Upon failed projection we have $\chi=0$.}
+    $ZZ$-errors occuring showcasing mechanism \textsf{B2}. At timestep $t=i$,
+    we perform an $X$ measurement on the left qubit with result $+1$, and a
+    $ZZ$ error occurs on the shown pair after the measurement. Then in the next
+    timestep, we measure $X$ on the left qubit once more. As a consequence of
+    the error, this $X$ measurement does not yield $+1$ deterministically, but
+    $\pm 1$ with probability $\frac{1}{2}$ for either result. When trying to
+    project in the classical simulation, this discrepancy gets noticed, since we
+    do not have access to the precise nature of the errors. Upon failed projection
+    we have $\chi=0$.}
   \label{fig:mech-b2-lxe}
 \end{figure}
 
-\subsection{tracking everything}
-\begin{itemize}
-  \item Mit Fehlermodell aus \cite{tikhanovskayaUniversalityCrossEntropy2023}
-    k\"onnen wir schauen wie schlecht unser experiment ist. Wenn
-    \enquote{Track $ZZ$} spalte von 1 verschieden ist haben wir ein faulty
-    experiment in $X$.
-  \item Geht mit $ZZ$ fehlern nicht so prickelnd,%aber wenn keine $X$-Fehler da sind,
-    aber aus der kombination der tracks kann man inferieren. 
-  \item Warum fehlt hier die absch\"atzung? da war doch mal eine am start?
-  \item Folgende ist gemeint:
+The mechanism of the circuit-level linear cross entropy going to $0$ due to
+errors which fail to not get noticed will henceforth be denoted with
+\textsf{B1} and \textsf{B2} for $X$ errors and $ZZ$ errors respectively.
+Possible examples of them occuring in a PTIM experiment and simulation
+are depicted schematically in \cref{fig:mech-b1-lxe,fig:mech-b2-lxe}.
 
-    Wenn man annimmt, dass \textsf{B1} der einzige mechanismus ist, der die LXE
-    nach unten dr\"uckt (wie bspw. bei Track $ZZ$, $X$ Error), dann kann man
-    folgende absch\"atzung machen:
-    \begin{align}
+It is not hard to convince oneself that the linear cross entropy sampled with
+faulty circuits is less than or equal to the original cross entropy, since the
+original source of it going to $0$ is still present nonetheless. We can do a
+simple estimation on the probability of one of the above introduced mechanisms
+to bound the error-influenced linear cross entropy from above. These
+considerations also serve to better understand them.
+
+Let us consider mechanism \textsf{B1}, where $X$ errors occur with probability
+$q$.
+The measurement record $\mathbf{m}$ obtained from $\tilde{C}$ applied on $\rho$
+is incompatible with $\sigma$ if there is a projection onto the zero-vector.
+Thus, for a non-zero LXE we want this \emph{not} to happen. One way for this to happen
+is if mechanism \textsf{B1} takes effect. To derive the probability of
+\textsf{B1} occuring, consider the following train of thought.
+
+\begin{enumerate}
+  \item Two successive $ZZ$ measurements must occur in $C$ on the same edge. This event has probability
+    $(1-p)\cdot (1-p)= (1-p)^2$ by the construction rules of the PTIM circuit.
+  \item No $X$ measurements on the site where the error occurs. This event also
+    has probability $(1-p)^2$, as $p$ is the probability of $X$ measurements,
+    again by the rules on how we construct a PTIM circuit.
+  \item An error must occur on one of the sites, which gets detected. The error
+    rate is $q$, with an effective probability of $q /2$, since the
+    \enquote{correct} measurement result is still a valid outcome in the
+    circuit.
+  \item The mechanism is symmetric in the two sites encompassed in the edge the
+    $ZZ$ measurements occur, which multiplies the above points by 2.
+\end{enumerate}
+
+Thus, the probability of \textsf{B1} is
+\begin{align}
+  P(\textsf{B1}; p,q) = \frac{2}{2} q \left(1-p\right)^2\left(1-p\right)^2 = q\left(
+  1-p\right)^4
+.\end{align}
+Since this should not happen anywhere in the space-time lattice, we have
+\begin{align}\label{eq:lxe-estimate}
       \chi \leq \left( 1-q\left( 1-p \right)^4  \right)^{(L-1)(T-1)}
-    .\end{align}
-    Recht simple explanation dazu: in der ersten klammer ist die
-    wahrscheinlichkeit, dass mechanismus \textsf{B1} \emph{nicht} passiert.
-    $\left( 1-p \right)^2$ von den zwei im circuit chillenden $ZZ$ messungen,
-    $\left( 1-p \right)^2$ von den zwei nicht im circuit chillenden $X$
-    messungen, und $\frac{2}{2} q$ von den zwei m\"oglichen fehlerpositionen
-    mit je $\frac{1}{2}$ wahrscheinlichkeit die LXE zu bricken.
+\end{align}
+as an estimation for the linear cross entropy for $X$ errors.
 
-  \item Das sollte ich vielleicht noch plotten, oder?
-  \item gleiche \"Uberlegung gilt auch mit track $X$. hier muss halt die upper
-    bound mit der \enquote{Track $X$} LXE multipliziert werden.
-\end{itemize}
+\subsection{Tracking everything}
+
+We first discuss the results for tracking every measurement outcome. The
+results of which are shown in the \enquote{Track all} column of
+\cref{fig:err-vs-tra} with annotations highlighting the predominant mechanism
+leading to a vanishing linear cross entropy. We set up the system the same way
+as before with $\rho = \dyad{GHZ+}$ and $\sigma = \dyad{GHZ-}$, and an
+additional error rate of $q=0.01$, consistent with the choice in ref.
+\cite{tikhanovskayaUniversalityCrossEntropy2023}.
+Note that in the cases where $X$
+errors are present, we show the plots of systems with fewer qubits. As we can infer from
+\cref{eq:lxe-estimate} the linear cross entropy is exponentially suppressed
+with larger system size. We therefore obtain $\chi \equiv 0$ for sufficiently
+large systems, which would be the case for $L=64$ and $L=128$, as shown in the
+other subplots. Shown additionally is the entanglement entropy of an ancilla
+qubit, $S_\mathrm{anc}$, which was the initial interpretation of the linear
+cross entropy in case of no noise. One can clearly see that this interpretation
+is no longer a valid one. 
+
+To highlight the shift of the critical point in case
+of noise, consider \cref{fig:large-q-anc-vs-lxe}, where the entanglement
+entropy of an ancilla qubit entangled to the initial cluster is shown with 
+the corresponding linear cross entropy. We here probed a region of $p$ close to
+the critical point with an error rate of $q=0.1$, higher than the one in
+\cref{fig:err-vs-tra}. We here chose smaller systems as well. Notice that the
+critical point moves as expected, where the linear cross entropy leaves no
+possibility for inference thereof. Its behavior is seemingly decoupled from the
+actual dynamics of the entanglement cluster, and is dominated by the other
+mechanisms leading to a vanishing cross entropy. Even for relatively small
+systems of $L=16$, the linear cross entropy is not robust to the influence of
+noise.
+
+Our results thus show that the linear cross entropy in the form defined in
+\cref{defn:lxe} is not a sensible choice for an order parameter of the phase
+transition, as experimental realizations of the projective transverse-field
+Ising model will inevitably include noise, exponentially suppressing the linear
+cross entropy. Its utility with regards to the phase transition in the PTIM is
+therefore rather limited.
+
+As an aside, we want to bring attention to the fact that our results differ
+from the results obtained by \cite{tikhanovskayaUniversalityCrossEntropy2023}.
+Their results for the linear cross entropy in a noisy circuit show little
+deviation from the noiseless behavior, seemingly only scaled down by some
+factor. However, by the provided upper bound, we know the LXE to be
+exponentially suppressed. This discrepancy between our results and theirs could
+be caused by a multitude of different issues. First, the source of the
+discrepancy could be statistical in nature, due to different sample
+sizes.\footnote{The author deems this the most likely explanation.}
+Additionally, they could also process their data with alternative methods.
+However, no evidence to support this explanation is presented in either the
+main text or the appendix of the preprint or the peer-reviewed publication,
+ref.  \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024}.
+
+%Finally, they could also
+%have made an honest mistake and inserted a plot at the wrong place. 
+%statistical errors, due to a different sample size. Then, they could also
+%sample differently. 
+
+%\begin{itemize}
+%  \item Mit Fehlermodell aus \cite{tikhanovskayaUniversalityCrossEntropy2023}
+%    k\"onnen wir schauen wie schlecht unser experiment ist. Wenn
+%    \enquote{Track $ZZ$} spalte von 1 verschieden ist haben wir ein faulty
+%    experiment in $X$.
+%  \item Geht mit $ZZ$ fehlern nicht so prickelnd,%aber wenn keine $X$-Fehler da sind,
+%    aber aus der kombination der tracks kann man inferieren. 
+%  \item Warum fehlt hier die absch\"atzung? da war doch mal eine am start?
+%  \item Folgende ist gemeint:
+%
+%    Wenn man annimmt, dass \textsf{B1} der einzige mechanismus ist, der die LXE
+%    nach unten dr\"uckt (wie bspw. bei Track $ZZ$, $X$ Error), dann kann man
+%    folgende absch\"atzung machen:
+%    
+%    Recht simple explanation dazu: in der ersten klammer ist die
+%    wahrscheinlichkeit, dass mechanismus \textsf{B1} \emph{nicht} passiert.
+%    $\left( 1-p \right)^2$ von den zwei im circuit chillenden $ZZ$ messungen,
+%    $\left( 1-p \right)^2$ von den zwei nicht im circuit chillenden $X$
+%    messungen, und $\frac{2}{2} q$ von den zwei m\"oglichen fehlerpositionen
+%    mit je $\frac{1}{2}$ wahrscheinlichkeit die LXE zu bricken.
+%
+%  \item Das sollte ich vielleicht noch plotten, oder?
+%  \item gleiche \"Uberlegung gilt auch mit track $X$. hier muss halt die upper
+%    bound mit der \enquote{Track $X$} LXE multipliziert werden.
+%\end{itemize}
 %\begin{figure}[h]
 %  \centering
 %  \includegraphics[width=0.8\textwidth]{Untitled.png}
@@ -859,7 +1042,7 @@ Mechanism \textsf{B2} tikz figure
 %  denke, dass didaktischer mehrwert existiert.}
 %  \label{fig:lxe-errors-track-all}
 %\end{figure}
-\begin{figure}[H]
+\begin{figure}[p]
   \centering
   \includegraphics{anc_vs_lxe_new.pdf}
   \caption{Ancilla entanglement entropy and linear cross entropy for an error
@@ -867,19 +1050,37 @@ Mechanism \textsf{B2} tikz figure
 \cref{fig:err-vs-tra} since $\chi$ would be $0$ for larger systems. Note that
 this is shown for the region around the critical point $p=.5$ in the ideal
 case. This was done to make the shift of $S_\mathrm{anc}$ in $p$ more
-noticeable without having the cross entropy be $0$ for ridiculously small
+noticeable without having the cross entropy be $0$ for small
 system sizes. Grey vertical dots indicate the critical point in the ideal case
-of no errors at $p = 1 /2$.}
+of no errors at $p = 1 /2$. Each datapoint corresponds to the sampling of $\sim
+10^5$ circuit realizations.}
   \label{fig:large-q-anc-vs-lxe}
 \end{figure}
-what happens if we only track a subset of measurements?
+
 \subsection{Marginalization}
 \label{sec:lxe-err-subset}
-Despite the fact that $\rho$ and $\sigma$ are being subjected to physically
+Notice that if, instead of applying projection operations, we applied
+measurement gates in the circuit depicted in \cref{fig:mech-b1-lxe}, we would
+-- obviously -- not project onto the 0-vector, and thus the circuit would
+continue. This is exactly what happens when one marginalizes out the
+measurement results of $ZZ$ measurements, as discussed in \cref{sec:lxe-indep}.
+It thus stands to reason that we should entertain this probability theoretic
+trick for the noisy circuits.
+
+Within $\tilde{C}$ and $C$ the same argument as in
+\cref{sec:lxe-indep} holds. The outcomes we track are still independent
+random variables, now only with a different circuit that produces them,
+i.e. 
+\begin{align}
+  P(\mathbf{m}_X \cap \mathbf{m}_Z | \tilde{C}, \rho) = 
+  P(\mathbf{m}_X | \tilde{C}, \rho)\cdot P(\mathbf{m}_Z | \tilde{C}, \rho)
+.\end{align}
+
+Therefore, despite the fact that $\rho$ and $\sigma$ are being subjected to physically
 different circuits, we can still separate the respective probabilities as we
 did before. We just need to be careful with the interpretation. That is, we can
 follow the derivation in \cref{eq:lxe-subset}, where we replace $C$ in the
-probabilities conditioned on initial state $\rho$ with $\tilde{C}$:
+probabilities conditioned on initial state $\rho$ with $\tilde{C}$,
 
 \begin{align}
       \label{eq:lxe-subset-err}
@@ -907,6 +1108,7 @@ probabilities conditioned on initial state $\rho$ with $\tilde{C}$:
           \left(P(\mathbf{m}_X' |
           C, \sigma)\right)^2}}_{\text{Subset X}}
 \end{align}
+
 It turns out that tracking $\mathcal{O}$ measurements only prevents us from
 seeing $\mathcal{O}$-errors. It is not hard to convince oneself that this needs to
 be true: If we do not care about the outcomes of the observable, where no errors
@@ -943,7 +1145,7 @@ errors and roughly equal to the ideal case for $X$ and $ZZ$ errors.
 
 \Cref{fig:err-vs-tra} hopefully looks nice. Maybe it also floats to the correct
 place!
-\begin{figure}[H]
+\begin{figure}[p]
   \centering
   \includegraphics{errors-vs-tracked.pdf}
   \caption{Which measurement outcomes have been tracked and used to compute the
@@ -951,4 +1153,7 @@ place!
   \label{fig:err-vs-tra}
 \end{figure}
 %It didn't seem to do so, so i passed \texttt{[h!]}
+\newpage
 \section{Summary}
+In this chapter we examined the linear cross entropy in the projective
+transverse-field Ising model. 

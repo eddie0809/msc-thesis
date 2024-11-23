@@ -1,8 +1,8 @@
-\begin{tikzpicture}[scale=1.2]
+\begin{tikzpicture}
 
 % Define grid dimensions, 10x8 grid
-\def\qubits{9} 
-\def\timesteps{7}
+\def\qubits{7} 
+\def\timesteps{6}
 
 % Draw the background grid
 \foreach \x in {0,...,\qubits} {
@@ -42,7 +42,7 @@
         \fi
     }
 
-\def\loopend{6}
+\def\loopend{5}
 % Place red circles on vertical edges with 0.5 probability
 \foreach \x in {0,...,\qubits} {
     \foreach \t in {0,...,\loopend} {

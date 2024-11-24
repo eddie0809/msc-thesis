@@ -5,7 +5,7 @@
 \citeauthor{baron-cohenAutismSpectrumQuotientAQ2001}}
 %\cite{baron-cohenAutismSpectrumQuotientAQ2001}}
 
-Was hier useful werden kann:
+%Was hier useful werden kann:
 
 %Nielsen: \cite{nielsenQuantumComputationQuantum2010}
 %
@@ -14,7 +14,7 @@ Was hier useful werden kann:
 %Algorithm for simulating stabilizer circuits:
 %\cite{aaronsonImprovedSimulationStabilizer2004}
 
-stabilizer lecture notes: \cite{arabLectureNotesQuantum2024}
+%stabilizer lecture notes: \cite{arabLectureNotesQuantum2024}
 
 %Entanglement with Stabilizers: \cite{fattalEntanglementStabilizerFormalism2004}
 %
@@ -30,14 +30,22 @@ stabilizer lecture notes: \cite{arabLectureNotesQuantum2024}
 This chapter serves to familiarize the reader with the core concepts relevant
 to this thesis. We will first introduce the stabilizer formalism, as it will
 later enable us to perform efficient numerical experiments on a classical
-computer. We then provide a general introduction to the field of entanglement
-transitions and go over some important examples. 
+computer. Next, we provide an overview of the field of entanglement transitions
+and cite some important examples and works of the field. We will then introduce
+the model system that is subject to the main part of this thesis, the
+projective transverse-field Ising model, motivate it and highlight its most
+intriguing features. Finalizing this chapter is a more metaphysical section on
+the sampling problem, which deals with the ontology of entanglement and phase
+transitions in entanglement.
 \newpage
 \section{The stabilizer formalism}\label{sec:stab-basics}
 In quantum computation and quantum computing we are exposed to a multitude of
-obstacles to overcome. Two obvious ones are the issues of quantum error
-correction and the exponential space complexity of genuine quantum simulations
-on classical computers. While it seems almost absurd to suggest that these two
+obstacles to overcome. For starters, there is the issue of quantum error
+correction. The encoding of information in a qubit allows for more than the
+usual bit-flip error from classical computing. Then there is the problem of
+simulating a quantum computer on a classical one. This requires, in principle,
+the storage of exponentially many amplitudes for every additional qubit one
+wants to simulate. While it seems almost absurd to suggest that these two
 problems would be dealt with by the same formalism, we nevertheless want to
 wash out doubts about this fact in the present section and present an
 introduction to the stabilizer formalism.
@@ -51,7 +59,7 @@ world of quantum information theory
 
 As the stabilizer formalism relies heavily on group theoretic arguments, we
 will first begin by giving a brief overview of the foundational algebra.
-\subsection{Basic notions of group theory}
+\subsection{Basic notions of group theory}\label{sec:grouptheory}
 Group theory is one of the most important concepts from algebra in the toolset
 of theoretical physicists.
 From classifying crystalline structures

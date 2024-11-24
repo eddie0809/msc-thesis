@@ -1,13 +1,19 @@
 \chapter{Upper Bound}
 \label{ch:rel-ent}
+\epigraph{To Infinity And Beyond}{Buzz Lightyear}
 
-\textcolor{red}{denk nochmal \"uber die struktur hier nach, also mit den
-numerischen approaches. naive approach zu den anderen? Auch auf simulations
-chapter verweisen!}
-
+%\textcolor{red}{denk nochmal \"uber die struktur hier nach, also mit den
+%numerischen approaches. naive approach zu den anderen? Auch auf simulations
+%chapter verweisen!}
+%
 In this chapter we explore the approach of
 \citeauthor{garrattProbingPostmeasurementEntanglement2023} presented in
-\cite{garrattProbingPostmeasurementEntanglement2024}. They introduce a method
+\cite{garrattProbingPostmeasurementEntanglement2023}\footnote{While this
+  reference points to a preprint on arXiv, we remark that the cited work has
+since been published in
+\citefield{garrattProbingPostmeasurementEntanglement2024}{journaltitle} with no
+significant alterations (cf. ref.
+\cite{garrattProbingPostmeasurementEntanglement2024})}. They introduce a method
 to probe the critical point of the phase transition of a hybrid circuit. In
 particular, they make use of Klein's inequality, bounding the entanglement
 entropy from above. In the present chapter we introduce the idea behind this
@@ -19,10 +25,10 @@ prove that for Clifford circuits, i.e. in the stabilizer formalism, there is
 only a limited class of cases, where the upper bound is non-trivial. In
 \cref{sec:upperbound-numerics} we introduce different numerical post-processing
 algorithms, trying to combat infinities appearing, when introducing an error
-model akin to the one in \cref{sec:lxe-errors}. The results of which are shown
+model akin to the one in \cref{sec:errormodel}. The results of which are shown
 and discussed in \cref{sec:upperbound-results}. Finally, we provide and discuss
-regularizations of divergences, weighing out utility and
-computational efficiency.
+regularizations of divergences, weighing out utility and computational
+efficiency.
 
 %computable quantities
 %In this chapter we investigate if Klein's Inequality can assist us in obtaining
@@ -36,11 +42,12 @@ computational efficiency.
 %to obtain an upper bound on the entanglement entropy via classical
 %post-processing.
 %
+\clearpage
 \section{The Idea \& Stabilizers}\label{sec:upperbound-idea}
 In this section we will introduce the upper bound on entanglement entropy,
 provide an information-theoretic interpretation and derive an expression for
 the quantity of interest in case of stabilizer states. First however, we will
-freshen up on definitions of some important quantities.
+recall the definitions of some important quantities.
 \subsubsection{Entropy of entanglement}
 The main quantity of interest in the whole field of entanglement transitions is
 the entropy of entanglement. It is a measure for how entangled one subsystem of a
@@ -116,7 +123,7 @@ The same way we
 motivated the von Neumann entropy, we want to define a quantum mechanical
 analogue to the classical relative entropy. This quantity will play a role of
 major importance in this chapter and is defined as follows.
-\begin{defn}[Quantum relative entropy]\label{defn:rel-ent}
+\begin{defn}[Quantum relative and cross entropy]\label{defn:rel-ent}
   Let $\rho$ and $\sigma$ be density matrices with identical dimension. The
   relative entropy of $\rho$ to $\sigma$ is
   %$S: H^{\otimes N} \times H^{\otimes N} \to \mathbb{R}^+_0 \cup \{\infty\}$
@@ -125,8 +132,11 @@ major importance in this chapter and is defined as follows.
     \Tr[\rho\log\sigma] = -S(\rho) - \Tr[\rho\log\sigma]
   ,\end{align}
   with the von Neumann entropy $S(\rho)$.
-  The last term in \cref{eq:rel-ent-defn}, that is, $\Tr[\rho\log\sigma]$ is also
-  known as \emph{cross entropy}. 
+  The last term in \cref{eq:rel-ent-defn}, that is, 
+  \begin{align}
+    S\left( \rho\mid\mid\sigma \right) + S(\rho) = -\Tr[\rho\log\sigma]
+  .\end{align}
+  is known as \emph{cross entropy}. 
 \end{defn}
 Relative entropy, classical or quantum, quantifies excess surprisal when
 one assumes $\sigma$ as a state\footnote{or probability distribution in the
@@ -301,7 +311,7 @@ the entanglement entropy, we can employ Klein's inequality to upper bound the
 entanglement entropy as well and thus try to find a signature of the phase
 transition.
 
-This idea was used in \cite{garrattProbingPostmeasurementEntanglement2024} for
+This idea was used in \cite{garrattProbingPostmeasurementEntanglement2023} for
 a hybrid circuit of Haar random 2-qubit unitaries and $Z$ measurements. Since
 they investigate a hybrid circuit, they take additional steps to circumvent the
 post-selection problem, such as shadow tomography. To test their approach they
@@ -337,7 +347,12 @@ relative entropy. We will explore this question in the next section.
 
 
 \subsection{Stabilizers}\label{sec:rel-ent-stab}
-In this section we will investigate the upper bound on the entanglement entropy
+When resarching the quantum relative entropy and cross entropy and possible
+expressions thereof in the stabilizer formalism, we have not been successful in
+finding an efficient method, such as the one for the entanglement entropy
+(cf. ref. \cite{fattalEntanglementStabilizerFormalism2004})
+\cite{veitchResourceTheoryStabilizer2014,niekampEntropicUncertaintyRelations2012,leoneStabilizerEntropiesAre2024,leonePhaseTransitionStabilizer2024,wuEntanglementUpperBound2011,vedralEntanglementMeasuresPurification1998,lindenQuantumEntropyCone2013,buExtremalityStabilizerStates2024,arabLectureNotesQuantum2024,nielsenQuantumComputationQuantum2010}.
+In this section we will therefore examine the upper bound on the entanglement entropy
 given by \cref{thm:kleins-ineq} in the context of stabilizers and the
 stabilizer formalism. In particular, we will explore the condition of infinite
 relative entropy,
@@ -347,7 +362,7 @@ density matrices (\cref{prop:subgroup}), and derive an expression for finite cro
 and relative entropy.
 
 Recall that we have $S(\rho\mid\mid\sigma)<\infty$ for
-supp$(\rho)\subseteq$supp$(\sigma)$. For the proof of \cref{prop:subgroup} it
+supp$(\rho)\subseteq$ supp$(\sigma)$. For the proof of \cref{prop:subgroup} it
 will prove useful to introduce an auxilliary lemma, which relates the support
 of a density matrix to the stabilized subspace.
 \begin{lem}\label{lem:supp-is-vs}
@@ -559,7 +574,7 @@ perfect mixture of stabilized states.
   Let $\rho$ and $\sigma$ be $N$-qubit stabilizer density matrices with
   respective stabilizer groups $\mathcal{S}_\rho$ and $\mathcal{S}_\sigma$ that
   satisfy $\mathcal{S}_\sigma \leq
-  \nathcal{S}_\rho$. Further, let $\abs{\mathcal{S}_\sigma} \equiv s$. Then
+  \mathcal{S}_\rho$. Further, let $\abs{\mathcal{S}_\sigma} \equiv s$. Then
   \begin{align}\label{eq:cross-ent-stab}
     -\Tr[\rho\log\sigma] = N - s
   .\end{align}
@@ -769,9 +784,8 @@ post-processing algorithms one might make use of.
 %the vibe of \emph{this section}.
 %
 
-\section{Numerical approaches}\label{sec:upperbound-numerics}
 
-\subsection{Na\"ive approach}\label{sec:naive-approach}
+\section{Naive approach}\label{sec:naive-approach}
 The key idea of the upper bound is to have a quantity that is linear in $\rho$.
 By obtaining a measurement record $\vb{m}$, we can try and classically
 reconstruct the experimental density matrix $\rho$ from the record. Since we
@@ -780,7 +794,7 @@ project onto measurement results. We therefore can -- naively -- attempt a
 reconstruction of our experiment based on the data. Of course, in our case, we
 also use a classical simulator to generate data.
 
-\subsubsection{Methods}
+\subsection{Methods}
 After the data has been generated we do as we did before in \cref{ch:lxe} and
 project the measurement outcomes onto $\sigma$. However, we start from the same
 state $\rho = \sigma = \dyad{GHZ+}$. After we have completed the circuit, we
@@ -801,76 +815,121 @@ record and stop the projections. Here, we really want a faithful reconstruction
 of the density matrix. The algorithm to force projections is outlined in
 \cref{alg:force-project}.
 
-Of course, we then also introduce errors. 
+As we use the general setup from \cref{ch:lxe}, we also employ the error model
+introduced in \cref{sec:errormodel} to emulate noise in the circuit. This is to
+ensure comparability between the general approaches of the linear cross entropy
+and the cross entropy as upper bound.
 
-How this is achieved numerically is detailed in
-\cref{sec:sim-entropies}. 
-
-In the case of $\mathcal{S}_\sigma \not\leq
+As we have access to the \enquote{experimental} density matrix $\rho$ through
+our numerical simulation, we employ the implementation of the cross entropy as
+outlined in \cref{thm:cross-ent-stab}. An important detail to note however is
+that we do not want infinities appearing in our data. As such, 
+in the case of $\mathcal{S}_\sigma \not\leq
 \mathcal{S}_\rho$, we add $N /2$, where $N$ is the number of qubits in the
-system. 
+system. This amounts to replacing the density matrix $\sigma$ by the maximally
+mixed state.
 
-\textcolor{red}{Hier auch auf jeden Fall n Plot mit dem naive approach drin}
+\subsection{Results}
 
 In \cref{fig:naive-svn-vs-se-no-error} the results of the upper bound is shown
-in the case of no errors.
-\begin{figure}[H]
+in the case of no noise in the circuit.
+\begin{figure}[t]
   \centering
   \includegraphics{naive_approach_cleansystem_soloplot.pdf}
-  \caption{Cross entropy vs entanglement entropy, no Errors track everything, naive approach (any of them work tho)}
+  \caption{Cross and entanglement entropy in the noiseless system. We project
+    the measurement outcomes from $\rho$ onto $\sigma$ if possible. Note that
+    we here use periodic boundary conditions. Each datapoint corresponds to
+    $\sim 10^5$ samples.}
   \label{fig:naive-svn-vs-se-no-error}
 \end{figure}
+\Cref{fig:naive-svn-vs-se-no-error} shows that there is perfect overlap between the original and
+the replicated system in the noiseless case. This is also what one would
+expect, since we effectively computed the entanglement entropy of a pure state that
+happens to have had the same measurement record as $\rho$. And incidentally,
+every outcome in the measurement record corresponded to an outcome that could
+be projected perfectly onto $\sigma$. We thus perfectly saturated the upper
+bound \cref{eq:kleins-ineq}. 
 
-\begin{itemize}
-  \item modeling errors like in \cref{ch:lxe}
-  \item naive approach is to just project and then computing $-\log\sigma$
-  \item before we compute the entanglement entropy/von neumann entropy, we
-    ptrace and check if the subgroup condition holds.
-  \item remember: $\sigma$ ought to be at least as or more mixed than $\rho$
-    for the cross entropy to be finite
-  \item errors can happen anywhere at any time, we will relax this assumption
-    later for an unphysical one (with a nice explanation onto why we do this)
-  \item spoiler: it doesn't work out nicely
-\end{itemize}
-faulty circuit: (naive approach mit fehlern, $\infty$ wird durch $N$ ersetzt)
-\begin{figure}[H]
+We now turn towards a more realistic scenario, namely that of a noisy circuit.
+The error model we use to emulate noise is the one introduced in
+\cref{sec:errormodel}. Note that we force the projections onto $\sigma$, and
+thus should recover a close estimate of the experimental density matrix. If it
+turns out that the density matrix obtained from the experiment does not have
+support in $\sigma$, we replace the appearing infinity with $L /2$, where $L$
+is the number of qubits.
+\begin{figure}[t]
   \centering
   \includegraphics{naive_approach_xerrors_soloplot.pdf}
-  \caption{Cross entropy vs entanglement entropy, $X$ Errors track everything,
-  naive approach, saller system sizes (this should exists)}
+  \caption{Cross and entanglement entropy in the system with projective $X$
+  errors. Measurement outcomes from a simulated experiment are projected onto a
+replica in the classical simulation. If the subgroup condition is not met, we
+replace the appearing infinity with $L /2$. }
   \label{fig:naive-svn-vs-se}
 \end{figure}
 
-\subsection{\enquote{Failure} of the na\"ive approach}
+\Cref{fig:naive-svn-vs-se} shows that the naive approach fails here already. In
+the $p< p_c$ regime we often need to correct for infinities in the sample,
+which get replaced, yes, but since the trivial upper bound is so far off the
+actual entanglement entropy, we have this diverging behavior even for
+relatively small systems, which is why only systems up to $L=64$ are shown. For
+$p>p_c$ we saturate the bound again, since the $X$ noise commutes with the then
+more frequently occuring $X$ measurements of the circuit, thereby restoring the
+adherence to the subgroup condition.
 
-\begin{itemize}
-  \item subgroup condition requires errors to be detected (and dealt with in
-    some way)
-  \item errors which are not succeeded by a measurement will lead to a change
-    in the group structure of $S_\rho$ such that $S_\sigma$ \enquote{never has
-    the chance to adapt}
-  \item maybe we should also implement some ideas from the shadow tomography
-    dings, such that errors are circumvented
-  \item Undetectable change in group structure happens if an error happens on a
-    qubit in a state stabilized by an orthogonal operator, e.g. an $X$-error if
-    the qubit is stabilized by $Z$.
-  \item The probability of any error happening in the last layer (i.e. after
-    all measurements in the circuit happenend) is $1-$ the probability of no
-    error, which is given by the binomial distribution
-    \[ P(\#\mathrm{err}>0) = 1-\binom{N}{0} (1-q)^N=1-(1-q)^N. \]
-  \item For $q=\num{0.01}$ and $N=32$ we have $P\simeq .275$
-  \item Of course, this probability says nothing about the actual simulation
-    (except for $p=0$) as it could be an error which was preceeded by an $X$
-    measurement.
-  \item That being said, you could technically compute this probability
-    analytically, by going through each layer and multiplying the probabilites
-    for \(X\) and not $ZZ$ happening to get the actual probability of failure
-   \item This is way too complicated, just to get an estimate on how many
-     simulations will end in $\infty$ for \cref{eq:kleins-ineq}. 
-\end{itemize}
+This tells us that we need some way to cope with noise. The subgroup condition
+requires us to detect the errors, since errors which are not succeeded by a
+measurement (of any kind) will lead to a change in the structure of
+$\mathcal{S}_\rho$, which are never detected. This undetectable change, as we
+can tell from \cref{fig:naive-svn-vs-se}, happens if an error occurs on a qubit
+in a state stabilized by an operator, which anticommutes with the type of
+noise. For instance, if an $X$ error occurs on a qubit stabilized by $Z$. Since
+$X$ measurements are more frequent for $p> 1/2$, the $X$ noise is directly
+mitigated by the frequent measurements. 
+
+What about the part where $X$ measurements aren't as frequent? We can again
+estimate a probability of not detecting the altering of the stabilizers.
+Imagine an error occurs in the very last layer, i.e. after all the measurements
+in the circuit happened. This is the complementary probability to no errors
+occuring. We thus have
+\begin{align}
+  P(\#\mathrm{err}>0) = 1-(1-q)^L
+.\end{align}
+As simple example, consider the probability of an $X$ error occuring in the
+very last layer of a system with $L=32$ qubits. The probability that an error
+doesn't get detected is $P\simeq\num{.275}$. Thus, about 1 in every 4 samples
+would yield infinity as upper bound, which is useless. We thus make the rather
+unphysical assumption that no error is allowed to happen after a certain
+threshhold. As we design the circuit in a classical simulator as well, we
+simply restrict the allowed errors occurring.
+
+%\begin{itemize}
+%  \item subgroup condition requires errors to be detected (and dealt with in
+%    some way)
+%  \item errors which are not succeeded by a measurement will lead to a change
+%    in the group structure of $S_\rho$ such that $S_\sigma$ \enquote{never has
+%    the chance to adapt}
+%  \item maybe we should also implement some ideas from the shadow tomography
+%    dings, such that errors are circumvented
+%  \item Undetectable change in group structure happens if an error happens on a
+%    qubit in a state stabilized by an orthogonal operator, e.g. an $X$-error if
+%    the qubit is stabilized by $Z$.
+%  \item The probability of any error happening in the last layer (i.e. after
+%    all measurements in the circuit happenend) is $1-$ the probability of no
+%    error, which is given by the binomial distribution
+%    \[ P(\#\mathrm{err}>0) = 1-\binom{N}{0} (1-q)^N=1-(1-q)^N. \]
+%  \item For $q=\num{0.01}$ and $N=32$ we have $P\simeq .275$
+%  \item Of course, this probability says nothing about the actual simulation
+%    (except for $p=0$) as it could be an error which was preceeded by an $X$
+%    measurement.
+%  \item That being said, you could technically compute this probability
+%    analytically, by going through each layer and multiplying the probabilites
+%    for \(X\) and not $ZZ$ happening to get the actual probability of failure
+%   \item This is way too complicated, just to get an estimate on how many
+%     simulations will end in $\infty$ for \cref{eq:kleins-ineq}. 
+%\end{itemize}
 
 %Let us now consider the information-theoretic implications of \cref{eq:cross-ent-stab}. 
-Recall that the cross entropy is a measure of the quality of an estimate of a
+Furthermore, recall that the cross entropy is a measure of the quality of an estimate of a
 probability distribution \cite{coverElementsInformationTheory2006}. As we are
 essentially estimating the experiment, represented by the density matrix
 $\rho$, with a uniform probability distribution over the support of $\rho$, the
@@ -886,70 +945,149 @@ This also shows how stabilizer
 states are particular in that sense. Any stabilizer density matrix we choose
 for $\sigma$ will yield this result, independent of $\rho$, as long as $\rho$
 is a valid density matrix. 
-\section{Other Approaches}\label{sec:other-approaches}
-\begin{itemize}
-  \item Naive approach fails because of errors, which cannot be detected by
-    construction
-  \item also, because so far we have only dealt with pure states.
-  \item we thus need a new classical post-processsing algorithm
-  \item first, we need to disallow errors after the last couple of
-    measurements, since these are the ones that make it into the subgroup check
-  \item this is, of course, an unphyisical assumption to take, but thats not
-    our main concern. informally speaking, we want to test the limits of
-    \cref{eq:kleins-ineq} for our system. We found this irreconcilable one in
-    the context of our model
-  \item if we relax the assumption of errors happening everywhere, we could try
-    other approaches and maybe get an idea of how viable the general approach
-    of an upper bound is to find a signature of the entanglement transition.
-  \item next, we have this condition of diverging cross entropy. Why not go in
-    reverse and try an algorithm, which has the stabilizers of $\sigma$ be a
-    subgroup of $\rho$.
-  \item we can do that by modifying the projections slightly
-  \item in the following sections we explore some approaches to modify the
-    projection operation to incorporate mixedness
-\end{itemize}
+
+This means that if we were to continue with the cross entropy and the upper
+bound in a pure stabilizer setting, we should think about how we could have a
+finer-grained selection of values the cross entropy can take up. If we only
+insert pure states, we might get lucky a couple of times, but in all
+generality, we will fail to estimate the density matrix obtained in an
+experiment. Thus, for the purely numerical approaches, we should abandon the
+naive one in favor of reconstruction algorithms that include a broader set of
+states to support $\rho$. Of course, they should, as we have been made aware by
+the previous results, ensure the fulfillment of the subgroup condition as well. 
+
+\section{Other numerical approaches}\label{sec:upperbound-numerics}
+
+We have seen that the naive approach fails once noise comes into play.
+Especially if the modelled errors are not succeeded by a measurement natively
+included in the circuit. We have also noted that due to the limitations of the
+stabilizer formalism, we either end up in agreement with the experiment or add
+infinities to the mix. 
+As we would like to stay in the stabilizer formalism, since it allows
+ploynomial-time simulation of the quantum circuit in question, we need to cope
+with noise in a different way, that also encompasses the tools we have at our
+disposal. 
+
+We have further found an irreconcilable limit to \cref{eq:kleins-ineq} in the
+form of errors appearing in the last measurement layer. For all the further
+considerations, we disallow errors after the last measurements. This is, of
+course, an unphysical assumption to make, but this is, as of right now, not our
+main concern, as we right now want to test the limits of \cref{eq:kleins-ineq}
+on our system. This was one of them. If we relax the assumption of errors
+happening everywhere, we could try other approaches and maybe get an idea of
+how viable the general approach of an upper bound is to find a signature of the
+entanglement transition.
+
+The following sections introduce the methodology behind two numerical
+post-processing algorithms that utilize mixed states to uphold the subgroup
+condition. 
+%\begin{itemize}
+%  \item Naive approach fails because of errors, which cannot be detected by
+%    construction
+%  \item also, because so far we have only dealt with pure states.
+%  \item we thus need a new classical post-processsing algorithm
+%  \item first, we need to disallow errors after the last couple of
+%    measurements, since these are the ones that make it into the subgroup check
+%  \item this is, of course, an unphyisical assumption to take, but thats not
+%    our main concern. informally speaking, we want to test the limits of
+%    \cref{eq:kleins-ineq} for our system. We found this irreconcilable one in
+%    the context of our model
+%  \item   \item next, we have this condition of diverging cross entropy. Why not go in
+%    reverse and try an algorithm, which has the stabilizers of $\sigma$ be a
+%    subgroup of $\rho$.
+%  \item we can do that by modifying the projections slightly
+%  \item in the following sections we explore some approaches to modify the
+%    projection operation to incorporate mixedness
+%\end{itemize}
+
 \subsection{Minimal Mixing}\label{sec:minimal-mixing}
-\begin{itemize}
-  \item We would like to compare $\rho$, which is the \enquote{experiment}
-    (i.e. a quantum simulator), with $\sigma$, which is the classical
-    simulation.
-  \item The algorithm follows a similar structure to
-    \cite{liCrossEntropyBenchmark2023}, wherein we project the measurement
-    outcomes from $\rho$ onto $\sigma$ where it is possible. The difference
-    being that we do not start with orthogonal GHZ states, but with identical
-    GHZ states. That way, there will be no incompatible measurement as long as
-    there are no errors
-  \item but what if there are errors?
-  \item consider the case that an $X$-error occurred after a $ZZ$-measurement.
-  \item Half of the time we will get an incompatible projection, which would
-    project onto the zero-vector.
-  \item In those cases, we replace the stabilizer by $\mathds{1}$, where the
-    incompatibility was detected, instead of replacing it by the measurement
-    outcome or the projection.
-  \item This ensures that the subgroup condition still holds \emph{and} that
-    subsequent measurements on the same site cannot be interfered with, i.e.
-    that this qubits stabilizer is $\mathds{1}$ until it gets measured again.
-  %\item However, we rolled a nat20 on a sleight of hand skill check: in the
-  %  cases, where we \emph{would} get $\infty$, we replace $\sigma$ (whatever
-  %  it may be at this point) by $2^{-N} \mathds{1}$
-  %\item This is also in line with the general philosophy of the density
-  %  matrix. We do not know where the error occurred, and are therefore in a
-  %  mixture of all possible quantum states
-\end{itemize}
+
+The first post-processing algorithm we introduce is what one could call
+\enquote{minimal mixing}. The algorithm works as follows. We start our
+classical reconstruction in the same state as the initial state of the
+experiment, for us it is $\dyad{GHZ+}$ in particular. Then, we project onto the
+measurement outcomes where possible. In a noiseless circuit, this recovers the
+standard entanglement entropy once more. Once we introduce noise this will no
+longer be given. Recall the scenario shown in \cref{fig:mech-b1-lxe}. In this
+case we had that the projection was successful only with probability
+$1 /2$ and unsuccessful also with probability $1 /2$.
+
+For this numerical approach, we choose to ignore the stabilizer generator with
+the failed projection. That is, we replace the stabilizer by $\mathds{1}$ where
+the incompatibility was detected, instead of forcing the projection. This
+should, in principle uphold the subgroup condition, since we remove particular
+generators from the generating set. Until it gets measured again, we have that
+this stabilizer is not a generator. The technical details behind the
+implementation are laid out in \cref{sec:other-dingers,alg:minimal-mixing}.
+
+One critique that could immediately be raised at this point is the (ab)use of
+mixed states in this context. Each time we come across such a discrepancy, we
+throw out a generator, even though this is the most recent information we have
+on the state of the system. However, we have already made some unphysical
+assumptions before, and this is no exception. At this point we want to test the
+performance of the upper bound in the extreme case of stabilizers and we want
+to use all the tools available to us, and selectively removing stabilizer
+generators from the generating set is one of them. \emph{How} we select them is
+then judged by the performance of the selection in the numerical simulation.
+
+%\begin{itemize}
+%  \item We would like to compare $\rho$, which is the \enquote{experiment}
+%    (i.e. a quantum simulator), with $\sigma$, which is the classical
+%    simulation.
+%  \item The algorithm follows a similar structure to
+%    \cite{liCrossEntropyBenchmark2023}, wherein we project the measurement
+%    outcomes from $\rho$ onto $\sigma$ where it is possible. The difference
+%    being that we do not start with orthogonal GHZ states, but with identical
+%    GHZ states. That way, there will be no incompatible measurement as long as
+%    there are no errors
+%  \item but what if there are errors?
+%  \item consider the case that an $X$-error occurred after a $ZZ$-measurement.
+%  \item Half of the time we will get an incompatible projection, which would
+%    project onto the zero-vector.
+%  \item In those cases, we replace the stabilizer by $\mathds{1}$, where the
+%    incompatibility was detected, instead of replacing it by the measurement
+%    outcome or the projection.
+%  \item This ensures that the subgroup condition still holds \emph{and} that
+%    subsequent measurements on the same site cannot be interfered with, i.e.
+%    that this qubits stabilizer is $\mathds{1}$ until it gets measured again.
+%  %\item However, we rolled a nat20 on a sleight of hand skill check: in the
+%  %  cases, where we \emph{would} get $\infty$, we replace $\sigma$ (whatever
+%  %  it may be at this point) by $2^{-N} \mathds{1}$
+%  %\item This is also in line with the general philosophy of the density
+%  %  matrix. We do not know where the error occurred, and are therefore in a
+%  %  mixture of all possible quantum states
+%\end{itemize}
+
 \subsection{Maximal Mixing}\label{sec:maximal-mixing}
-\begin{itemize}
-  \item the first approach is what we'd call \emph{maximal mixing}.
-  \item The maginot line of no errors occuring is still a factor. However, each
-    time we encounter a discrepancy for the projections, we remove \emph{all}
-    the stabilizers in $\sigma$
-  \item since the trivial group is always a subgroup of any group (group
-    axioms), we still obey the subgroup rule
-  \item the technical details are laid out in \cref{alg:maximal-mixing}
-  \item most importantly, for a system with no errors, the bound is perfectly
-    saturated, with equality everywhere
-  \item when introducing errors, we lose this feature and start to become more
-    inaccurate.
-\end{itemize}
+
+The next algorithm is what we could call \enquote{maximal mixing}. It is
+similar to the previously introduced algorithm with the caveat that we are now
+not selectively removing stabilizer generators, but removing the whole
+generating set. This is the most extreme method of how one could deal with the
+noise, since now once we catch it, we in principle act as if no generator of
+our generating set is to be trusted. Also, as the trivial group is always a
+subgroup of any group (cf. \cref{sec:grouptheory}), and as the trivial group is
+generated by the empty set (cf. \cref{defn:generators}), we should most
+definitely ensure the fulfillment of the subgroup condition. The technical
+details behind the implementation of this algorithm is given in
+\cref{sec:other-dingers,alg:maximal-mixing}.
+
+Note that this approach should also saturate the upper bound perfectly in the
+noiseless case, since we only throw out generators when we encounter a mismatch
+in the projections.
+%\begin{itemize}
+%  \item the first approach is what we'd call \emph{maximal mixing}.
+%  \item The maginot line of no errors occuring is still a factor. However, each
+%    time we encounter a discrepancy for the projections, we remove \emph{all}
+%    the stabilizers in $\sigma$
+%  \item since the trivial group is always a subgroup of any group (group
+%    axioms), we still obey the subgroup rule
+%  \item the technical details are laid out in \cref{alg:maximal-mixing}
+%  \item most importantly, for a system with no errors, the bound is perfectly
+%    saturated, with equality everywhere
+%  \item when introducing errors, we lose this feature and start to become more
+%    inaccurate.
+%\end{itemize}
 
 \section{Results}\label{sec:upperbound-results}
 \begin{itemize}
@@ -960,6 +1098,7 @@ is a valid density matrix.
   \item Now we do not have orthogonal initial states!
 \end{itemize}
 \subsection{Minimal mixing}
+
 \begin{itemize}
   \item \cref{fig:min_mix-svn_se-4x3} shows the upper bound, i.e. the cross
     entropy and entanglement entropy, for the minimal mixing approach
@@ -1051,7 +1190,8 @@ is a valid density matrix.
   \item \textbf{ZZ Errors}:
   \item \textbf{X and ZZ Errors}: Here we have the worst of both worlds. 
 \end{itemize}
-\begin{figure}[H]
+
+\begin{figure}[p]
   \centering
   \includegraphics{minimal_mixing-4x3-svn_se.pdf}
   \caption{Cross Entropy and entanglement entropy of selected system sizes with
@@ -1060,6 +1200,7 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:min_mix-svn_se-4x3}
 \end{figure}
+
 \begin{itemize}
   \item In the simulation we trace out half the system in both cases, and then
     compute if they are subgroups of one another
@@ -1089,7 +1230,8 @@ different trackings and errors are shown in the same manner as in
     pressing weight of errors
   \item Therefore, this algorithm is unfit for post-processing 
 \end{itemize}
-\begin{figure}[H]
+
+\begin{figure}[p]
   \centering
   \includegraphics{minimal_mixing-4x3-inftyratio.pdf}
   \caption{Ratio of divergences in cross entropy to number of samples for
@@ -1099,6 +1241,7 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:min_mix-inftyratio-4x3}
 \end{figure}
+
 \begin{itemize}
   \item As measure for how much contribution the algorithm has in the end,
     consider \cref{fig:min_mix-svn_sigma_full-4x3}, where the von Neumann
@@ -1111,7 +1254,8 @@ different trackings and errors are shown in the same manner as in
   \item For the track $ZZ$ column, we see that only when $X$ errors are
     present, 
 \end{itemize}
-\begin{figure}[H]
+
+\begin{figure}[p]
   \centering
   \includegraphics{minimal_mixing-4x3-svn_sigma_full.pdf}
   \caption{$S(\sigma)$ of full density matrix $\sigma$ 
@@ -1120,8 +1264,39 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:min_mix-svn_sigma_full-4x3}
 \end{figure}
+
 \subsection{Maximal mixing}
-\begin{figure}[H]
+\begin{itemize}
+  \item For the maximal mixing approach, we find that the first row of
+    \cref{fig:max_mix-svn_se-4x3} is almost identical to the corresponding
+    plots in \cref{fig:min_mix-svn_se-4x3} for the other processing
+    algorithm
+  \item This is due to the fact that we have not introduced errors and the
+    maximal mixing procedure has no effect on this
+  \item We also see that almost all the \enquote{Track $X$} or \enquote{Track
+    $ZZ$} columns are similar in appearance, except for \enquote{Track $ZZ$}
+    when $X$ errors are present. We will see an explanation for this in
+    \cref{fig:max_mix-svn_sigma_full-4x3}, where the von Neumann entropy of the
+    entire density matrices is shown.
+  \item For the \enquote{Track all} columns, we have values for the cross
+    entropy that are way smaller than with the previous algorithm. 
+  \item When taking \cref{fig:max_mix-inftyratio-4x3} into account, we notice
+    that these contributions are (almost) entirely from the post-processing
+    algorithm we chose.
+  \item For $X$ errors we have that the upper bound attains larger values for
+    $p \approx p_c$ with a slight slant to the left
+  \item the converse is true for $ZZ$ errors, where the upper bound almost
+    doesn't go back to the original curve
+  \item For the noisiest system with $X$ and $ZZ$ errors, we have a combination
+    of the two effects
+  \item Interestingly, the scaling at the critical point is linear, since the
+    peaks roughly double in magnitude with doubling the system size $L$.
+  \item This is in contrast to the \enquote{ideal} case, where we have
+    logarithmic scaling at the critical point
+  \item The peaks in the top right subplot are spaced evenly, which is as
+    expected with the doubling of system size.
+\end{itemize}
+\begin{figure}[p]
   \centering
   \includegraphics{extreme-rel-ent-4x3-svn_se.pdf}
   \caption{Cross Entropy and entanglement entropy of selected system sizes with
@@ -1130,7 +1305,24 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:max_mix-svn_se-4x3}
 \end{figure}
-\begin{figure}[H]
+\begin{itemize}
+  \item For the infinity ratios, we have made progress: In the \enquote{Track
+    all} column, we find that we had no infinities almost everywhere.
+  \item However, there are noticeable bumps in some of the plots. They are
+    miniscule, but still there. So miniscule that we can rule out the
+    possibility of them substantially contributing to the behavior shown in
+    \cref{fig:max_mix-svn_se-4x3}
+  \item Nonetheless, this shows that even with the most extreme measure of
+    trying to ensure the adherence to the subgroup condition, we still have
+    some samples bypassing it.
+  \item This undermines the fact that clusters emerge undetected, even within
+    the last measurement layers.
+  \item Consequently, we find that even when compensating with the most extreme
+    measures, we do not generally comply with the subgroup condition. This
+    fact rules out any purely numerical approaches to detect the phase
+    transition.
+\end{itemize}
+\begin{figure}[p]
   \centering
   \includegraphics{extreme-rel-ent-4x3-inftyratio.pdf}
   \caption{Ratio of divergences in cross entropy to number of samples for
@@ -1140,7 +1332,29 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:max_mix-inftyratio-4x3}
 \end{figure}
-\begin{figure}[H]
+\begin{itemize}
+  \item When considering the full density matrix, we can again qualitatively
+    measure how good our approach was at the very end. We see that even though
+    the \enquote{mixedness} was set to the max, we never have an insanely large
+    value for the von Neumann entropy, as seen in
+    \cref{fig:max_mix-svn_sigma_full-4x3}.
+  \item We find that for noisy systems, the algorithm did what it was designed
+    to do, namely, intercept errors
+  \item In the presence of $X$ errors, we almost immediately recover the whole
+    group, but fail to recover the global $X$ stabilizer. This shows itself in
+    the \enquote{Track all} column of \cref{fig:max_mix-svn_sigma_full-4x3},
+    where it goes to $1$ for $p\to 0$.
+  \item At the critical point, there is a peak for large enough systems, since
+    there we have the highest impact of additional measurements of the
+    competing kind.
+  \item Remarkably, just as in \cref{fig:min_mix-svn_sigma_full-4x3} we have
+    \enquote{$ZZ$ errors -- Track $ZZ$} be identically $0$. This follows from
+    the group structure. We never maximally mix.
+  \item For the \enquote{Track $X$} column, we just see the peak where the
+    initial cluster dies, which was also present in
+    \cref{fig:min_mix-svn_sigma_full-4x3}
+\end{itemize}
+\begin{figure}[p]
   \centering
   \includegraphics{extreme-rel-ent-4x3-svn_sigma_full.pdf}
   \caption{$S(\sigma)$ of full density matrix $\sigma$ 
@@ -1150,20 +1364,42 @@ different trackings and errors are shown in the same manner as in
   \label{fig:max_mix-svn_sigma_full-4x3}
 \end{figure}
 
+\begin{itemize}
+  \item Recall that both of these simulations were based on the assumption that
+    there are no errors appearing in the last measurement layer.
+  \item With that we have basically thrown physics out the window
+  \item However, there was still something to learn about in these simulations
+    and these figures
+  \item Sometimes, one needs to do some unphysical assumptions to get a better
+    understanding of the physics.
+  \item As a closer, we can say that the maximal mixing approach worked best,
+    but not perfect, since we still can't rule out the possibility of
+    divergences.
+  \item For that we need to regularize
+\end{itemize}
 \section{Regularization}
+
 We can see that, even though we chose our numerical algorithms in a way that
 should mitigate the infinities, we still have them. Furthermore, the subgroup
-check is a subtle way to incorporate once more what we try to avoid. Namely,
-we want to find a density matrix, which is independent of the experimental
-density matrix $\rho$. However, with the subgroup check, we implicitly
-introduce it into our computation again, as we once more require knowledge of
-the full density matrix, bringing us back to the sampling problem. In the
+check is a subtle way to incorporate once more what we try to avoid. Namely, we
+want to find a density matrix, which is independent of the experimental density
+matrix $\rho$. However, with the subgroup check, we implicitly introduce it
+into our computation again. As we once more require knowledge of the full
+density matrix, this would bring us right back to the sampling problem. In the
 following we present two approaches to regularize the infinity appearing in the
 cross entropy. These approaches require nothing but the numerically computed
 density matrix $\sigma$. The first approach is one, which could be implemented
 in a stabilizer simulator, which has the drawback of being exponentially worse
-than the trivial upper bound $N$. The other is more flexible, but lacks an
-obvious implementation for stabilizer states. Both of these approaches could be
+than the trivial upper bound $N$, among other things. The other is more
+flexible, but lacks an efficient implementation in a stabilizer
+simulation.\footnote{It is not definitive if there exists such an
+implementation or not. For now, it does not exist yet.}
+Note that these approaches are
+designed to not need the subgroup condition to be fulfilled. As such, the
+assumption of a noiseless last measurement layer could be restricted again to
+include errors up to the end of measurements. 
+
+Both of these approaches could be
 the subject of further study, as the computational argument is one of
 feasibility, but not possibility (i.e., it is possible, but at what
 computational cost).
@@ -1172,87 +1408,254 @@ computational cost).
 For the first regularization we choose an exponential Ansatz. The basic reasoning
 behind this Ansatz is twofold. First, we want to ensure that the support of
 $\sigma$ is large enough to contain the support of $\rho$. That is, what we
-failed to achieve numerically, we attempt to achieve analytically, while
-ensuring that the classical processing step is only a function of the
-measurement out comes, $\sigma \equiv \sigma(\mathbf{m})$, and not the density
-matrix, which we implicitly had by checking the subgroup condition on each run.
+failed to achieve numerically, we attempt to achieve analytically. We want to
+ensure that the classical processing step is only a function of the
+measurement outcomes, $\sigma \equiv \sigma(\mathbf{m})$, and not the
+experimentally obtained density matrix, which we implicitly had by checking the
+subgroup condition on each run.
 
 The second reason for this Ansatz in particular is the computability. Since we
 are performing classical computations via the stabilizer formalism, we reduce
 the memory requirements significantly. Storing a state of an $N$ qubit Hilbert
 space is done in quadratic space complexity (cf. \cref{ch:mixed}). If we were
 to write out the density matrix of, e.g., $N=100$ qubits explicitly, we would
-be faced with an exponentially large matrix. If we chose $\sigma$ arbitrarily,
+have to deal with an exponentially large matrix. That is, if we choose $\sigma$
+arbitrarily, 
 we would be faced with the herculean task of diagonalizing a $2^{100} \times
-2^{100}$ matrix, way beyond the scope of any reasonable computational
+2^{100}$ matrix when computing its logarithm, way beyond the scope of any reasonable computational
 feasibility. By exponentiation we ensure that the logarithm \enquote{gets eaten
-up} such that we are dealing with the density matrix itself. 
+up} such that we are dealing with the density matrix itself with an additional
+normalizing term.
 
-As mathematical expression we may write
+As mathematical expression we may write\footnote{The factor of $\ln 2$ comes
+  from the fact that we have the entropic quantities with base $2$. By a
+leading factor of $1 /\ln 2$ this factor can be omitted.}
 \begin{align}
-  \tilde{\sigma} = \frac{\exp[\sigma]}{\Tr[\exp[\sigma]]}
+  \tilde{\sigma} = \frac{\exp[\ln(2) \sigma]}{\Tr[\exp[\ln(2) \sigma]]}
 .\end{align}
 Substituting $\tilde{\sigma}$ back into the right hand side of
 \cref{eq:kleins-ineq} we get
+\begin{align}\label{eq:exp-ansatz}
+  -\Tr[\rho\log\rho]\leq-\Tr[\rho\log\tilde{\sigma}] = -\Tr[\rho\sigma] +
+  \log(\Tr[\exp[\ln(2)\sigma]])
+.\end{align}
+Note that the original $\sigma$ is still our classical reconstruction, i.e. a
+density matrix in the stabilizer formalism. As $\sigma$ is therefore a product
+commuting projectors, and with that a projector itself, we can once again
+compute $-\Tr[\rho\sigma]$ efficiently. If $\rho=\sigma$, it recovers the
+purity of $\rho$ with a negative sign, and if $\rho \perp \sigma$, then the trace is $0$. In a
+sense, we here have recovered an inner product between density matrices, defined
+as
 \begin{align}
-  -\Tr[\rho\log\rho]\leq-\Tr[\rho\log\tilde{\sigma}] = -\frac{1}{\ln 2}\Tr[\rho\sigma] +
-  \log(\Tr[\exp[\sigma]])
-\end{align}
+  \langle \rho, \sigma \rangle = \Tr[\rho\sigma]
+.\end{align}
+This inner product can be efficiently computed in the stabilizer formalism, as
+we merely need to count projectors, and if they are orthogonal, the resulting
+inner product is $0$. We remark that for density matrices, this inner product
+is bounded with $\Tr[\rho\sigma] \in [0,1]$.
 
-By choosing this Ansatz we effectively recover the Cauchy-Schwarz inequality
+To efficiently compute the resulting upper bound from choosing the exponential
+Ansatz, we need to resolve the logarithm in \cref{eq:exp-ansatz}. To this end
+we proceed by first calculating the argument of the trace, which turns out to
+yield the result of the trace as byproduct.
 
-In summary, we have a measurement record $\mathbf{m}$, obtained from running an
-experimental circuit $C$ on $N$ qubits. This measurement record gets piped into
-a classical simulator so that we can compute the upper bound (cf.
-\cref{eq:kleins-ineq}). 
-$\Tr[\rho\log\sigma]$. 
-%We are interested in the half-system
-%entanglement entropy, $$-\Tr[\rho_A \log \rho_A]\qquad{\text{with}}\qquad
-%\rho_A = \Tr_B[\dyad{\phi_\mathbf{m}}]$$, where $A$ and $B$ refer to the two
-%halves of the system. 
-We then pipe the measurement record to a classical
-simulator 
+Since the density matrix of interest is, up to a prefactor, a projector, we
+rewrite $\ln(2)\sigma$ as $c\mathbb{P}$ with some constant factor $c$.
+By the matrixexponential we have
+\begin{alignat*}{2}
+  \exp[c\mathbb{P}] 
+    = \sum_{k=0}^\infty \frac{\left(c\mathbb{P}\right)^k}{k!}
+    &= \mathds{1} + \sum_{k=1}^\infty \frac{\left(c\mathbb{P}\right)^k}{k!}\\
+    &= \mathds{1} + \mathbb{P}\sum_{k=1}^\infty \frac{c^k}{k!}
+    &&\qquad{(\mathbb{P}^2 = \mathbb{P})}\\
+    &= \mathds{1} + \mathbb{P}\left(\sum_{k=0}^\infty \frac{c^k}{k!} - 1\right)
+    &&\qquad{\text{(shift index)}}\\
+    &= \mathds{1} + \mathbb{P}\left(e^c -1\right) \\
+    &= \mathds{1} + 2^{N-n}\sigma\left(2^{2^{n-N}}-1 \right) &&\qquad{(c =
+      2^{n-N}\ln(2) \text{ and } \sigma = 2^{n-N}\mathbb{P}_s)}
+.\end{alignat*}
+We can then calculate the trace easily, since $\Tr[\mathds{1}] = 2^N$
+and $\Tr[\sigma] = 1$. It follows that
 \begin{align}
-  \tilde{\sigma} = \frac{e^\sigma}{\Tr[e^\sigma]}
+  \Tr[\exp[\ln(2)\sigma]] &= 2^N + 2^{N-n}\left(2^{2^{n-N}} -1 \right)
+  \label{eq:trace-exp}
+.\end{align}
+Note that the parenthesis in \cref{eq:trace-exp} never vanish, but only
+asymptotically reach $0$ in the thermodynamic limit. This is also the case if
+one flips the sign, i.e. $\exp[-c\mathbb{P}]$, where one obtains
+\begin{align}
+  \Tr[\exp[\ln(2)\sigma]] &= 2^N + 2^{N-n}\left(1-2^{-2^{n-N}}\right)
+.\end{align}
+For both of these cases we have that the resulting upper bound is worse than
+trivially assuming $N$, with diminishing fluctuations in $n$,
+\begin{align}
+  \log\left(\Tr[\exp[\ln(2)\sigma]]\right) &= \log(2^N +
+  2^{N-n}\left(2^{2^{n-N}} -1 \right)) \geq N
 .\end{align}
 
-we still have a valid density matrix, given we normalize appropriately. 
-condensed into . If we were to write out an $N$ qubit
-density 
-Second, and more importantly for this Ansatz in particular, we
+Since this Ansatz is worse than the trivial upper bound with variations in $n$
+being small compared to the system size, we did not immediately see utility in
+this approach. However, all quantities in the above calculations are
+technically computable in the stabilizer simulator, and could thus be subject
+of future study. 
 
-Thus, we prepare $\sigma(\mathbf{m})$ by means of classical reconstruction,
-with either one of the previous numerical algorithms. Here, since we 
 \subsection{Rescaling probabilities}
+The second regularization approach could be called the naive regularization
+approach. We again want the support of $\sigma$ to span the entire Hilbert
+space. With $\sigma$ being a product of projectors, it is a projector itself,
+up to multiplicative factors. To complete the Hilbert space, we would need to
+add the rest of the $2^{N}-2^{N-n}$ projectors needed, and rescale them in
+order to put more (or less) weight on our prediction. Concretely,
+we want $\sigma$ to have the form of
 \begin{align}
-  D_\sigma = \mqty(\dmat{1-\varepsilon,1-\varepsilon,\ddots,\varepsilon,\varepsilon})
+  \tilde{\sigma} &= (1-\varepsilon)\sigma +  c\sum_{s \in
+  \mathrm{ker}(\sigma)} \mathbb{P}_s \label{eq:complement-sigma}\\
+&= (1-\varepsilon)\sigma +  \frac{\varepsilon}{\Tr[\sum_{s \in
+\mathrm{ker}(\sigma)} \mathbb{P}_s]}\sum_{s \in
+\mathrm{ker}(\sigma)} \mathbb{P}_s \label{eq:epsilon-over-trace}
+,\end{align}
+such that the diagonal form of $\sigma$ is
+\begin{align}
+  D_\sigma = \mqty(\dmat{1-\varepsilon,c,\ddots,c,c})
+.\end{align}
+This way, every basis vector of $H^{\otimes N}$ is included in $\sigma$ with a
+weight of either $(1-\varepsilon)$ or $c$. As we want to ensure that
+$\Tr[\tilde{\sigma}] =1$, $c$ is parametrized by $\varepsilon$. We now want to derive an
+expression for $c(\epsilon)$, i.e. the trace in \cref{eq:epsilon-over-trace},
+as well as a way to determine the constituents of the sum in
+\cref{eq:complement-sigma}.
+
+In principle, we need the sum in \cref{eq:complement-sigma} to go over all
+orthogonal projections in the kernel of $\sigma$.
+Since the support of $\sigma$ is fixed by the projectors onto the eigenspaces
+of the tensor products of Pauli matrices contained in the generating set, we
+need the orthogonal complement of each of them. Suppose we have the respective
+signs of the generators $g_i$ in a bitstring $r_i$ of length $n$, i.e.
+$\mathbf{r} \in \mathbb{F}^n_2$. We then write $\sigma$ as
+\begin{align}
+  \sigma = \frac{1}{2^N} \prod_{i=1}^n \left( \mathds{1}+(-1)^{r_i} g_i \right) 
+.\end{align}
+We then have a sum over all the combinations of values of $r_i$, which are
+\emph{not} the original bitstring. We might write this as
+\begin{align}
+  \sum_{s\in\mathrm{ker}(\sigma)} \mathbb{P}_s = \sum_{\mathbf{r}' \neq \mathbf{r}} \frac{1}{2^n}\prod_{i=1}^n \left(
+  \mathds{1} + (-1)^{r_i} g_i \right) 
+.\end{align}
+The subspaces of each of the above projectors is one-dimensional, and thus
+their trace is $1$. Since there are $2^N$ total dimensions, and $2^{N-n}$ of
+them are already in the support of $\sigma$, we have a total of $2^{N-n}\left(
+2^n -1\right)$ additional projectors.\footnote{One can also arrive at this through
+combinatorical arguments over the sign vector $\mathbf{r}$.} By rearranging and
+by using the completeness relation, one can also reduce the number of
+projectors needed to $\abs{\mathcal{S}_\sigma}$. However, the trace still
+remains the same, since we want to rescale the missing diagonal entries
+uniformly. This then yields
+\begin{align}
+  c = \frac{\varepsilon}{2^{N-n}\left( 2^n -1 \right) }
+\end{align}
+and thus
+\begin{align}
+  \tilde{\sigma} = (1-\varepsilon)\sigma + \frac{\varepsilon}{2^{N-n}\left( 2^n
+  -1 \right) } \sum_{s\in\mathrm{ker}(\sigma)} \mathbb{P}_s
 .\end{align}
 
-\section{Summary}
+Having determined a form for the auxilliary density matrix, we want to examine
+it in the context of the cross entropy. It now becomes
+\begin{align}
+  -\Tr[\rho\log\sigma] = -\sum_n \matrixel{n}{\rho}{n} \log\lambda_n
+\end{align}
+with $\lambda_n =(1-\varepsilon)$ or $\lambda_n = \varepsilon
+\left(2^{N-n}(2^n-1) \right)^{-1}$. While this appears to be better than the
+diagonalization of a $2^{N} \times 2^{N}$ matrix, we still need to be aware
+of -- or compute -- the representation of $\rho$ in the space, where $\sigma$
+is diagonal.  Therefore, we do not quite dodge the task of handling an
+exponentially large matrix.
+
+%However, we can reduce this sum by realizing, that a projection onto \emph{one}
+%of them halves the space which is projected onto. We can therefore build up the
+%sum in the following way. First, we project onto the orthogonal space of the
+%first generator, i.e.
+%\begin{align}
+%  \tilde{\mathbb{P}}^\perp_1 = \frac{1}{2}\left( \mathds{1} + (-1)^{1-r_1} g_1 \right) 
+%.\end{align}
+%Note that to ensure a uniform rescaling, we need to correct for the number of
+%dimensions projected onto. In this case, we project onto a
+%$2^{N-1}$-dimensional subspace.\footnote{This is a first indicator that this
+%approach gets finicky.} Additionally, with said prefactor this is not a genuine
+%projector anymore, since $\tilde{\mathbb{P}}^2 \neq \tilde{\mathbb{P}}$.
+%
+%The next one in the sum is the projector onto the space of $g_1$ multiplied by
+%the orthogonal complement of $g_2$,
+%\begin{align}
+%  \tilde{\mathbb{P}}^\perp_2 = \frac{1}{2^{N-1}}\left(\mathds{1} + (-1)^{r_1} g_1  \right)
+%  \left( \mathds{1} + (-1)^{1-r_2} g_2 \right) 
+%.\end{align}
+%This continues for all generators of the generating set.
+%This way, we only need $\abs{\mathcal{S}_\sigma}$ projectors in the sum. 
+%Since they take the form of
+%\begin{align}
+%  \mathbb{P}_s = \frac{1}{2}\left( \mathds{1} + s \right) 
+%\end{align}
+%with $s \in \mathcal{P}_N$, their trace is
+%\begin{align}
+%  \Tr[\mathbb{P}_s] = \frac{1}{2} 2^N = 2^{N-1}
+%.\end{align}
+%We argued that we only need $\abs{\mathcal{S}_\sigma}$ projectors in the sum.
+%Therefore, \cref{eq:epsilon-over-trace} becomes
+%\begin{align}
+%  \tilde{\sigma} &= (1-\varepsilon)\sigma +
+%  \frac{\varepsilon}{\abs{\mathcal{S}_\sigma}2^{N-1}}\sum_{s \in
+%  \mathrm{ker}(\sigma)} \mathbb{P}_s 
+%,\end{align}
+%given that we choose the projectors with the above described method.
+
+
+%There are $n$ generators for $\sigma$.
+%
+%\begin{itemize}
+%  \item eigentlich sinds $2^N - 2^{N-n}$ verschiedene orthogonale projektionen,
+%    die zu machen sind
+%  \item gibt cleveren algorithmus wie man das reduzieren kann:
+%    \begin{enumerate}
+%      \item orthogonales komplement zum projektor auf den ersten
+%      \item projektor auf den ersten, multipliziert mit projektor auf
+%        orthogonales komplement vom zweiten
+%      \item projektor auf ersten mal projektor auf zweiten mal o.k. von
+%        projektor auf dritten
+%      \item etc\ldots
+%    \end{enumerate}
+%  \item damit reduziert man erheblich, man braucht dann nur so viele wie man
+%    generatoren hat, also $n$, anstatt exponentiell viele
+%  \item nur doof, dass es auch daf\"ur keine gute methode gibt im stabilizer zu
+%    handlen
+%  \item kann sich ja der n\"achste masterand ransetzen?
+%\end{itemize}
 
 \clearpage
-\section*{some relevant references}
-\begin{enumerate}
-  \item \textcolor{red}{\citetitle{aaronsonImprovedSimulationStabilizer2004}
-      fuck why didn't i read it in its entirety earlier: section 7 does the
-    job\ldots}
-  \item \citetitle{veitchResourceTheoryStabilizer2014}, entropic quantities of
-    magic states; quantifying non-stabilizerness. This paper is with gottesman
-    himself, so i thought it might be interesting to study. 
-  \item \citetitle{niekampEntropicUncertaintyRelations2012}, more or less what
-    it says. No regularization scheme or whatever. I think stabilizers are
-    mentioned tangentially, thats why i found it.
-  \item \citetitle{lashkariRelativeEntropiesConformal2014}, $\leftarrow$ me
-    grasping for straws.
-  \item \citetitle{leonePhaseTransitionStabilizer2024}, very recent, not too
-    particularily relevant to our stuff as far as i can tell.
-  \item \citetitle{wuEntanglementUpperBound2011} idfk\ldots
-  \item \citetitle{vedralEntanglementMeasuresPurification1998} one of the more
-    promising papers i've come across. probably helpful in proving the failure
-    of the na\"ive approach. However, it was published in 1998. It most likely
-    has nothing to do with stabilizers.
-  \item \citetitle{lindenQuantumEntropyCone2013}, probably some interesting
-    stuff in there, but not the thing i want.
-  \item \citetitle{buExtremalityStabilizerStates2024}, this paper is where most
-    of my confusions come from. 
-\end{enumerate}
+\section{Summary}
+
+%\section*{some relevant references}
+%\begin{enumerate}
+%  \item \textcolor{red}{\citetitle{aaronsonImprovedSimulationStabilizer2004}
+%      fuck why didn't i read it in its entirety earlier: section 7 does the
+%    job\ldots}
+%  \item \citetitle{veitchResourceTheoryStabilizer2014}, entropic quantities of
+%    magic states; quantifying non-stabilizerness. This paper is with gottesman
+%    himself, so i thought it might be interesting to study. 
+%  \item \citetitle{niekampEntropicUncertaintyRelations2012}, more or less what
+%    it says. No regularization scheme or whatever. I think stabilizers are
+%    mentioned tangentially, thats why i found it.
+%  \item \citetitle{lashkariRelativeEntropiesConformal2014}, $\leftarrow$ me
+%    grasping for straws.
+%  \item \citetitle{leonePhaseTransitionStabilizer2024}, very recent, not too
+%    particularily relevant to our stuff as far as i can tell.
+%  \item \citetitle{wuEntanglementUpperBound2011} idfk\ldots
+%  \item \citetitle{vedralEntanglementMeasuresPurification1998} one of the more
+%    promising papers i've come across. probably helpful in proving the failure
+%    of the na\"ive approach. However, it was published in 1998. It most likely
+%    has nothing to do with stabilizers.
+%  \item \citetitle{lindenQuantumEntropyCone2013}, probably some interesting
+%    stuff in there, but not the thing i want.
+%  \item \citetitle{buExtremalityStabilizerStates2024}, this paper is where most
+%    of my confusions come from. 
+%\end{enumerate}

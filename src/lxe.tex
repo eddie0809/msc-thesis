@@ -4,33 +4,64 @@
   \citefield{butlerCage1988}{booktitle}
 --- \citefield{butlerCage1988}{number}}
 
-PTIM: \cite{langEntanglementTransitionProjective2020}
+%In this chapter we examined the linear cross entropy in the projective
+%transverse-field Ising model. The linear cross entropy was introduced by
+%\citeauthor{liCrossEntropyBenchmark2023} in \cite{liCrossEntropyBenchmark2023},
+%and first investigated for the projective transverse-field Ising model by
+%\citeauthor{tikhanovskayaUniversalityCrossEntropy2023} in
+%\cite{tikhanovskayaUniversalityCrossEntropy2023}. In search of a promising
+%candidate for an order parameter of the phase transition that is measureable in
+%an experimental setting, we picked up where these previous works left off. Our investigations
+%PTIM: \cite{langEntanglementTransitionProjective2020}
+%
+%Fisher/Altman PRL, hier wird die LXE definiert: \cite{liCrossEntropyBenchmark2023}
+%
+%Nicolai: \enquote{Das ist eines der Paper, die Fisher zitiert, wo die LXE eingeführt wurde.} \cite{baoSymmetryEnrichedPhases2021}
+%
+%arXiv:2306.00058, LXE fürs PTIM, preprint \cite{tikhanovskayaUniversalityCrossEntropy2023}
+%
+%MIPT allgemein, hier leider eher weniger ahnung warum ich das in dieses Kapitel rein
+%gemacht hab zum zitieren. \cite{baoTheoryPhaseTransition2020}
+%
+%Sampling stuff aus appendix von \cite{roserDecodingProjectiveTransverse2023}
+%
+%MOTHERFUCKER\ldots \cite{kamakariExperimentalDemonstrationScalable2024}
 
-Fisher/Altman PRL, hier wird die LXE definiert: \cite{liCrossEntropyBenchmark2023}
+In this chapter we examine a measure known as the linear cross entropy proposed
+by \citeauthor{liCrossEntropyBenchmark2023} in
+\cite{liCrossEntropyBenchmark2023} to experimentally access measurement-induced
+phase transitions. Despite its novelty, it has already been employed in
+experiments to probe hybrid quantum circuits
+\cite{kamakariExperimentalDemonstrationScalable2024}, and other theoretical
+works are based on it. Even for our model system, the projective
+transverse-field Ising model (PTIM), a study has been conducted (cf. ref.
+\cite{tikhanovskayaUniversalityCrossEntropy2023}\footnote{While this reference
+  points to a preprint on arXiv, we remark that the cited work has since been
+  published in
+\citefield{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024}{journaltitle}
+with no significant alterations (cf. ref.
+\cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024}).}). We therefore build on the work of
+\citeauthor{tikhanovskayaUniversalityCrossEntropy2023} in
+\cite{tikhanovskayaUniversalityCrossEntropy2023} in hopes of detecting the
+measurement-induced phase transition in the projective transverse-field Ising
+model in the best case, and gaining new understanding from failure in the worst
+case.
 
-Nicolai: \enquote{Das ist eines der Paper, die Fisher zitiert, wo die LXE eingeführt wurde.} \cite{baoSymmetryEnrichedPhases2021}
-
-arXiv:2306.00058, LXE fürs PTIM, preprint \cite{tikhanovskayaUniversalityCrossEntropy2023}
-
-MIPT allgemein, hier leider eher weniger ahnung warum ich das in dieses Kapitel rein
-gemacht hab zum zitieren. \cite{baoTheoryPhaseTransition2020}
-
-Sampling stuff aus appendix von \cite{roserDecodingProjectiveTransverse2023}
-
-MOTHERFUCKER\ldots \cite{kamakariExperimentalDemonstrationScalable2024}
-
-In this chapter we examine a measure proposed by
-\citeauthor{liCrossEntropyBenchmark2023} in \cite{liCrossEntropyBenchmark2023}
-to circumvent the sampling problem. This measure is called the \emph{linear
-cross entropy} (abbreviated as LXE). Although it is a novel quantity, its properties in hybrid
-circuits, and general random circuits, have already been explored in varying
-degrees of detail. Even for the projective transverse-field Ising model (PTIM),
-a study has been conducted (cf. ref.
-\cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024}). In the present
-chapter, we will investigate the properties of the linear cross entropy in
-general and for the projective transverse-field Ising model. We will also
-evaluate its quality as an order parameter for the phase transition of the
-PTIM.
+%We particularily
+%want to examine it for our model system, the projective transverse-field Ising
+%model (PTIM), and evaluate its suitability to circumvent the sampling problem
+%and detect the phase transition.
+%for the projective transverse-field Ising model and evaluate its suitability to
+%circumvent the sampling problem and detect the phase transition. This measure is called the \emph{linear
+%cross entropy} (abbreviated as LXE). Although it is a novel quantity, its properties in hybrid
+%circuits, and general random circuits, have already been explored in varying
+%degrees of detail, with 
+%Even for the projective transverse-field Ising model (PTIM),
+%a study has been conducted . In the present
+%chapter, we will investigate the properties of the linear cross entropy in
+%general and for the projective transverse-field Ising model. We will also
+%evaluate its quality as an order parameter for the phase transition of the
+%PTIM.
 
 The chapter is structured as follows. We will first introduce the quantity
 itself in \cref{sec:lxe-defn}, where we also provide a shortcut for computing
@@ -40,15 +71,29 @@ the system. Next, we introduce faulty gates to the process and examine the LXE
 for a system with errors. Lastly, we motivate the discarding of either $X$ or
 $ZZ$ measurement results with probability-theoretic arguments and evaluate the
 utility of the LXE for the different cases.
-
+\newpage
 \section{Definition and properties}\label{sec:lxe-defn}
-In this section we provide a definition for the linear cross entropy (LXE)
-$\chi$ and a detailed derivation for its computation in Clifford circuits.
+In this section we provide a definition for the linear cross entropy $\chi$
+(also abbreviated as LXE)
+and a detailed derivation for its computation in Clifford circuits. To this
+end, we follow the results of ref.
+\cite{liCrossEntropyBenchmark2023,tikhanovskayaUniversalityCrossEntropy2023} for the
+generalities, and provide our own derivations and proofs for the
+particularities surrounding the projective transverse-field Ising model.
 
-Hier Definition und die ganze algebra/mathematik. dann den part zu LXE in
-stabilizer (mit dieser projection und so)
-
-Auch verschiedene Trackings?
+Before introducing all the technical details surrounding the linear cross
+entropy, we want to give a quick remark on the motivation behind the linear
+cross entropy. In ref.
+\cite{liCrossEntropyBenchmark2023}, they mention that eariler studies found a
+quantity closely related to $-\ln\chi$ corresponding to the free energy cost
+after fixing a boundary condition in a replicated spin model
+\cite{liCrossEntropyBenchmark2023,baoTheoryPhaseTransition2020,jianMeasurementinducedCriticalityRandom2020,nahumOperatorSpreadingRandom2018,zhouEmergentStatisticalMechanics2019}.
+The linear cross entropy is thus also motivated from classical statistical physics.
+%Note that although the linear cross entropy was originally introduced in ref. \cite{liCrossEntropyBenchmark2023}
+%in a rather technical manner, they mention that earlier studies (cf. ref.
+%\cite{baoTheoryPhaseTransition2020}) have pointed out 
+%that a quantity closely related to $-\ln\chi$ corresponds to the free energy
+%cost of fixing a boundary condition in a 
 
 \subsection{General random circuits}
 We first introduce the linear cross entropy (also abbreviated as LXE) in the
@@ -68,8 +113,11 @@ state as
 .\end{align}
 Here, $C_\mathbf{m}$ is the time-ordered product of all gates in the circuit,
 unitary and measurement, and can be written as
+\cite{liCrossEntropyBenchmark2023}
 \begin{align}
-  C_\mathbf{m} = 
+  C_\mathbf{m} = \mathbb{P}_{m_N} \mathbb{P}_{m_{N-1}} \cdots
+  \mathbb{P}_{m_{N-N_T+1}} U_T \mathbb{P}_{m_{N-N_T}} \cdots
+  \mathbb{P}_{m_{N-N_T-N_{T-1}+1}} U_{T-1} \cdots
 .\end{align}
 The action of $C_\mathbf{m}$ on the initial state
 $\rho$ is the mathematical object representing one possible trajectory with
@@ -421,11 +469,11 @@ worked out how it can be computed in the context of stabilizer circuits. As we
 also know an efficient method of computing the (experimentally inaccessible)
 entanglement entropy, we will also compare the LXE with the entropy of
 entanglement.
-\subsection{Methods}
+\subsection{Methods}\label{sec:lxe-numeric}
 Before we discuss the linear cross entropy in detail, we introduce the setup
 for our simulations. If not explicitly stated otherwise, the simulations were
 performed with a stabilizer simulator written in \verb|C++| using the algorithm detailed in
-\cref{ch:mixed,sec:tableau}.
+\cref{ch:mixed,sec:tableau} \cite{langCliffordCircuitSimulator2022}.
 Previous numerical investigations of the projective transverse-field Ising
 model have that the sample average of a system is
 \cite{roserDecodingProjectiveTransverse2023}
@@ -531,15 +579,14 @@ parameter $p$.
 
 \subsection{Results}
 
-\textcolor{red}{vielleicht hier nicht der erste hinweis darauf, dass da schon
-  peer-reviewed stuff in der welt rumgeistert, auf dem die ganze analyse
-basiert}
-
-As \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024} already explored
+%\textcolor{red}{vielleicht hier nicht der erste hinweis darauf, dass da schon
+%  peer-reviewed stuff in der welt rumgeistert, auf dem die ganze analyse
+%basiert}
+As \cite{tikhanovskayaUniversalityCrossEntropy2023} already explored
 the linear cross entropy on the projective transverse-field Ising model, we
-choose the setup with the maximally entangled states $\rho = \dyad{GHZ+}$ and
+choose the identical setup with the maximally entangled states $\rho = \dyad{GHZ+}$ and
 $\sigma = \dyad{GHZ-}$ as initial states with $L=T$ for better comparability
-with their results and for the upcoming sections in this chapter.
+with their results in this and the upcoming sections of this chapter.
 
 \Cref{fig:lxe-vs-se-default} shows the linear cross entropy and the
 entanglement entropy for different system sizes.
@@ -612,7 +659,7 @@ which is still $p_c = 1 /2$.
 %\end{itemize}
 
 \section{Marinalizing over probabilities}\label{sec:lxe-indep}
-In \cite{tikhanovskayaUniversalityCrossentropy$mathbbZ_2$2024} they argue that
+In \cite{tikhanovskayaUniversalityCrossEntropy2023} they argue that
 by tracking only the outcomes of $X$ measurements, one obtains the identical
 results for the linear cross entropy compared to tracking all results.
 In this section, we will
@@ -790,8 +837,8 @@ As error model, we implement the model from
 \cite{tikhanovskayaUniversalityCrossEntropy2023}, where they
 considered symmetric noise in $X$. The protocol to introduce errors is as
 follows. Between each timestep, apply a quantum channel of the form
-\begin{align}
-  \varepsilon(\rho) = \frac{1}{2}\rho + \frac{1}{2}X\rho X^\dagger
+\begin{align}\label{eq:noisechannel}
+  \varepsilon(\rho) = \frac{1}{2}\rho + \frac{1}{2}X\rho X
 \end{align}
 on each qubit with an error rate $q$.\footnote{We refer to this quantum channel
 as \enquote{error} and \enquote{noise} interchangeably.} That is, after each timestep, before
@@ -803,7 +850,7 @@ errors happening in this way, as well as errors on both observables.
 This type of error can be interpreted as additional measurements we failed to
 keep track of in general, and not by choice. Another way of interpreting it is
 that they constitute projective errors, akin to the one shown in a minimal
-example in \cref{fig:error-detecting-circuit}. Our expectation from the
+example in \cref{fig:error-detection-circuit}. Our expectation from the
 interpretation of the survival rate of the initial cluster would be that for
 $X$ noise, we have the phase transition at a smaller probability, since the
 initial cluster dies earlier due to the presence of more frequent $X$
@@ -849,10 +896,10 @@ parameters $p$ and $q$ for measurements we do and do not have control over, resp
 .\end{align}
 
 With the sampling scheme defined in a more precise way, we can refine our
-predictions on the results in the simulation. Although the $f$ in \cref{eq:sample-f-Ctilde} and \cref{eq:sample-f-C} are
-identical, the measurement record we take as input is not generated from the
-same circuit. Consequently, we can now identify other
-causes of the function going to $0$.
+predictions on the results in the simulation. Although the $f$ in
+\cref{eq:sample-f-Ctilde} and \cref{eq:sample-f-C} are identical, the
+measurement record we take as input is not generated from the same circuit.
+Consequently, we can now identify other causes of the function going to $0$.
 
 Previously we argued that the probability of a
 measurement outcome is not influenced by preceeding measurements, that is, they
@@ -951,6 +998,20 @@ Since this should not happen anywhere in the space-time lattice, we have
       \chi \leq \left( 1-q\left( 1-p \right)^4  \right)^{(L-1)(T-1)}
 \end{align}
 as an estimation for the linear cross entropy for $X$ errors.
+The LXE is thus exponentially suppressed for $p<1$ in the thermodynamic limit
+of $L \to \infty$. We should also not confuse the facts here; this estimate
+does not give the actual behavior of the linear cross entropy.  It is only a
+heuristically derived upper bound for the rate of occurence of mechanism
+\textsf{B1}. In principle, this probability would need to be multiplied by the
+probability of the other mechanisms to get a tighter upper bound. However, it
+stands to reason that even if this were the only mechanism (and we will come
+across an example of exactly this later), the linear cross entropy would still
+go to $0$ for large systems, with a singular value of $\chi=1$ at
+$p=1$.\footnote{This follows from the sandwich lemma.} Note that the converse
+is the case for \textsf{B2} by an analogous line of reasoning, where it is
+$\chi=1$ at $p=0$ and $\chi=0$ otherwise. 
+%Indeed it turns out that for sufficiently large systems, due to the fact that
+%\cref{eq:lxe-estimate} is only an estimate for mechanism \textsf{B1}, 
 
 \subsection{Tracking everything}
 
@@ -1058,14 +1119,15 @@ of no errors at $p = 1 /2$. Each datapoint corresponds to the sampling of $\sim
 \end{figure}
 
 \subsection{Marginalization}
-\label{sec:lxe-err-subset}
+\label{sec:lxe-err-subset} 
 Notice that if, instead of applying projection operations, we applied
-measurement gates in the circuit depicted in \cref{fig:mech-b1-lxe}, we would
--- obviously -- not project onto the 0-vector, and thus the circuit would
-continue. This is exactly what happens when one marginalizes out the
-measurement results of $ZZ$ measurements, as discussed in \cref{sec:lxe-indep}.
-It thus stands to reason that we should entertain this probability theoretic
-trick for the noisy circuits.
+measurement gates in the right hand side circuits depicted in
+\cref{fig:mech-b1-lxe,fig:mech-b2-lxe}, we would -- obviously -- not project
+onto the 0-vector, and thus the circuit would continue. This is exactly what
+happens when one marginalizes out the measurement results of $ZZ$ or $X$
+measurements, as discussed in \cref{sec:lxe-indep}.  It thus stands to reason
+that we should entertain this probability theoretic trick for the noisy
+circuits.
 
 Within $\tilde{C}$ and $C$ the same argument as in
 \cref{sec:lxe-indep} holds. The outcomes we track are still independent
@@ -1106,54 +1168,156 @@ probabilities conditioned on initial state $\rho$ with $\tilde{C}$,
           \underbrace{\frac{\sum_{\mathbf{m}_X} P(\mathbf{m}_X | \tilde{C}, \rho)
           P(\mathbf{m}_X | C, \sigma)}{\sum_{\mathbf{m}_X'}
           \left(P(\mathbf{m}_X' |
-          C, \sigma)\right)^2}}_{\text{Subset X}}
+          C, \sigma)\right)^2}.}_{\text{Subset X}}
 \end{align}
 
-It turns out that tracking $\mathcal{O}$ measurements only prevents us from
-seeing $\mathcal{O}$-errors. It is not hard to convince oneself that this needs to
-be true: If we do not care about the outcomes of the observable, where no errors
+As discussed previously, by tracing out the other measurement outcomes, we
+effectively replace them by an identity in the calculation of the probability.
+It therefore turns out that tracking only the outcomes $\mathcal{O}$ measurements prevents us from
+seeing $\mathcal{O}$-errors. Another way one can convince oneself of this fact
+is the following.
+If we do not care about the outcomes of the observable, where no errors
 happen, then every error gets necessarily bypassed as described above. We can
 no longer distinguish if a measurement turned from random to deterministic due
 to a faulty random measurement. The outcome is still a valid one with respect to
 $C$ (and possibly $\sigma$, for that matter). On the other hand will it be
-impossible to tell if the entanglement cluster died because of a faulty
+impossible to tell if the initial entanglement cluster died because of a faulty
 measurement or a native one. 
 
-In particular will tracking only $X$ with $X$-errors be the same as without, which
-is equivalent to tracking everything without errors. Furthermore will tracking
-$ZZ$ while having $ZZ$ errors still be identically $1$. One can, of course,
-combine the lot ad absurdum, which culminates into \cref{fig:err-vs-tra}, with
-the quest of finding a worthy representative of the actual happenings inside
-the PTIM.
+In particular will marginalizing over $ZZ$, i.e. tracking $X$, with $X$-errors
+yield the identical linear cross entropy as in the noiseless case. With the
+results of \cref{sec:lxe-subset} we also know that this is then equivalent to
+tracking every outcome in the noiseless circuit.
+Furthermore will tracking
+$ZZ$ while having $ZZ$ errors still be identically $1$. 
+Note that this implies that the different mechanisms for the different error
+types get absorbed depending on which observable we choose to keep track of. 
 
-\Cref{fig:err-vs-tra} shows multiple plots of $\chi$ as a function of
-$p$, where $p$ ($1-p$) is the probability of a single-site $X$ ($ZZ$)
-measurement. The plots are ordered as follows. In each row there is some kind of
-error present: none, $X$, $ZZ$, and $X$ and $ZZ$. Each error happens at an
-error rate of $q=0.01$. In each column, we track a different subset of
-measurements, $X$, $ZZ$, and all measurements.
-Inside the plots are annotations which qualitatively
-indicate the mechanism behind $\chi$ going to $0$, refering to the previously
-defined denotions of said mechanisms. The dashed line is the ancilla
-entanglement entropy. Each simulation was done twice: once for an isolated
-system, which we then compared with $\sigma$, and another one entangled to an
-ancilla qubit. At the end of each circuit simulation, we computed the
-entanglement entropy of the ancilla. It is $1$ if the cluster survived and $0$
-otherwise. Its critical point should be lower for $X$ errors, higher for $ZZ$
-errors and roughly equal to the ideal case for $X$ and $ZZ$ errors.
-\Cref{fig:large-q-anc-vs-lxe} offers a visualization of this phenomenon.
+\subsubsection{Results}
+The results of the numerical analysis are shown in \cref{fig:err-vs-tra}. The
+linear cross entropy and the entanglement entropy of an ancilla qubit is shown,
+where every possible combination of error type and marginalization is represented in
+a separate subplot. Although we previously made reference to the figure, we
+will clarify how the tableau presentation is to be read, as we will employ it
+again for our numerical results in \cref{ch:rel-ent}.
 
-\Cref{fig:err-vs-tra} hopefully looks nice. Maybe it also floats to the correct
-place!
+Along the rows of the
+tableau of subplots we simulate the PTIM with noise represented by different
+observables. In the first row, there are no errors, $q=0$. In the second row,
+we introduce symmetric noise in $X$ as defined in
+\cref{sec:errormodel,eq:noisechannel}. As error rate we choose $q=0.01$ in
+agreement with ref. \cite{tikhanovskayaUniversalityCrossEntropy2023}. In the
+thrid row we proceed analogously with $ZZ$ errors, also at a rate of $q=0.01$.
+In the last row, we combine the two, where first the noise channel of $X$ and
+then the one of $ZZ$ is applied. 
+
+Along the columns of \cref{fig:err-vs-tra}, we use a different subset of
+measurement outcomes. In the first column, titled \enquote{Track X}, we track
+the outcomes of $X$ measurements, and replace projections onto $ZZ$ results
+with measurement operations. The second column, titled \enquote{Track ZZ} is
+the converse of the first, with $ZZ$ outcomes tracked and $X$ outcomes
+marginalized. The last column is where we track everything. 
+
+The solid line denotes the linear cross entropy, while the dashed line is the
+ancilla entanglement entropy. Note that each simulation was done twice: once
+for an isolated system, which we then compared with $\sigma$ in order to
+compute the linear cross entropy, and another one entangled to an ancilla
+qubit.  We want to emphasize that the different combinations of errors and
+marginalizations are qualitatively different in that some system sizes need not
+be shown for one or the other. For instance, in the \enquote{X Errors, Track
+all} case, the linear cross entropy for $L=64$ would be $0$ almost everywhere,
+with miniscule deviations. We thus omit some system sizes in some subplots,
+also in an effort to retain legibiliy.
+
+Within each subplot we annotated each curve to qualitatively indicate the
+predominant mechanism that sends $\chi$ to $0$, refering to the previously
+defined denotions of said mechanism. For the \enquote{$X$ Errors -- Track $X$},
+\enquote{No Errors -- Track $X$}, and \enquote{No Errors -- Track all}
+situations, the only mechanism is the one where the initial cluster dies by
+means of an $X$ measurement. As such, mechanism \textsf{A} is the predominant
+one. For the \enquote{$X$ Errors -- Track all}, we have \textsf{A}, as well as
+\textsf{B1}, the latter of which is predominant in the regime $p<p_c$, whereas
+the former is predominant for $p> p_c$. Notice that this can be seen in the
+combination of the subplots to the left of it. In the \enquote{No Errors --
+Track $ZZ$} case, the linear cross entropy is identically $1$, which is no
+longer the case for $X$ errors. Here, we have \textsf{B1}, which is the only
+mechanism by which the $ZZ$ linear cross entropy goes to 0.
+
+Since we also know that the \enquote{Track all} linear cross entropy is the
+product of the marginalized ones, we can read each line as the product of the
+first two plots equalling the third one. For rows 1 and 3, this is rather
+trivial. For the others, it offers an explanation as to why it was necessary to
+lower the system size in the last column.\footnote{The last row offers the
+better visualization of this phenomenon in the nontrivial case compared to the
+second.} This shows that the simulations agree with the prediction.
+
+These remarkable results notwithstanding, we would still be hard-pressed to
+find any evidence of the \emph{real}, i.e. \emph{measureable}, phase transition
+of the projective transverse-field Ising model in noisy systems. This is highlighted by the fact
+that the \enquote{true} behavior of the system is simulated as well in the form
+of the ancilla entanglement entropy. For this we especially focus on the last
+row of the tableau, which would be the noisiest system, where the behavior of
+the linear cross entropy is seemingly decoupled from the dynamics of the
+cluster. In particular, due to the exponential suppression in the
+thermodynamic limit the mechanisms that are \emph{not} \textsf{A} dominate.  
+
+However, this exponential suppression can be synthesized\footnote{in the
+Hegelian sense} into an advantage. Notice that as a consequence of this
+suppression, the \enquote{Track $ZZ$} column is highly sensitive to $X$ noise.
+Where it is identically $1$ in the ideal case, even small error rates in small
+systems lead to the deviation from the ideal behavior. We can therefore use
+this fact, as well as \cref{eq:lxe-estimate}, to estimate how noisy our system
+is. As such, one \emph{could} still draw some utility from the linear cross
+entropy, in that the \enquote{Track $ZZ$} column could function as an indicator
+of noise in the system, albeit only noise in $X$, i.e. bitflips. 
+
+%Inside the plots are annotations which qualitatively indicate the mechanism
+%behind $\chi$ going to $0$, refering to the previously defined denotions of
+%said mechanisms. 
+%At the end of each circuit simulation, we computed the entanglement entropy of
+%the ancilla. It is $1$ if the cluster survived and $0$ otherwise. Its critical
+%point should be lower for $X$ errors, higher for $ZZ$ errors and roughly equal
+%to the ideal case for $X$ and $ZZ$ errors.  \Cref{fig:large-q-anc-vs-lxe}
+%offers a visualization of this phenomenon.  One can, of course, combine the
+%lot ad absurdum, which culminates into \cref{fig:err-vs-tra}, with the quest
+%of finding a worthy representative of the actual happenings inside the PTIM.
+%
+%\Cref{fig:err-vs-tra} shows multiple plots of $\chi$ as a function of $p$,
+%where $p$ ($1-p$) is the probability of a single-site $X$ ($ZZ$) measurement.
+%The plots are ordered as follows. In each row there is some kind of error
+%present: none, $X$, $ZZ$, and $X$ and $ZZ$. Each error happens at an error
+%rate of $q=0.01$. In each column, we track a different subset of measurements,
+%$X$, $ZZ$, and all measurements.
+
+%\Cref{fig:err-vs-tra} hopefully looks nice. Maybe it also floats to the correct
+%place!
 \begin{figure}[p]
   \centering
   \includegraphics{errors-vs-tracked.pdf}
-  \caption{Which measurement outcomes have been tracked and used to compute the
-  linear cross entropy, vs the type of errors simulated.}
+  \caption{Linear cross entropy (solid) and entanglement entropy of an ancilla qubit
+  entangled to the initial cluster (dashed) for $p\in[0,1]$ for all combinations of
+errors and marginalizations and different system sizes. Note that the ancilla entropy is unaffected by the
+marginalizations. Annotations within the subfigures reference the predominant mechanisms of
+the linear cross entropy going to $0$. \textsf{A} corresponds to
+\cref{fig:mechanism-a}, \textsf{B1} and \textsf{B2} correspond to
+\cref{fig:mech-b1-lxe,fig:mech-b2-lxe}, respectively.}
   \label{fig:err-vs-tra}
 \end{figure}
 %It didn't seem to do so, so i passed \texttt{[h!]}
 \newpage
 \section{Summary}
 In this chapter we examined the linear cross entropy in the projective
-transverse-field Ising model. 
+transverse-field Ising model. The linear cross entropy was introduced by
+\citeauthor{liCrossEntropyBenchmark2023} in \cite{liCrossEntropyBenchmark2023},
+and first investigated for the projective transverse-field Ising model by
+\citeauthor{tikhanovskayaUniversalityCrossEntropy2023} in
+\cite{tikhanovskayaUniversalityCrossEntropy2023}. In search of a promising
+candidate for an order parameter of the phase transition that is measureable in
+an experimental setting, we picked up where these previous works left off. Our investigations
+showed that while it is a fitting quantity for noiseless systems, the linear
+cross entropy is not at all robust to noise in the system, as it gets exponentially
+suppressed with larger system size. We additionally showed that we can
+marginalize over measurement outcomes of one operator and still find some
+utility in the linear cross entropy. In an experimental setting, the
+marginalized linear cross entropy could be employed in attempts to minimize the
+influence of noise, as it is highly sensitive to noise.

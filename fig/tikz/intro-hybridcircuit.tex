@@ -1,0 +1,76 @@
+\begin{tikzpicture}
+
+% Define grid dimensions, 10x8 grid
+\def\qubits{7} 
+\def\timesteps{6}
+\def\xspace{.8}
+\def\qubitss{\qubits*\xspace}
+
+% Draw the background grid
+\foreach \x in {0,...,\qubits} {
+  \draw[black, thick] (\x*\xspace,0.25) -- (\x*\xspace,\timesteps+.9);
+  %\fill[black] (\x,-.75) circle (.2);
+}
+\foreach \t in {0,...,\timesteps} {
+  \node[] at (-1.5,\t+.5) {$t=\t$};
+}
+
+%\draw[red, very thick, fill=red!20] (0,\timesteps+1.2) circle (.15);
+%\draw[arrow, thick] (-1,-1) -- (-1,\timesteps+1.5) node[anchor=west] {\LARGE$t$}; 
+
+\foreach \t in {1,...,\timesteps} {
+    \foreach \x in {0,...,\qubits} {
+        % Check if we're on an even or odd row
+        \pgfmathparse{int(mod(\t-1,2))}
+        \let\rowtype=\pgfmathresult
+        % Check if we're on an even or odd column
+        \pgfmathparse{int(mod(\x,2))}
+        \let\coltype=\pgfmathresult
+        
+        % Place rectangle if row and column types match
+        \ifnum\rowtype=\coltype
+            % If we're at the last column and need a rectangle
+            \ifnum\x=\qubits
+                % Right half
+                \fill[petrol!60] (\qubitss-0.2,\t-0.2) rectangle (\qubitss+0.3,\t+0.2);
+                \draw[black,very thick] (\qubitss-0.2,\t-0.2) -- (\qubitss-0.2,\t+0.2);  % Right border 
+                \draw[black,very thick] (\qubitss-.22208,\t-0.2) -- (\qubitss+0.3,\t-0.2);      % bottom border
+                \draw[black,very thick] (\qubitss-.22208,\t+0.2) -- (\qubitss+0.3,\t+0.2);      % top border
+                
+                % Left half - no border on right side
+                \fill[petrol!60] (-0.3,\t-0.2) rectangle (0.2,\t+0.2);
+                \draw[black,very thick] (0.2,\t-0.2) -- (0.2,\t+0.2);                % left border
+                \draw[black,very thick] (-0.3,\t-0.2) -- (.22208,\t-0.2);                   % bottom border
+                \draw[black,very thick] (-0.3,\t+0.2) -- (.22208,\t+0.2);                   % top border
+              \else
+                % Normal rectangle for non-boundary positions
+                \draw[black,very thick, fill=petrol!60] (\xspace*\x-.2,\t-0.2) rectangle
+                (\xspace*\x+1,\t+0.2);
+            \fi
+            %\draw[blue, fill=blue!30] (\x+0.1,\t-0.15) rectangle (\x+0.9,\t+0.15);
+        \fi
+    }
+  }
+
+\def\loopend{6}
+% Place red circles on vertical edges with 0.5 probability
+\foreach \x in {0,...,\qubits} {
+    \foreach \t in {0,...,\loopend} {
+        \pgfmathrandominteger{\randnum}{0}{2}
+        \ifnum\randnum=1
+            \draw[black, very thick, fill=white] (\x*\xspace,\t+0.5) circle (0.1);
+        \fi
+    }
+  }
+
+  \draw[black, thick] (\qubits,4) -- (\qubits,5);
+  \draw[black, thick] (\qubits+.75,4) -- (\qubits+.75,5);
+  \draw[black, thick, fill=petrol!60] (\qubits-.15,4.3) rectangle
+  (\qubits+.9,4.7);
+  \node[anchor=west] at (\qubits+1,4.5) {random unitary};
+
+  \draw[black, thick] (\qubits+.25,2) -- (\qubits+.25,3);
+  \draw[black, thick, fill=white] (\qubits+.25,2.5) circle (.08);
+  \node[anchor=west] at (\qubits+1, 2.55) {local measurement};
+
+\end{tikzpicture}

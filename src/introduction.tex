@@ -744,8 +744,10 @@ on classical computers, as well as the proof to \cref{thm:gottesman-knill}
 until \cref{ch:mixed}. For now we remind ourselves that the Clifford gate set
 does not constitute a universal set of quantum gates. Thus, classical computers
 \emph{cannot} suffice to efficiently simulate quantum computers
-
+\clearpage
 \section{Entanglement Transitions}\label{sec:ent-trans}
+
+\textcolor{red}{fehlt! mach das mal!}
 
 Random assortment of MIPT Paper (incomplete):
 
@@ -795,26 +797,37 @@ more curated MIPT collection:
 %  \caption{Claude Hybrid Circuit Tikz picture??}
 %  \label{fig:hybrid-circuit-claude}
 %\end{figure}
-\begin{figure}[H]
+\begin{figure}[t]
   \centering
   \input{fig/tikz/intro-hybridcircuit.tex}
-  \caption{Hybrid Circuit Tikz picture??}
+  \caption{Example of a random unitary circuit model studied in the context of
+    measurement induced phase transitions with measurements
+  performed with probability $p$ at each site for each timestep.
+  In this paradigmatic
+circuit, two-qubit unitary gates are arranged in a way resembling a brickwork
+wall, and single-qubit measurement gates are randomly distributed. The circuit
+diagram is adapted from Fig. 1 of Ref.
+\cite{liMeasurementdrivenEntanglementTransition2019}.}
   \label{fig:hybrid-circuit}
 \end{figure}
 
 \subsection{Phenomenology}
-\newpage
+
+\clearpage
 \section{The Projective Transverse-Field Ising Model}\label{sec:intro-ptim}
 In this section we introduce the model investigated in the main part of the
 thesis, known as the projective transverse-field Ising model (abbreviated as
 PTIM). We want to give the introduction by going backwards through each of the
 concepts constituting the name \enquote{PTIM}, starting with the Ising model.
 \subsection{The Ising model}
+
+\textcolor{red}{fehlt! mach das mal!}
+
 Hier nur kurz, criticality in 2d, lars onsager whatever, einfach kurz back to
 the roots, was sind die origins von dem was folgt
 \subsection{The transverse-field Ising model}
 
-The Ising model as conceived by Ernst Ising is a model from classical
+The Ising model as conceived by Wilhelm Lenz is a model from classical
 statistical mechanics. The spins that constitute it can only take on discrete
 values, yes, but they cannot exist in a coherent superposition of up and down,
 but only up. For a quantum mechanical analogue to the classical Ising model, we
@@ -833,7 +846,8 @@ transverse-field Ising model (TIM) reads
 \begin{align}\label{eq:tim-hamiltonian}
   H = -J\sum_{i=1}^L \sigma_i^z \sigma_{i+1}^z - h\sum_{i=1}^L \sigma_i^x
 ,\end{align}
-where we choose $J>0$ (ferromagnetic coupling) and a magnetic field $h>0$. With
+where we choose $J>0$ (ferromagnetic coupling), periodic boundary conditions
+($L+1 \equiv 1$), and a magnetic field $h>0$. With
 positive $h$, the magnetic field it points in $x$-direction, which is transverse to the
 $z$-direction, hence the name \emph{transverse-field}. 
 Notice that in \cref{eq:tim-hamiltonian}, the terms $\sigma_i^z\sigma_{i+1}^z$
@@ -845,14 +859,16 @@ Note that the ferromagnetic coupling implies aligned spins, where nearest
 neighbours tend to share directions, while the transverse magnetic field will
 flip some spins arbitrarily in the evolution.
 
-If we now consider the two limits of $J \ll h$, i.e. $J\to 0$,  and $h \ll J$,
-i.e. $h \to 0$. In the former, we have a weaker coupling between the spins, and
+Let us now consider the two limits of $J \ll h$, i.e. $J\to 0$,  and $h \ll J$,
+i.e. $h \to 0$. In the former we have a weaker coupling between the spins and
 thus a higher tendency for individual spins to flip. The ground state is then
 the product state of local ground states of $\sigma_i^x$, $\ket{G_+} =
-\ket{++\cdots +}$. This ground state is unique, since each constituent is a
+\ket{++\cdots +}$. This ground state is unique, since each constituent is
+locally a
 unique ground state. One further feature of it is that is possesses no
 long-range order. The spin on site $i$ is completely agnostic to the happenings
-of the spin on site $j$, if $i$ and $j$ are sufficiently far apart, and are on
+of the spin on site $j$ -- if $i$ and $j$ are sufficiently far apart --, i.e.
+$i$ and $j$ are on
 average not aligned (similar to the classical ising model for higher
 temperatures). Mathematically, this expresses as 
 \begin{align}
@@ -885,15 +901,17 @@ $\expval{\sigma_i^z\sigma_j^z}\to 0$ in the long-range limit. A natural
 question to follow is, what happens between the regimes of
 $h /J \to 0$ and $h /J \to \infty$? The answer is, of course, that there is a phase
 transition. Remarkably, this phase transition happens already in the
-one-dimensional case, whereas the classical Ising model did not have a phase
-transition in one dimension. To understand what happens at the phase
+one-dimensional case, contrary to the classical Ising model which did not have a phase
+transition in one dimension. To understand what we mean by a phase 
 transition, consider the symmetry group of the Hamiltonian, $\mathcal{G}_H =
 \{I, X\} \cong \mathbb{Z}_2$ with $X = \prod_i \sigma_i^x$, which
 corresponds to flipping all spins. In the paramagnetic phase, the ground state
 shares this symmetry, since $X\ket{G_+} = \ket{G_+}$. In the ferromagnetic
 phase, we do not have this symmetry in general, since flipping all spins would
 transform one ground state into the other. Thus, the symmetry of the
-Hamiltonian is spontaneously broken. 
+Hamiltonian is spontaneously broken. This breaking of a symmetry corresponds to
+a phase transition according to the Landau paradigm of phase transitions
+(\textcolor{orange}{landau phase transitions zitieren, findest du safe}).
 \subsection{The projective transverse-field Ising model}\label{sec:the-ptim}
 We now have the baseline set to introduce the \emph{projective}
 transverse-field Ising model. Our detailed introduction follows ref.
@@ -907,7 +925,7 @@ measurements. The action of a measurement of observable $O$ on a state
 $\ket{\phi}$ is given by
 \begin{align}
   \mathcal{M}[O](\ket{\phi}) =
-  \frac{\mathbb{P}_\lambda}{\sqrt{\expval{\mathbb{P}_\lambda}{\phi}}}
+  \frac{\mathbb{P}_\lambda\ket{\phi}}{\sqrt{\expval{\mathbb{P}_\lambda}{\phi}}}
 \end{align}
 with the eigenvalue $\lambda$ of $O$ and probability $P(\lambda;
 \ket{\phi}) = \expval{\mathbb{P}_\lambda}{\phi}$.
@@ -974,20 +992,18 @@ include mutual information in the source code.}
 
 As a final note we interpret \cref{fig:phase-transition} in the context of
 quantum error correction. The specific choice of observables is not only
-interesting in their connection to the TIM.
-Recall the circuit shown in
+interesting in their connection to the TIM.  Recall the circuit shown in
 \cref{fig:error-detection-circuit}. If we have an entangled state over multiple
 qubits, we can think of $ZZ$ measurements as stabilizer (syndrome) measurements
-and projective $X$ erors in the circuit. Due to the projective dynamics,
-we not only detect, but also sometimes correct the error. More importantly, the
+and projective $X$ erors in the circuit. Due to the projective dynamics, we not
+only detect, but also sometimes correct the error. More importantly, the
 entanglement structure stays the same no matter what. (This is also manifest in
 the fact that the local observables commute with the symmetry operator
-$U=\prod_i X_i$, which generates a global $\mathbb{Z}_2$ symmetry.)
-For $p\to 0$, we thus
-have a lot of effective entangling gates, which are stabilized by sufficiently
-frequent $ZZ$ measurements. As a consequence, each qubit is entangled with
-every other qubit, giving a half-system entanglement entropy of $1$ (as there
-is only one independent Bell pair).
+$U=\prod_i X_i$, which generates a global $\mathbb{Z}_2$ symmetry.) For $p\to
+0$, we thus have a lot of effective entangling gates, which are stabilized by
+sufficiently frequent $ZZ$ measurements. As a consequence, each qubit is
+entangled with every other qubit, giving a half-system entanglement entropy of
+$1$ (as there is only one independent Bell pair).
 
 For $p \to 1 /2$ we approach the critical point,
 where entanglement clusters are sporadically created and merged together. The
@@ -1006,20 +1022,20 @@ have a product state of $X$ eigenstates. The more frequent $X$ measurements are
 (and conversely, less frequent $ZZ$ measurements), the more we stabilize a
 product state.
 
-
-Hier basically PTIM paper zusammenfassen
-\begin{itemize}
-  \item PTIM paper: \citetitle{langEntanglementTransitionProjective2020}
-    \cite{langEntanglementTransitionProjective2020}
-  \item Felix decoder paper: \citetitle{roserDecodingProjectiveTransverse2023}
-    \cite{roserDecodingProjectiveTransverse2023}
-  \item Colored Cluster Model!
-  \item There should be a Skinner paper, but I don't have it in my zotero
-    library (yet)
-  \item Its \cite{nahumEntanglementDynamicsDiffusionannihilation2020}.
-\end{itemize}
+%Hier basically PTIM paper zusammenfassen
+%\begin{itemize}
+%  \item PTIM paper: \citetitle{langEntanglementTransitionProjective2020}
+%    \cite{langEntanglementTransitionProjective2020}
+%  \item Felix decoder paper: \citetitle{roserDecodingProjectiveTransverse2023}
+%    \cite{roserDecodingProjectiveTransverse2023}
+%  \item Colored Cluster Model!
+%  \item There should be a Skinner paper, but I don't have it in my zotero
+%    library (yet)
+%  \item Its \cite{nahumEntanglementDynamicsDiffusionannihilation2020}.
+%\end{itemize}
 
 \section{Sampling Problem}\label{sec:sampling}
+
 The metaphysics of this endeavour (i.e. this thesis) can
 be condensed in the following way; we (a) know from experiments how quantum
 systems behave under certain conditions, and (b) predict through theoretical
@@ -1040,6 +1056,8 @@ lord 2024, we phyisicists are thankfully able to perform experiments at home
 with cleverly assembled silicon.  That is, nowadays we make do with these
 bottlenecks by performing numerical experiments. This is not to discredit the
 utility of experiments as such, on the contrary! 
+
+\textcolor{red}{fehlt! mach das mal!}
 
 \subsection{Fisher: Linear Cross Entropy}
 \cite{liCrossEntropyBenchmark2023}

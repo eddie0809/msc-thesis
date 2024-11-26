@@ -12,7 +12,7 @@
   %\fill[black] (\x,-.75) circle (.2);
 }
 \foreach \t in {0,...,\timesteps} {
-  \node[] at (-1.5,\t+.5) {$t=\t$};
+  \node[] at (-1.5,\t+.6) {$t=\t$};
 }
 
 %\draw[red, very thick, fill=red!20] (0,\timesteps+1.2) circle (.15);
@@ -69,8 +69,8 @@
   (\qubits+.9,4.7);
   \node[anchor=west] at (\qubits+1,4.5) {random unitary};
 
-  \draw[black, thick] (\qubits+.25,2) -- (\qubits+.25,3);
-  \draw[black, thick, fill=white] (\qubits+.25,2.5) circle (.08);
+  \draw[black, thick] (\qubits+.375,2) -- (\qubits+.375,3);
+  \draw[black, thick, fill=white] (\qubits+.375,2.5) circle (.08);
   \node[anchor=west] at (\qubits+1, 2.55) {local measurement};
 
 \end{tikzpicture}

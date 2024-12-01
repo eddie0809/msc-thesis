@@ -49,7 +49,7 @@ results from \cref{sec:rel-ent-stab}.
 %algorithm, which allows simulations in polynomial time, and expand it to
 %properly deal with mixed states. We assume the reader to be familiar with the
 %corresponding sections in \cref{sec:stab-basics}.
-
+\clearpage
 \subsubsection*{A computer science primer}
 %%% WAS HIER URSPRÜNGLICH MAL STAND:
 % This chapter addresses classical computation and algorithms, focussing on the
@@ -100,20 +100,26 @@ classes}. For instance, an algorithm is said to scale polynomially (in time) if
 its asymptotic behavior is $\mathcal{O}(n^\alpha)$ with $\alpha \geq 1$, and
 exponentially if it is $\mathcal{O}(2^n)$. These classes constitute an
 important subfield in theoretical computer science in the form of
-complexity theory, where numerous classes exist.\footnote{A continuously
+complexity theory, where numerous classes exist.\footnote{A comprehensive and continuously
 updated list can be found in \cite{ComplexityZoo}.} The two examples from above
 fall in the classes \textsf{P} (polynomial time) and \textsf{EXP} (exponential
 time) respectively.  While there are lots of caveats to this highly simplified
 explanation, a deeper examination of complexity theory lies beyond the scope of
-this thesis. However, the key takeaway is summarized in
+this thesis. The key takeaway for our purposes is summarized in
 \cref{defn:efficient-alg}.
 \begin{defn}[Algorithmic efficiency \cite{ComplexityZoo}]\label{defn:efficient-alg}
   A problem is considered efficiently solvable on a classical computer if it
   belongs to the complexity class \textsf{P}.
 \end{defn}
-Having laid out these foundational concepts, we can now delve deeper into the
-subtleties of stabilizers and the problem of simulating stabilizer
-circuits, potentially gaining a new appreciation for their intricacies.
+We acknowledge that this definition is highly simplified, and specifically
+tailored to our purposes.\footnote{It even omits the mention of
+\emph{Turing machines} entirely.} However, within the scope of our work, this
+definition suffices.
+
+Having laid out these foundational concepts of computer science, we can now
+delve deeper into the subtleties of stabilizers and the problem of simulating
+stabilizer circuits, potentially gaining a new appreciation for their
+intricacies.
 
 \section{Consequences of the Gottesman-Knill theorem}\label{sec:sim-stab}
 In this section we explore the implications of \cref{thm:gottesman-knill} and
@@ -124,9 +130,10 @@ present the \emph{tableau algorithm}, as proposed by Aaronson and Gottesman in
 draws largely from outside sources, namely Refs.
 \cite{aaronsonImprovedSimulationStabilizer2004, arabLectureNotesQuantum2024,
 gottesmanStabilizerCodesQuantum1997,
-gottesmanHeisenbergRepresentationQuantum1998}. As this following section serves
+gottesmanHeisenbergRepresentationQuantum1998}. As the present section serves
 to introduce the computational algorithms based on the stabilizer formalism, it
-can (and should) be read as a sequel to \cref{sec:stab-basics}.
+can (and should) be read as a sequel to
+\cref{sec:stab-basics,sec:stabilizergroup}.
 %This section provides an introduction to the tableau algorithm. It can (and
 %should)
 %be read as the sequel to \cref{sec:stab-basics}. Note that this section is
@@ -139,7 +146,7 @@ its structure can be fully encapsulated by storing only its \emph{generators}
 in memory. This reduces the amount of data to be stored to memory from $2^n$
 to $n$, owing to the well-known fact from group theory that a finite group $G$
 has a generating set of size $\log \abs{G}$. That is, an $n$-qubit pure state
-$\ket{\phi}$ with stabilizer group $S\left(\ket{\phi}\right)$ has a generating
+$\ket{\phi}$ with stabilizer group $\mathcal{S}\left(\ket{\phi}\right)$ has a generating
 set of size $\log 2^n = n$.
 
 To determine the actual memory requirements we examine the generators
@@ -154,7 +161,7 @@ $\mathcal{O}\left( 2^n \right)$ to $\mathcal{O}\left( n^2 \right)$.
 For practical purposes, these bits can be assorted to two $n\times n$ matrices
 and a vector containing the $n$ signs. This way of writing the generators is
 called the \emph{Tableau Representation}. As an example, consider the state
-$\ket{\phi}=\ket{0000}$, which is stabilized by Stab$(\ket{\phi}) = \langle
+$\ket{\phi}=\ket{0000}$, which is stabilized by $\mathcal{S}(\ket{\phi}) = \langle
 Z_1, Z_2, Z_3, Z_4\rangle$. The stabilizer tableau $\mathcal{T}$ of
 $\ket{\phi}$ is then given by
 \begin{align}\label{eq:stabtab}
@@ -193,7 +200,7 @@ $\ket{\phi}$ is then given by
 %  \end{array}
 %  \right]
 .\end{align}
-Each row in \cref{eq:stabtab} represents a generator of Stab$(\ket{\phi})$. The
+Each row in \cref{eq:stabtab} represents a generator of $\mathcal{S}(\ket{\phi})$. The
 first four columns are the $X$-matrix, the next four are the $Z$-matrix and the
 last column represents the sign. The $i$-th column of the $X$ and $Z$ matrix
 encode the Pauli matrix at position $i$ in the tensor product of the
@@ -454,7 +461,7 @@ simulator with more functionalities.
 \begin{prop}[Invariants of the tableau algorithm]\label{prop:comm-tab}
   The following are invariant under operations of the tableau algorithm
   \begin{enumerate}
-    \item $R_{n+1},\ldots,R_{2n}$ generate $S(\ket{\phi})$, and $R_1, \ldots,
+    \item $R_{n+1},\ldots,R_{2n}$ generate $\mathcal{S}(\ket{\phi})$, and $R_1, \ldots,
       R_{2n}$ generate $\mathcal{P}_n$.
     \item $R_1, \ldots, R_n$ commute.
     \item $\forall h \in \{1,\ldots,n\}, \ \{R_h, R_{h+n}\} = 0$
@@ -533,6 +540,11 @@ summarized in \cref{alg:force-project}.
   returning \verb|false| upon failed projection, we manipulate the tableau
   analogously to case 1 of \cref{alg:tab-measure} and insert the correct sign.  
 \end{alg}
+Note that both \cref{alg:projection,alg:force-project} utilize the pre-existing
+subroutines for measurement gates from the improved simulation algorithm.
+Consequently, they are also $\mathcal{O}\left( n^2 \right)$, with the latter
+being slightly worse than the former, but equal asymptotic behavior.
+\clearpage
 \section{Implementing mixed states}\label{sec:mixed-states}
 The tableau algorithm in the form it is outlined in \cref{sec:tableau}
 currently supports stabilizer circuit simulations exclusively for pure states.
@@ -547,7 +559,7 @@ heuristically by thinking about an intuitive approach to incorporate mixed
 states to the simulator.
 
 Consider the density matrix of a general $N$-qubit stabilizer
-state with generating set Stab$\left( \rho \right) = \langle g_1, \ldots, g_n
+state with generating set $\mathcal{S}\left( \rho \right) = \langle g_1, \ldots, g_n
 \rangle$,
 \begin{align}
   \rho = \frac{1}{2^N} \prod_{i=1}^n I + g_i
@@ -631,7 +643,11 @@ phenomena to classical computers. However, we also try to follow common
 practices and principles of software development. In particular, we aim for as
 little repetition as necessary, by the DRY (don't repeat yourself) principle,
 and introduce new subroutines only if deemed unavoidable. If there exists a
-function that does what we want, we will use it.
+function that does what we want, we will use it, as we have already done for
+\cref{alg:projection,alg:force-project}. 
+%Minimal reworking has the added
+%advantage of being asymptotically optimal (within the current working
+%infrastructure).
 
 \subsection{The mix attribute}
 %\textcolor{orange}{Each instance of the \texttt{Qubit} object now comes with a
@@ -691,6 +707,7 @@ in principle, have all the freedoms laid out in \cref{prop:comm-tab} to choose
 the generators below the dashed line as it is only needed for mathematical and
 technical convenience. We will see the advantages of keeping tabs on the
 full-rank tableau in the following sections.
+
 \subsection{Unitaries and measurements}
 Now that we have introduced a method to describe a mixed state to the
 simulator, let us further investigate how its member functions need to be
@@ -741,6 +758,13 @@ augmentations of \cref{alg:tab-measure} is given in \cref{alg:sim-meas-mixed}.
   this might include a swap of an antistabilizer to the stabilizers.) Then, we
   decrement \verb|mix| by 1.
 \end{alg}
+
+Note that this additional case does not worsen the time-complexity of the
+simulation of measurement gates, in theory as well as in practice. The only
+addition to the existing algorithm is another loop over more rows. The total
+number of rows, however, is limited to $2N$ for $N$ qubits, which does not
+worsen the performance or change the asymptotic behavior.
+
 \subsection{Entropies}\label{sec:sim-entropies}
 By taking a broader class of quantum states into our consideration, we unlock a
 broader set of entropic quantities to be investigated and computed. We will
@@ -751,17 +775,19 @@ The first new function the \verb|mix| attribute allows us to realize is the von
 Neumann entropy. We know from \cref{sec:rel-ent-stab} that the von Neumann
 entropy has a simple expression for stabilizer states, namely
 \begin{align}
-  S\left( \rho \right) = -\Tr[\rho\log\rho] = N - \abs{S_\rho}
+  S\left( \rho \right) = -\Tr[\rho\log\rho] = N - \abs{\mathcal{S}_\rho}
 \end{align}
 with the number of qubits $N$ and the rank of the stabilizer group
-$\abs{S_\rho}$. Since the rank of a group is the size of its smallest
+$\abs{\mathcal{S}_\rho}$. Since the rank of a group is the size of its smallest
 generating set, we already have the von Neumann entropy baked into our
 extension. By definition, \verb|mix| is the number of generators the state has
 fewer than a pure state, which has $N$ generators. Thus, the von Neumann
-entropy is just \verb|mix|. Due to its simplicity we will forego a detailed
-listing of the function here. Nonetheless, the implementation of the von
+entropy is just \verb|mix|. Remarkably, we therefore have $\mathcal{O}(1)$
+scaling for the von Neumann entropy, since it is a lookup of a constant.
+Due to its simplicity we will forego a detailed
+summary of the function here. Nonetheless, the implementation of the von
 Neumann entropy in the simulator (written in \verb|C++|) can be found in
-\cref{ch:apdx-code}.
+\cref{ch:apdx-code}. 
 
 \subsubsection{Cross and relative entropy}
 We want to include a way to compute the cross and relative entropy between two
@@ -771,8 +797,8 @@ subroutine, which will be introduced beforehand.
 \subsubsection{\texttt{is\_subgroup\_of}}
 Since we know from \cref{prop:subgroup} that the relative or cross
 entropy $\Tr[\rho\log\sigma]$ only takes on finite values if and only if the
-stabilizer group of $\sigma$, Stab$(\sigma)$, is a subgroup of the stabilizer group
-of $\rho$, Stab$(\rho)$. As such, before continuing with the implementation of
+stabilizer group of $\sigma$, $\mathcal{S}(\sigma)$, is a subgroup of the stabilizer group
+of $\rho$, $\mathcal{S}(\rho)$. As such, before continuing with the implementation of
 other entropic quantities, it seems a worthwhile endeavor to introduce a
 subroutine that verifies if one stabilizer group is a subgroup of the other.
 To simplfy notation, we fix the Qubit objects such that we ask if $\sigma$ is a
@@ -788,8 +814,8 @@ and already has access to the tableau and consequently the generators.
 Answering the question if one stabilizer group is the subgroup of another is
 equivalent to answering the question if we can generate the smaller group from
 group elements of the larger one. That is, if there is no generating set of
-Stab$(\rho)$ that \emph{does not} also generate Stab$(\sigma)$, we know that
-Stab$(\rho)\not\leq$ Stab$(\sigma)$. Put differently, if there is an element in
+$\mathcal{S}(\rho)$ that \emph{does not} also generate $\mathcal{S}(\sigma)$, we know that
+$\mathcal{S}(\rho)\not\leq\mathcal{S}(\sigma)$. Put differently, if there is an element in
 the stabilizer of $\sigma$ that cannot be constructed with $\rho$ stabilizers
 by means of the group operation, the condition fails.
 It follows that we need a way to determine if the generating set of $\sigma$ is
@@ -818,7 +844,7 @@ Consequently, the function should return \verb|false| in these cases and
 \begin{alg}[Is subgroup of]\label{alg:is-subgroup-of}
   Let $\mathcal{T}_\sigma$ and $\mathcal{T}_\rho$ be tableaus of (possibly
   mixed) $N$-qubit stabilizer states $\sigma$ and $\rho$, respectively. W.l.o.g
-  we say that we want to determine if Stab$(\sigma)\leq \mathrm{Stab}(\rho)$.
+  we say that we want to determine if $\mathcal{S}(\sigma)\leq \mathcal{S}(\rho)$.
 
   First, construct a new auxiliary matrix $M$ as follows. Rows $1, \ldots,
   N-\verb|rho.mix|$ of $M$ correspond to the \enquote{non-mix} stabilizer
@@ -834,6 +860,10 @@ Consequently, the function should return \verb|false| in these cases and
   pivot was never found in a row corresponding to the $\sigma$ tableau. Thus,
   these rows are all $0$s, and the function returns \verb|true|.
 \end{alg}
+As this is a Gaussian elimination algorithm, which scales as $\mathcal{O}(n^3)$
+in practice, \cref{alg:is-subgroup-of} scales as such. Recall that this is also
+what \citeauthor{fattalEntanglementStabilizerFormalism2004} had for their
+algorithm of the \emph{entanglement entropy}.
 \subsubsection{Cross and relative entropy, ctd.}
 With the subgroup check in place, we can tend to the computation of the other
 entropic quantities. If the subgroup condition does \emph{not} hold,
@@ -848,7 +878,12 @@ respectively.  The cross entropy between $\rho$ and $\sigma$ then simply
 becomes the von Neumann entropy of $\sigma$, while the relative entropy becomes
 the difference between \verb|sigma.mix| and \verb|rho.mix|.
 
-\newpage
+In conjunction with \cref{alg:is-subgroup-of} we find agreement with the
+$\mathcal{O}\left( n^3 \right)$ scaling of the entanglement entropy, found by
+\citeauthor{fattalEntanglementStabilizerFormalism2004} in Ref.
+\cite{fattalEntanglementStabilizerFormalism2004}.
+
+%\newpage
 \subsection{Partial trace}\label{sec:ptrace}
 The next item on the list is a function that implements the partial tracing
 over a subsystem. The function itself is rather short, but relies on two
@@ -896,12 +931,16 @@ included a flowchart representation of the algorithm, shown in
   \verb|dummy| is non-zero, return 0. If the loop breaks with
   $\texttt{dummy}=0$, return $-1$.
 \end{alg}
-\begin{figure}[H]
+
+\begin{figure}[p]
   \centering
   \input{fig/tikz/get_state_type.tex}
-  \caption{flowchart for the \texttt{get\_state\_type} algorithm for qubit $a$.}
+  \caption{Flowchart representation of the \texttt{get\_state\_type} subroutine
+  for qubit $a$. Note that the function terminates upon returning one of the
+possible values. }
   \label{fig:statetype-diag}
 \end{figure}
+
 %\begin{algorithm}[H]
 %\caption{Determine State Type for Qubits}
 %\label{alg:get_state_type1}
@@ -982,17 +1021,21 @@ applying the tableau algorithm on the rowreduced tableau. To this end, cf.
 %  Modifying $S$ by multiplication of two generators $g_i$
 %  and $g_j$ needs to be accompanied by an appropriate modification of $A$
 \end{prop}
-\begin{figure}[H]
+\begin{figure}[p]
   \centering
   \input{fig/tikz/rowreduce.tex}
-  \caption{Flowchart representation of the rowreduce subroutine}
+  \caption{Flowchart representation of the rowreduce subroutine. Since the
+  function returns nothing, or \texttt{void}, it terminates after
+  the loop over $Z$ stabilizers. The \enquote{repeat loop with $Z$} box is
+  therefore to be read as the loop over stabilizers with every $x$ or $X$
+  replaced by $Z$.}
   \label{fig:rowreduce-diag}
 \end{figure}
 \begin{proof}[Proof of \cref{prop:comm-tab-2}]
   We will first recall the invariants as given in \cref{prop:comm-tab}.
   They read
   \begin{enumerate}
-    \item $R_{n+1},\ldots,R_{2n}$ generate $S(\ket{\phi})$, and $R_1, \ldots,
+    \item $R_{n+1},\ldots,R_{2n}$ generate $\mathcal{S}(\ket{\phi})$, and $R_1, \ldots,
       R_{2n}$ generate $\mathcal{P}_n$.
     \item $R_1, \ldots, R_n$ commute.
     \item $\forall h \in \{1,\ldots,n\}, \ \{R_h, R_{h+n}\} = 0$

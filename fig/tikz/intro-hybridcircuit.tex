@@ -32,19 +32,19 @@
             % If we're at the last column and need a rectangle
             \ifnum\x=\qubits
                 % Right half
-                \fill[petrol!60] (\qubitss-0.2,\t-0.2) rectangle (\qubitss+0.3,\t+0.2);
+                \fill[svenja!60] (\qubitss-0.2,\t-0.2) rectangle (\qubitss+0.3,\t+0.2);
                 \draw[black,very thick] (\qubitss-0.2,\t-0.2) -- (\qubitss-0.2,\t+0.2);  % Right border 
                 \draw[black,very thick] (\qubitss-.22208,\t-0.2) -- (\qubitss+0.3,\t-0.2);      % bottom border
                 \draw[black,very thick] (\qubitss-.22208,\t+0.2) -- (\qubitss+0.3,\t+0.2);      % top border
                 
                 % Left half - no border on right side
-                \fill[petrol!60] (-0.3,\t-0.2) rectangle (0.2,\t+0.2);
+                \fill[svenja!60] (-0.3,\t-0.2) rectangle (0.2,\t+0.2);
                 \draw[black,very thick] (0.2,\t-0.2) -- (0.2,\t+0.2);                % left border
                 \draw[black,very thick] (-0.3,\t-0.2) -- (.22208,\t-0.2);                   % bottom border
                 \draw[black,very thick] (-0.3,\t+0.2) -- (.22208,\t+0.2);                   % top border
               \else
                 % Normal rectangle for non-boundary positions
-                \draw[black,very thick, fill=petrol!60] (\xspace*\x-.2,\t-0.2) rectangle
+                \draw[black,very thick, fill=svenja!60] (\xspace*\x-.2,\t-0.2) rectangle
                 (\xspace*\x+1,\t+0.2);
             \fi
             %\draw[blue, fill=blue!30] (\x+0.1,\t-0.15) rectangle (\x+0.9,\t+0.15);
@@ -65,7 +65,7 @@
 
   \draw[black, thick] (\qubits,4) -- (\qubits,5);
   \draw[black, thick] (\qubits+.75,4) -- (\qubits+.75,5);
-  \draw[black, thick, fill=petrol!60] (\qubits-.15,4.3) rectangle
+  \draw[black, thick, fill=svenja!60] (\qubits-.15,4.3) rectangle
   (\qubits+.9,4.7);
   \node[anchor=west] at (\qubits+1,4.5) {random unitary};
 

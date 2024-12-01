@@ -4,7 +4,7 @@
   \node [startstop] (start) {Start};
   \node [block, below of=start] (init) {\verb|dummy| = 0};
   \node [process, below of=init] (loop) {Loop over stabilizers $i<(N-\verb|mix|)$};
-  \node [decision, below of=loop] (valnot0) {$2X_{ia} + Z_{ia}
+  \node [decision, text width = 8em, below of=loop] (valnot0) {$2X_{ia} + Z_{ia} = \mathrm{val}
   \neq 0$?};
   \node [decision, below of=valnot0, yshift=-.5cm] (dummy0)
   {\verb|dummy| $=0$?};

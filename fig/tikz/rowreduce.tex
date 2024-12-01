@@ -8,8 +8,8 @@
   \node [decision, below of=xloop] (checkx) {$X_{ia} = 1$?};
   \node [decision, below of=checkx] (checkfirstx) {\verb|first_x| = $-1$?};
   \node [decision, left of=checkx, xshift=-.5cm] (loopend) {End of loop?};
-  \node [process, right of=checkfirstx, xshift=2cm] (rowsumx)
-  {\verb|rowsum(i,first_x)|};
+  \node [process, text width = 10em, right of=checkfirstx, xshift=2.2cm] (rowsumx)
+  {rowsum(i, first\_x)\\rowsum(first\_x+1, i+1)};
   \node [block, left of=checkfirstx, xshift=-1.5cm] (setfirstx) {\verb|first_x|
 $=i$};
   \node [decision, left of=setfirstx, yshift=-3cm] (xswap)

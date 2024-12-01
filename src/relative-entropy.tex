@@ -123,6 +123,7 @@ The same way we
 motivated the von Neumann entropy, we want to define a quantum mechanical
 analogue to the classical relative entropy. This quantity will play a role of
 major importance in this chapter and is defined as follows.
+
 \begin{defn}[Quantum relative and cross entropy]\label{defn:rel-ent}
   Let $\rho$ and $\sigma$ be density matrices with identical dimension. The
   relative entropy of $\rho$ to $\sigma$ is
@@ -134,10 +135,11 @@ major importance in this chapter and is defined as follows.
   with the von Neumann entropy $S(\rho)$.
   The last term in \cref{eq:rel-ent-defn}, that is, 
   \begin{align}
-    S\left( \rho\mid\mid\sigma \right) + S(\rho) = -\Tr[\rho\log\sigma]
+    S\left( \rho\mid\mid\sigma \right) + S(\rho) \equiv S_C(\rho\mid\mid\sigma) = -\Tr[\rho\log\sigma]
   .\end{align}
   is known as \emph{cross entropy}. 
 \end{defn}
+
 Relative entropy, classical or quantum, quantifies excess surprisal when
 one assumes $\sigma$ as a state\footnote{or probability distribution in the
 classical case}, when the actual state is $\rho$. In that sense it tells us how
@@ -576,7 +578,7 @@ perfect mixture of stabilized states.
   satisfy $\mathcal{S}_\sigma \leq
   \mathcal{S}_\rho$. Further, let $\abs{\mathcal{S}_\sigma} \equiv s$. Then
   \begin{align}\label{eq:cross-ent-stab}
-    -\Tr[\rho\log\sigma] = N - s
+    S_C(\rho\mid\mid\sigma) = N - s
   .\end{align}
 \end{thm}
 
@@ -609,7 +611,7 @@ perfect mixture of stabilized states.
    matrix is \cite{hallElementaryIntroductionGroups2000}
    $$\log \sigma = U \log D_\sigma U^{-1}.$$ Consequently,
    \begin{align}
-      -\Tr[\rho \log\sigma] = -\Tr[U D_\rho U^{-1} U \log D_\sigma U^{-1}] =
+      S_C(\rho\mid\mid\sigma) = -\Tr[\rho \log\sigma] = -\Tr[U D_\rho U^{-1} U \log D_\sigma U^{-1}] =
       -\Tr[D_\rho \log D_\sigma] 
    .\end{align}
    With $D_\rho$ and $D_\sigma$ diagonal we can write the trace as

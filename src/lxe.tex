@@ -230,17 +230,19 @@ laid out in \cref{lem:prob-traj-cliff}.
 \begin{proof}
 Suppose we have a Clifford circuit $C$ with $N$ measurement gates and an
 $n$-qubit initial stabilizer state $\rho$. We already
-know from \cref{sec:stab-basics} that there are two types of measurement
+know from \cref{sec:stabilizergroup} that there are two types of measurement
 outcomes, random or deterministic. Each measurement potentially has 2 outcomes,
 and in the former case each outcome has probability $1 / 2$ of occuring. (The
 other outcomes, the deterministic ones, trivially have unit probability.)
 Furthermore, we know that $\rho$ can be expressed as the product of projectors
+(cf. \cref{defn:stab-dmat})
 \begin{align}
   \rho = \frac{1}{2^n} \prod_{i=1}^n (I + g_i)
 \end{align}
-or equivalently as a sum of all stabilizer group elements
+with generators $g_i$,
+or equivalently as a sum of \emph{all} stabilizer group elements
 \begin{align}
-  \rho = \frac{1}{2^n} \sum_{g\in \mathrm{Stab}(\rho)} g
+  \rho = \frac{1}{2^n} \sum_{g\in \mathcal{S}(\rho)} g
 .\end{align}
 
 If we now subject $\rho$ to the circuit $C$, we obtain a measurement record
@@ -293,23 +295,23 @@ we only need to consider a single projection. It is
 \begin{align}
   P\left(\mathbf{m} \mid C, \rho\right) 
   &= \Tr[ \mathbb{P}_N \cdots \mathbb{P}_i \frac{1}{2^n}\sum_{g \in
-  \mathrm{Stab}(\rho)} g]\nonumber\\
+  \mathcal{S}(\rho)} g]\nonumber\\
   &= \Tr[ \mathbb{P}_N \cdots \frac{1}{2} \left(\frac{1}{2^n} \sum_{g \in
-  \mathrm{Stab}(\rho)} g + \sum_{g \in \mathrm{Stab}(\rho)} Mg\right) ]
+  \mathcal{S}(\rho)} g + \sum_{g \in \mathrm{Stab}(\rho)} Mg\right) ]
 .\end{align}
 Since the second sum is exclusively one over Pauli matrices, which are traceless,
 they don't contribute to the total. We thus have
 \begin{align}
   P\left(\mathbf{m} \mid C, \rho\right) 
   = \Tr[\mathbb{P}_N \cdots \mathbb{P}_{i+1} \frac{1}{2^{n+1}}
-  \sum_{g\in\mathrm{Stab}(\rho)} g]
+  \sum_{g\in\mathcal{S}(\rho)} g]
 .\end{align}
 
 Combining cases 1 and 2, knowing that measurements with deterministic outcomes
 don't alter the state at all, we have
 \begin{align}
   P\left(\mathbf{m} \mid C, \rho\right) 
-  &= \Tr[\frac{1}{2^{n+N_\mathrm{rand}}} \sum_{g\in\mathrm{Stab}(\rho)}
+  &= \Tr[\frac{1}{2^{n+N_\mathrm{rand}}} \sum_{g\in\mathcal{S}(\rho)}
   g]\nonumber\\
   &= \frac{1}{2^{N_\mathrm{rand}}} = 2^{-N_\mathrm{rand}}
 .\end{align}
@@ -389,9 +391,9 @@ opposite information is encoded in $\ket{\varphi_0}$. That this choice is a
 reasonable one gets even more apparent when considering generating sets of the
 respective stabilizers,
 \begin{align}\label{eq:rhosigmagenerators-lxe}
-  G_\rho = \langle X\ldots X, Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle \quad{\text{and}}
+  \mathcal{S}_\rho = \langle X\ldots X, Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle \quad{\text{and}}
   \quad
-  G_\sigma = \langle -X\ldots X, Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle
+  \mathcal{S}_\sigma = \langle -X\ldots X, Z_1Z_2,\ldots,Z_{n-1}Z_n\rangle
 .\end{align}
 Notice that they are almost identical with a different sign in front of the
 global $X$ stabilizer, implying orthogonality in the logical basis. In the
@@ -1261,8 +1263,9 @@ the linear cross entropy is seemingly decoupled from the dynamics of the
 cluster. In particular, due to the exponential suppression in the
 thermodynamic limit the mechanisms that are \emph{not} \textsf{A} dominate.  
 
-However, this exponential suppression can be synthesized\footnote{in the
-Hegelian sense} into an advantage. Notice that as a consequence of this
+However, this exponential suppression can be synthesized
+%\footnote{in the Hegelian sense} 
+into an advantage. Notice that as a consequence of this
 suppression, the \enquote{Track $ZZ$} column is highly sensitive to $X$ noise.
 Where it is identically $1$ in the ideal case, even small error rates in small
 systems lead to the deviation from the ideal behavior. We can therefore use

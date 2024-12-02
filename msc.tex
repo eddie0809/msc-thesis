@@ -15,14 +15,18 @@
 \makethesistitle
 \KOMAoptions{twoside=true}
 
-
 \declaration
 
 \input{src/abstract.tex}
 
+\begin{otherlanguage}{ngerman}
 \input{src/zusammenfassung.tex}
+\end{otherlanguage}
 
 \tableofcontents
+\addcontentsline{toc}{chapter}{Contents}
+
+\input{src/acknowledgements.tex}
 
 \mainmatter
 
@@ -48,8 +52,6 @@
 \input{src/tangents.tex}
 
 \backmatter
-
-\input{src/acknowledgements.tex}
 
 \cleardoublepage
 \addcontentsline{toc}{chapter}{Bibliography}

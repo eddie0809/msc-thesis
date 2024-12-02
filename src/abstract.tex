@@ -15,8 +15,8 @@
   \item 2D percolation and the CCM has been widely studied, from this we
     predict there to be the quantum phase transition from one area law to the
     other
-  \item \textcolor{red}{check das mit dem area law ding auf jeden fall nochmal,
-    ich glaub da wird schon auch wert drauf gelegt}
+%  \item \textcolor{red}{check das mit dem area law ding auf jeden fall nochmal,
+%    ich glaub da wird schon auch wert drauf gelegt}
   \item No way to measure entanglement in experiment, since we can only measure
     observables
   \item Many attempts of probing the critical point of the phase transitions
@@ -35,5 +35,37 @@
     with hybrid circuits.
 \end{itemize}
 
+This thesis consists of four main chapters and is structured as follows
+\begin{description}
+  \item[\cref{ch:basics}] In this chapter we give an introduction to the
+    concepts relevant throughout the thesis. We begin by outlining the
+    stabilizer formalism, as it is a useful representation of quantum states
+    and the foundation of the simulation algorithm employed for the numerical
+    approaches in the thesis. We then provide an overview of the concept of entanglement
+    transitions in general, before specifically introducing the projective
+    transverse-field Ising model. This model serves as the primary subject of
+    our studies. We then discuss the post-selection or sampling problem,
+    motivating the rest of the thesis.
+  \item[\cref{ch:lxe}] In this chapter we examine the quantity defined by
+    \citeauthor{liCrossEntropyBenchmark2023} in the context of the projective
+    transverse-field Ising model. We particularily motivate post-selection
+    algorithms and compare our results to
+    previous investigations of similar nature (cf. Ref.
+    \cite{tikhanovskayaUniversalityCrossEntropy2023}), while also raising
+    critiques.
+  \item[\cref{ch:rel-ent}] In this chapter we investigate the approach of
+    \citeauthor{garrattProbingPostmeasurementEntanglement2023} to detect the
+    entanglement transition in the projective transverse-field Ising model. We
+    first derive an expression for the cross- and relative entropy in the
+    stabilizer formalism, before trying different numerical approaches to
+    circumvent the post-selection problem. We finalize the chapter by outlining
+    two regularization approaches to deal with appearing infinities.
+  \item[\cref{ch:mixed}] In this chapter we introduce the simulation algorithm,
+    which is based on the stabilizer formalism outlined in \cref{ch:basics}. We
+    first give a brief summary of the existing algorithms. We then introduce
+    the extensions necessary for the numerical simulations performed throughout
+    the thesis, especially concerning mixed states and the different entropies
+    derived in \cref{ch:rel-ent}.
+\end{description}
 
 \lipsum[0-1]

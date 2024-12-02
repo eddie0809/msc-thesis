@@ -235,7 +235,7 @@ will introduce an important example of a finite group and its normalizer.
 %    \forall g \in G, \forall h \in H: \ g^{-1} h g \in H
 %  .\end{align}
 %\end{defn}
-\subsection{The Pauli group and Clifford gates}
+\subsection{The Pauli group and Clifford gates}\label{sec:pauligroup}
 
 Consider the Pauli matrices with the identity,
 \begin{align}
@@ -549,7 +549,7 @@ generators in $\mathcal{S}_{AB}$, which is $2$, then dividing by $2$, which
 gives the correct result of $1$. 
 
 The proof of \cref{thm:entent} and the practical computational implementation
-are rather involved. The interested reader is invited to consult ref.
+are rather involved. The interested reader is invited to consult Ref.
 \cite{fattalEntanglementStabilizerFormalism2004}, where the method is
 introduced. For now, it suffices to say that the generating set can be brought
 into a canonical form, consisting of two sets generating $A$ and $B$,
@@ -740,9 +740,13 @@ We will forego a detailed discussion of the simulation of stabilizer circuits
 on classical computers, as well as the proof to \cref{thm:gottesman-knill}
 until \cref{ch:mixed}. For now we remind ourselves that the Clifford gate set
 does not constitute a universal set of quantum gates. Thus, classical computers
-\emph{cannot} suffice to efficiently simulate quantum computers
+\emph{cannot} suffice to efficiently simulate quantum computers.
 \clearpage
 \section{Entanglement Transitions}\label{sec:ent-trans}
+
+Felix' lieblings skinner paper:
+\cite{nahumEntanglementDynamicsDiffusionannihilation2020}. Hier ist das mit den
+majorana modes illustriert.
 
 %Quantum entanglement acts as the bedrock of quantum computational principles
 %and is the  \cite{einsteinCanQuantumMechanicalDescription1935}
@@ -784,12 +788,22 @@ efforts are beginning to probe their signatures in cutting-edge quantum
 platforms. This section explores the emerging understanding of entanglement
 transitions and their broader implications.
 
-This section is a rough adaption of and largely follows Ref. \cite{skinnerLectureNotesIntroduction2023},
-if not explicitly stated otherwise.\footnote{Following the suggestion in Ref.
-  \cite{skinnerLectureNotesIntroduction2023}, we invite the interested reader
-  to consult the review papers Refs.
-\cite{fisherRandomQuantumCircuits2023,potterEntanglementDynamicsHybrid2021}}
+This section is a rough adaption of and largely follows Ref.
+\cite{skinnerLectureNotesIntroduction2023}, if not explicitly stated otherwise.
+In this spirit, we invite the interested reader to follow the suggestion in the
+aforementioned paper, and further deepen their understanding by referring to the
+review papers
+\cite{fisherRandomQuantumCircuits2023} and \cite{potterEntanglementDynamicsHybrid2021}, as
+well as the author's initial introduction to the field, Ref.
+\cite{liMeasurementdrivenEntanglementTransition2019}.
+%Following the suggestion in Ref.  \cite{skinnerLectureNotesIntroduction2023},
+%we invite the interested reader to consult the review papers
+%\cite{fisherRandomQuantumCircuits2023,potterEntanglementDynamicsHybrid2021},
+%as well as the authors first introduction to the field, Ref.
+%\cite{liMeasurementdrivenEntanglementTransition2019}
+
 \subsection{Quantifying entanglement}
+
 A quantum state is called \emph{entangled} if we cannot specify it by
 describing the components independently. Alternatively, a more mathematical description can
 be stated as follows. Suppose that a quantum system contains two distinct parts
@@ -819,41 +833,51 @@ Although technically correct, this definition, along with the paradigmatic
 examples given above, can be misleading. It insinuates a sort of binary
 relation in the sense that a system is either in an entangled state or in a
 separable (product) state. It thus does not obviously lead to a quantitative
-description of the degree of entanglement between $A$ and $B$. To this end, it
-can prove useful to think of entanglement as correlations, such as from
-classical
-statistics. That is, we can equivalently consider entanglement in terms of
-possible measurement outcomes for the subsystems $A$ and $B$ for subsequent
-measurements on $B$ or $A$. The quantum nature of entanglement then arises from the
-non-locality of these correlations.
+description of the degree of entanglement between $A$ and $B$.  To move beyond
+this limiting binary perspective, we can reframe entanglement through the lens
+of correlations,
+%To this end, it can prove useful to think of entanglement as correlations,
+not unlike the correlations known from classical statistics, such that we can
+employ the toolset of classical statistics and information theory. That is, we
+can just as well consider entanglement in terms of possible measurement
+outcomes for the subsystems $A$ and $B$ for subsequent measurements on $B$ or
+$A$. The quantum nature of entanglement then arises from the non-locality of
+these correlations.\footnote{Note that entanglement is not the only type of
+  quantum correlation. There is a wide variety of correlations that are
+entirely non-classical in nature. This non-classicality is characterized by a
+measure called \enquote{quantum discord}
+\cite{dakicNecessarySufficientCondition2010}}
 
 For a better grasp of this intuition, we return to the examples from above.
 Suppose we perform a computational basis measurement on qubit $A$, while the
-system is in the state described by
-\cref{eq:productstate}. This measurement
-yields either $+1$ or $-1$ as outcome with equal probability and collapses the
-state of the qubit accordingly. A subsequent measurement of qubit $B$ in the computational
-basis then turns out to be unaffected by the previous measurement; $A$ and $B$
-are thus uncorrelated, i.e. unentangled. The probability of the measurement
-outcomes $+1$ or $-1$ on qubit $B$ is still the same as before.
+system is in the state described by \cref{eq:productstate}. This measurement
+yields either $+1$ or $-1$ as outcome with equal probability, $P(\pm 1) = 1
+/2$, and collapses the state of the qubit accordingly. A subsequent measurement
+of qubit $B$ in the computational basis then turns out to be unaffected by the
+previous measurement; $A$ and $B$ are thus uncorrelated, i.e. unentangled. The
+probabilities of the measurement outcomes $+1$ or $-1$ on qubit $B$ are still the
+same as before.
 
 If we were to perform the same procedure on a system in the state described by
 \cref{eq:entangledstate}, this would no longer be the case. A measurement of
 qubit $A$ in the computational basis would still yield the outcomes $\pm 1$
-with equal probability. However, the wave function now collapses to one of
-$\ket{0_A 0_B}$ and $\ket{1_A 1_B}$, which yields a definitive outcome for a
-subsequent measurement of qubit $B$. For instance, if we measured $+1$,
-corresponding to $\ket{0_A}$, the state after the measurement is $\ket{\phi'} =
-\ket{0_A 0_B}$. A measurement of $B$ would therefore also yield $+1$.
-Therefore, by measuring one of the constituents of the bipartite system, we
-have eliminated the uncertainty of the measurement outcome of the other. 
+with equal probability, $P(\pm 1)= 1/2$. However, the wave function now
+collapses in a fundamentally quantum manner: the measurement of one qubit
+instantaneously collapses the state of the other as well, since the total wave
+function collapses to one of $\ket{0_A 0_B}$ or $\ket{1_A 1_B}$. This yields a
+definitive outcome for a subsequent measurement of qubit $B$. For instance, if
+we measured $+1$, corresponding to $\ket{0_A}$, the state after the measurement
+is $\ket{\phi'} = \ket{0_A 0_B}$. A measurement of $B$ would therefore also
+yield $+1$.  Therefore, by measuring one of the constituents of the bipartite
+system, we have eliminated the uncertainty of the measurement outcome of the
+other. 
 
 This uncertainty can be quantified by the entanglement entropy. Formally, it
 quantifies the reduction of the statistical entropy of measurement outcomes of
 $A$ by completely measuring subsystem $B$. We have already discussed the
 entropy of entanglement in the context of the stabilizer formalism in
 \cref{sec:stabilizergroup} with \cref{defn:entent}. Here, we motivate it
-further and convice ourselves that the previously given definition is
+further and convince ourselves that the previously given definition is
 reasonable.
 
 First, construct the density matrix $\rho$ of the system. For a pure state
@@ -882,7 +906,7 @@ matrix
                       0 & 0 & 0 & 0 \\
                       1 & 0 & 0 & 1)
 \end{align}
-With the rows and columns corresponding to the two-qubit basis vectors. The
+with the rows and columns corresponding to the two-qubit basis vectors. The
 partial trace now corresponds to a trace over the $2\times 2$ submatrices in
 the corners,
 \begin{align}
@@ -893,86 +917,223 @@ coherent superposition of basis states, but rather a classical mixture of
 $\ket{0_A}$ and $\ket{1_A}$, both with probability $1 /2$. The entanglement
 entropy is then the statistical entropy of this specific mixture. As already
 given in \cref{defn:entent}, it is defined as
-\begin{align}
+\begin{align}\label{eq:entent-ent}
   S_\mathrm{E}(\ket{\phi}) = -\Tr[\rho_A \log \rho_A] 
 ,\end{align}
 which is equivalent to the von Neumann entropy of the subsystem density matrix
 $\rho_A$, which is in turn equivalent to the Shannon entropy
 \cite{vonneumannMathematischeGrundlagenQuantenmechanik1968,shannonMathematicalTheoryCommunication1948}.
 
+We remark that the entanglement relation between subsystems $A$ and $B$ is a
+symmetric one: asking how entangled $A$ is with $B$ yields the same degree of
+entanglement as asking
+how entangled $B$ is with $A$. This symmetry resolves the seemingly
+contradictory notation in \cref{defn:entent,eq:entent-ent}. It is the same
+phenomenon from either perspective. While that is the case for subsystems $A$
+and $B$ once they have been fixed, the same level of agnosticism cannot be
+ascribed to the choice of subsystems. If the partitioning of $A$ and $B$ is
+ambiguous, the degree of entanglement is dependent on how one slices the system
+apart. Once one fixes a choice of $A$ and $B$, the degree of entanglement
+between them is symmetric.
 
 \subsection{Random circuits}
-\begin{itemize}
-  \item approximate continuous time evolution with discrete timesteps
-  \item unitaries grow entanglement
-  \item Haar random unitaries!
-\end{itemize}
 
-%Random assortment of MIPT Paper (incomplete):
+In the context of entanglement transitions, we often deal with unitary
+circuits, either consisting of random unitary operators, or with unitaries
+placed randomly in a circuit layout (cf. \cref{fig:random-brickwork}). This
+naturally raises two questions: why unitary circuits, and why should they, in
+any way, be random? In this subsection we try to answer both of these, starting
+with the first.
+
+\subsubsection{Why unitary circuits?}
+
+A unitary circuit is an alternative way next to the Schr\"odinger equation to
+describe the time evolution of a quantum state. While the Schr\"odinger
+equation describes the time evolution in continuous-time, unitary circuits are
+employed to describe the dynamics in discrete-time. That is, in a unitary
+circuit, the state evolves according to the unitaries applied at certain
+timesteps. As a visualization, consider the circuits depicted in
+\cref{fig:random-brickwork}. From an initial product state (represented by the
+arrows pointing up) we have a discrete-time dynamics to some steady state.
 %
-%\begin{itemize}
-%  \item Fisher paper, das ich mir als allererstes mal durchgelesen hab
-%    (\citetitle{liMeasurementdrivenEntanglementTransition2019}):
-%    \cite{liMeasurementdrivenEntanglementTransition2019}
-%  \item MIPT general, war in \cref{ch:lxe}, aber leider keine ahnung mehr
-%    warum\ldots (\citetitle{baoTheoryPhaseTransition2020}) \cite{baoTheoryPhaseTransition2020}
-%  \item \citetitle{baoSymmetryEnrichedPhases2021}
-%    \cite{baoSymmetryEnrichedPhases2021}
-%  \item Why not: Measurement induced synchronization von Finn
-%    (\citetitle{schmolkeMeasurementinducedQuantumSynchronization2023}):
-%    \cite{schmolkeMeasurementinducedQuantumSynchronization2023}
-%  \item 2017 WR for quantum state tomography (10 qubits):
-%    (\citetitle{song10QubitEntanglementParallel2017})
-%    \cite{song10QubitEntanglementParallel2017}
-%  \item LXE: Definition: \cite{liCrossEntropyBenchmark2023}; PTIM:
-%    \cite{tikhanovskayaUniversalityCrossEntropy2023}
-%  \item Garratt/Altman Paper:
-%    (\citetitle{garrattProbingPostmeasurementEntanglement2023}) \cite{garrattProbingPostmeasurementEntanglement2023}
-%  \item self-cite for clout:
-%    (\citetitle{schmolkeBoostingInformationTransfer2024})
-%    \cite{schmolkeBoostingInformationTransfer2024}
-%\end{itemize}
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}{0.42\textwidth}
+    \input{fig/tikz/randomcircuit.tex}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.42\textwidth}
+    \input{fig/tikz/brickwork.tex}
+  \end{subfigure}
+  \caption{Examples of unitary quantum circuits. Note that in the theory of
+    random circuits and entanglement- or measurement-induced phase transitions,
+    circuit diagrams are conventionally shown in time-position representation,
+    instead of the usual position-time. The arrows on the respective $x$-axes
+    represent an array of spins---or qubits---initially in a product state.
+    Subfigure (a) shows a random circuit,
+    where \enquote{random} refers to the placement of unitary gates in the
+    space-time lattice. Subfigure (b) shows a random circuit with a fixed
+    \enquote{brickwork} pattern, where random refers to the choice of
+    unitaries, in that we choose unitaries from a given ensemble. The circuit
+    diagrams are adapted from Fig. 1 of Ref. \cite{skinnerLectureNotesIntroduction2023}}
+  \label{fig:random-brickwork}
+\end{figure}
 %
-%more curated MIPT collection:
-%\begin{itemize}
-%  \item Skinner Lecture notes on MIPT
-%    \cite{skinnerLectureNotesIntroduction2023}
-%  \item ist zwei mal in meiner zotero library, vielleicht mal auschecken: 
-%    \cite{hokeMeasurementinducedEntanglementTeleportation2023}
-%  \item Titel klingt vielversprechend: \cite{baoTheoryPhaseTransition2020}
-%  \item PRX von skinner 1: \cite{skinnerMeasurementInducedPhaseTransitions2019}
-%    chronologisch das erste
-%  \item PRX von skinner 2: \cite{nahumMeasurementEntanglementPhase2021}
-%  \item PRX von skinner 3:
-%    \cite{nahumEntanglementDynamicsDiffusionannihilation2020}
-%    Das hat Felix immer auf gemacht um mir das mit den Majoranas zu zeigen
-%  \item eins noch for good measure:
-%    \cite{yoshidaDecodingEntanglementStructure2021}
-%\end{itemize}
-%\begin{figure}[H]
-%  \centering
-%  \input{fig/tikz/claude-hybridcircuit.tex}
-%  \caption{Claude Hybrid Circuit Tikz picture??}
-%  \label{fig:hybrid-circuit-claude}
-%\end{figure}
+Describing the time evolution of a system with a discretized time dimension can
+be motivated by a mutlitude of factors. The most straightforward reason would
+be because one might describe the time evolution of a quantum computer, which
+operates by the application of unitary gates. Another reason is the
+\emph{approximation} of continuous time dynamics. When simulating quantum
+systems on a classical computer, one only has access to a discrete set of
+timesteps. As such, a unitary circuit can function as an approximation of the
+continuous-time dynamics. An implementation of the circuit depicted in
+subfigure (b) of \cref{fig:random-brickwork} could, for instance, approximate
+the continuous-time dynamics of a one-dimensional spin chain with
+nearest-neighbor interactions.
+
+We remark that the approximation of continuous-time dynamics can not only be
+motivated from a technical standpoint, but also from a mathematical one. As a
+matter of fact, the validity of this approximation is not as simple as it may
+seem. For some Hamiltonian with nearest-neighbor interaction, we might write
+$H= \sum_j H_j$ with the local interactions $H_j$. In general, we
+have\footnote{$\hbar=1$}
+\begin{align}
+  e^{-iHt} = e^{-i\sum_j H_j t} \neq \prod_j e^{-iH_jt}
+.\end{align}
+If we now consider the limit where $t \to \Delta t \to 0$, we obtain
+\begin{align}\label{eq:trotterization}
+  e^{-iH\Delta t} = e^{-i\sum_j H_j \Delta t} = \prod_j e^{-iH_j \Delta t} +
+  \mathcal{O}\left(\left(\Delta t\right)^2\right)
+.\end{align}
+Therefore, the total time evolution of the many-body system \emph{can} be
+represented as a product of local time evolutions, as long as I choose to
+discretize the time evolution with sufficiently small $\Delta t$. The error of
+discretizing the time evolution of length $T$ in steps of size $\Delta t$ is of
+order $\mathcal{O}(\Delta t / T)$. Both the error and \cref{eq:trotterization}
+follow from the Trotter product formula
+\cite{hallElementaryIntroductionGroups2000}, which is why this process of
+discretizing the dynamics is often referred to as \enquote{Trotterization}.
+
+The use of unitary circuits is therefore both motivated by the applicability
+for prospective
+quantum computers, as well as the simulation of quantum dynamics on a
+classical computer by means of Trotterization. Having answered the first
+question, we can now turn towards the question of why the unitary operations in
+the circuit should be random.
+
+\subsubsection{Why random?}
+
+Under the umbrella of \enquote{quantum dynamics} does of course fall
+the dynamics of entanglement, and the question of why the unitary circuit
+should in any way be random brings us back to exactly that (particularily the
+growth of entanglement). By choosing a
+specific Hamiltonian to dictate the dynamics, we fix the time evolution to be
+somewhat streamlined to the specific system. (In a classical simulation, we
+would simulate the circuit in subfigure (b) of \cref{fig:random-brickwork} with
+fixed unitaries given by the Hamiltonian.) The motivation of randomizing the
+unitaries---or the placement thereof in the space-time grid (subfigure (a) of
+\cref{fig:random-brickwork})---is then that one might hope to unveil some
+\emph{generic} entanglement dynamics, abstracted away from any particular
+Hamiltonian.
+
+Furthermore, investigation of entanglement dynamics, in
+particular entanglement growth, is important for the simulation of quantum
+states on a \emph{universal} quantum computer. For short-range entangled states
+there are efficient algorithms to simulate their behavior such as matrix
+product state simulations. For states with extensive entanglement, i.e. where
+the entanglement entropy scales with the system's volume, this is no
+longer the case. (The stabilizer formalism would be agnostic to this, which is
+why we specified the universal quantum computer.)
+
+With the circuit layout given, e.g. subfigure (b) of
+\cref{fig:random-brickwork}, we are now tasked with selecting for random
+unitary operators. That is, we need to specify an ensemble of unitaries from
+which we randomly choose. A sensible first choice would be to select uniformly
+from the set of all unitary matrices. This type of random unitary is referred
+to as \emph{Haar-random} matrix. The dynamics of random circuits with
+Haar-random unitaries is the most generic type of dynamics. However, it is in
+general exponentially hard to simulate, as the dimensionality goes with $2^N$
+for $N$ qubits. Another ensemble of unitaries, which we have already
+introduced, is the Clifford group, generated by the Clifford gate set (cf.
+\cref{defn:cliffords}). Restricting the set of operators in this way allows for
+efficient classical simulations. As the peculiarities of the Clifford gate set
+and its connection to classical simulability have been discussed in other
+sections, we refer the reader to
+\cref{sec:pauligroup,sec:stabilizergroup,thm:gottesman-knill,sec:tableau}, and
+forego additional discussions thereof. 
+
+Naturally, there is more to the choice of random unitary circuits for the study
+of entanglement dynamics and entanglement growth, with excursions to the
+eigenstate thermalization hypothesis among other things. However, this would go
+far beyond the scope of this thesis. For our purposes it suffices that we have
+done our due diligence and convinced ourselves that the framework of random
+circuits is a practical one for the study of entanglement growth.
+
+\subsection{Measurement-Induced Phase Transitions}\label{sec:mipt}
+
+We have now discussed how entanglement can grow and spread in a system by means
+of random unitary operations. As a concrete example of a circuit that generates
+entanglement, recall the circuit depicted in
+\cref{fig:error-detection-circuit} and consider the first three (or two,
+if one chooses the middle qubit as control qubit for the second CNOT gate)
+\enquote{timesteps}. If we had chosen our random unitaries from the Clifford
+gate set---or had gotten infinitely lucky with Haar-random matrices---this could
+have been one possible circuit. This created an entangled state over the three
+qubits, a 3-qubit Bell cluster. 
+
+Let us now also consider the operation immediately following the second CNOT in
+\cref{fig:error-detection-circuit}, a measurement gate on qubit 3. What was
+merely implied in the previous discussion of the circuit, we now state
+explicitly: the measurement gate removed the third qubit from the entanglement
+cluster, thus reducing the degree of entanglement in the system. This is in
+contrast to the previous gates, which created the cluster to begin with. (The
+fact that the subsequent syndrome measurements restore the entanglement becomes
+important in the projective transverse-field Ising model.) 
+
+With these insights we can intuit the idea of the measurement-induced
+entanglement phase transition (MIPT): Unitary operators tend to increase the
+degree of entanglement in a system, while local measurements tend to decrease
+it. Two qubits can be entangled with a Hadamard and CNOT, while measuring
+either one disentangles the two. A natural question that arises is the
+following. How, if at all, is the entanglement dynamics altered if the circuit
+as depicted in subfigure (b) of \cref{fig:random-brickwork}, is augmented by
+sporadic local measurements, such as depicted in \cref{fig:hybrid-circuit}?
+
 \begin{figure}[t]
   \centering
   \input{fig/tikz/intro-hybridcircuit.tex}
   \caption{Example of a random unitary circuit model studied in the context of
-    measurement induced phase transitions with measurements
-  performed with probability $p$ at each site for each timestep.
-  In this paradigmatic
-circuit, two-qubit unitary gates are arranged in a way resembling a brickwork
-wall, and single-qubit measurement gates are randomly distributed. The circuit
-diagram is adapted from Fig. 1 of Ref.
+    measurement induced phase transitions with measurements performed with
+    probability $p$ at each site for each timestep. In this paradigmatic
+    circuit, two-qubit unitary gates are arranged in a way resembling a
+    brickwork wall, and local single-qubit measurement gates are randomly
+  distributed. The circuit diagram is adapted from Fig. 1 of Ref.
 \cite{liMeasurementdrivenEntanglementTransition2019}.}
   \label{fig:hybrid-circuit}
 \end{figure}
 
-\subsection{Measurement-Induced Phase Transitions}
-Unitary operators tend to increase the entanglement, while measurements tend to
-decrease it. I can entangle two qubits by applying a unitary operator, but if I
-measure the spin of either one i disentangle them again.
+The answer to this question is, as is so often the case, \enquote{it depends}.
+Specifically, it depends on how frequent the measurements are, that is, the
+measurement rate $p$. If there are no, or only a minimal amount of measurement
+gates, $p\ll 1$, the entanglement growth remains (qualitatively) unaffected,
+since we only rarely remove a qubit from an entanglement cluster. However, if
+there is a measurement gate for each qubit at every timestep, $p\to 1$, we stun
+or effectively stop the growth of entanglement.
+
+As it turns out these two extremes cases of the measurement frequency fall into
+two distinct \emph{phases}, where there is a \emph{phase transition} between
+them with a critical rate $p_c$. This is the measurement-induced entanglement phase transition. If
+measurements are rare, $p<p_c$, the system is in the \emph{entangling phase}.
+Conversely, if measurements are sufficiently frequent, i.e. more frequent than
+the critical frequency $p_c$, the system is in the \emph{disentangling phase}
+(also sometimes called \enquote{weak} and \enquote{strong monitoring} phases,
+respectively). The key features of the two phases are as follows.
+
+\begin{description}
+  \item[Entangling phase] 
+  \item[Disentangling phase]
+\end{description}
+
 \begin{itemize}
   \item \Cref{fig:hybrid-circuit}: Measurements reduce entanglement, unitaries
     grow entanglement
@@ -1015,19 +1176,20 @@ $i$ in the chain. Consider now the case where a \enquote{mistake} is added to
 the system in the form of one spin flipping. This is associated with an energy
 cost of $\Delta E=J$, since we go from an energy saving $J /2$ contribution to
 $-J /2$. However, we did not specify where this defect appeared. It could have
-been on any of the $L$ sites. Thus, there is an entropy gain of $S = k_B \ln
-L$. In the thermodynamic limit ($L\to \infty$), the cost of a defect is still
-$J$, whereas the contribution from the entropy becomes infinite. For our
-considerations, we have that the properties of the system are determined by the
-free energy
+been on any of the $L$ sites. Thus, there is an entropy gain of
+\footnote{$k_B=1$} $S = \ln L$. In the thermodynamic limit ($L\to \infty$), the
+cost of a defect is still $J$, whereas the contribution from the entropy
+becomes infinite. For our considerations, we have that the properties of the
+system are determined by the free energy 
 \begin{align}
-  F = E - T S
-.\end{align}
-It is clear that for finite (here, non-zero) temperatures, $F\to-\infty$ in the
-presence of defects. We therefore have that for finite temperatures, spin-flips
-will spontaneously occur, and there is no long-range order in one dimension.
-Consequently one can say that the critical temperature is $T=0$. 
-This consideration is valid for all one-dimensional lattices.
+  F = E - \beta^{-1} S
+\end{align}
+with $\beta = 1 / T$. It is clear that for finite $\beta$ (or non-zero
+temperatures) $F \to -\infty$ in the presence of defects. We therefore have
+that for temperatures above absolute 0, spin-flips will spontaneously occur,
+and there is no long-range order in one dimension. Equivalently, one can say
+that the critical temperature is $T=0$. This consideration is valid for all
+one-dimensional lattices.
 
 \subsection{The transverse-field Ising model}
 
@@ -1038,7 +1200,7 @@ but only up. Furthermore, it concerns itself with finite temperatures, $T>0$,
 and not the quantum limit $T\to 0$. 
 For a quantum mechanical analogue to the classical Ising model, we
 look towards the \emph{transverse-field} Ising model, which we briefly want to
-introduce in this section, following its introduction in ref.
+introduce in this section, following its introduction in Ref.
 \cite{langLectureNotesTopological2021}. The transverse-field Ising model is
 especially interesting in the context of quantum phases and quantum phase
 transitions, where we examine ground states of the Hamiltonian, i.e. at $0$
@@ -1073,7 +1235,7 @@ the product state of local ground states of $\sigma_i^x$, $\ket{G_+} =
 locally a
 unique ground state. One further feature of it is that is possesses no
 long-range order. The spin on site $i$ is completely agnostic to the happenings
-of the spin on site $j$ -- if $i$ and $j$ are sufficiently far apart --, i.e.
+of the spin on site $j$ --- if $i$ and $j$ are sufficiently far apart ---, i.e.
 $i$ and $j$ are on
 average not aligned (similar to the classical ising model for higher
 temperatures). Mathematically, this expresses as 
@@ -1121,7 +1283,7 @@ a phase transition according to the Landau paradigm of phase transitions
 
 \subsection{The projective transverse-field Ising model}\label{sec:the-ptim}
 We now have the baseline set to introduce the \emph{projective}
-transverse-field Ising model. Our detailed introduction follows ref.
+transverse-field Ising model. Our detailed introduction follows Ref.
 \cite{langEntanglementTransitionProjective2020}. 
 The initial setup of the model is similar to the
 TIM, in that we have a linear chain of $L$ spin-$1 /2$ degrees of freedom on sites
@@ -1222,7 +1384,7 @@ dynamics at this point is nontrivial, and can be characterized by a mapping to
 a conformal field theory. Interestingly, the PTIM and its phase transition is
 identical to 2d percolation, which is analytically solvable and has a
 well-known critical point of $1 /2$. The interested reader is invited to
-consult refs.
+consult Refs.
 \cite{aharonyIntroductionPercolationTheory2017,difrancescoConformalFieldTheory1997}
 for further details on percolation and conformal field theories, which go
 beyond the scope of this work. For now, we can see that the emergence of new
@@ -1284,3 +1446,51 @@ Ideen von Finn: \cite{joshiObservingQuantumMpemba2024,aresEntanglementAsymmetryP
 \subsection{Altman: Upper Bound}
 \cite{garrattProbingPostmeasurementEntanglement2023}
 
+
+%Random assortment of MIPT Paper (incomplete):
+%
+%\begin{itemize}
+%  \item Fisher paper, das ich mir als allererstes mal durchgelesen hab
+%    (\citetitle{liMeasurementdrivenEntanglementTransition2019}):
+%    \cite{liMeasurementdrivenEntanglementTransition2019}
+%  \item MIPT general, war in \cref{ch:lxe}, aber leider keine ahnung mehr
+%    warum\ldots (\citetitle{baoTheoryPhaseTransition2020}) \cite{baoTheoryPhaseTransition2020}
+%  \item \citetitle{baoSymmetryEnrichedPhases2021}
+%    \cite{baoSymmetryEnrichedPhases2021}
+%  \item Why not: Measurement induced synchronization von Finn
+%    (\citetitle{schmolkeMeasurementinducedQuantumSynchronization2023}):
+%    \cite{schmolkeMeasurementinducedQuantumSynchronization2023}
+%  \item 2017 WR for quantum state tomography (10 qubits):
+%    (\citetitle{song10QubitEntanglementParallel2017})
+%    \cite{song10QubitEntanglementParallel2017}
+%  \item LXE: Definition: \cite{liCrossEntropyBenchmark2023}; PTIM:
+%    \cite{tikhanovskayaUniversalityCrossEntropy2023}
+%  \item Garratt/Altman Paper:
+%    (\citetitle{garrattProbingPostmeasurementEntanglement2023}) \cite{garrattProbingPostmeasurementEntanglement2023}
+%  \item self-cite for clout:
+%    (\citetitle{schmolkeBoostingInformationTransfer2024})
+%    \cite{schmolkeBoostingInformationTransfer2024}
+%\end{itemize}
+%
+%more curated MIPT collection:
+%\begin{itemize}
+%  \item Skinner Lecture notes on MIPT
+%    \cite{skinnerLectureNotesIntroduction2023}
+%  \item ist zwei mal in meiner zotero library, vielleicht mal auschecken: 
+%    \cite{hokeMeasurementinducedEntanglementTeleportation2023}
+%  \item Titel klingt vielversprechend: \cite{baoTheoryPhaseTransition2020}
+%  \item PRX von skinner 1: \cite{skinnerMeasurementInducedPhaseTransitions2019}
+%    chronologisch das erste
+%  \item PRX von skinner 2: \cite{nahumMeasurementEntanglementPhase2021}
+%  \item PRX von skinner 3:
+%    \cite{nahumEntanglementDynamicsDiffusionannihilation2020}
+%    Das hat Felix immer auf gemacht um mir das mit den Majoranas zu zeigen
+%  \item eins noch for good measure:
+%    \cite{yoshidaDecodingEntanglementStructure2021}
+%\end{itemize}
+%\begin{figure}[H]
+%  \centering
+%  \input{fig/tikz/claude-hybridcircuit.tex}
+%  \caption{Claude Hybrid Circuit Tikz picture??}
+%  \label{fig:hybrid-circuit-claude}
+%\end{figure}

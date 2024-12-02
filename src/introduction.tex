@@ -744,50 +744,211 @@ does not constitute a universal set of quantum gates. Thus, classical computers
 \clearpage
 \section{Entanglement Transitions}\label{sec:ent-trans}
 
+%Quantum entanglement acts as the bedrock of quantum computational principles
+%and is the  \cite{einsteinCanQuantumMechanicalDescription1935}
+%
+%In this section we introduce 
+%Entanglement transitions refer to changes in the nature of quantum entanglement
+%in a system as external parameters, such as disorder, interactions, or
+%measurement rates, are varied. These transitions are a burgeoning area of study
+%in quantum physics and quantum information science, offering insights into
+%non-equilibrium phenomena and the interplay between quantum mechanics and
+%statistical physics.
 %\textcolor{red}{fehlt! mach das mal!}
 
-Random assortment of MIPT Paper (incomplete):
+Quantum entanglement is one of the most important features of quantum
+mechanics, opening the door to quantum computation and quantum information. It
+distinguishes quantum information from classical information, as the creation,
+manipulation, and exploitation of entanglement is what quantum information
+science is ultimately all about. 
+what distinguishes \emph{quantum} information
+theory from \emph{classical} information theory. However, entanglement is a 
 
+Many different studies for entanglement transitions
+\cite{liMeasurementdrivenEntanglementTransition2019,baoTheoryPhaseTransition2020,baoSymmetryEnrichedPhases2021,schmolkeMeasurementinducedQuantumSynchronization2023,hokeMeasurementinducedEntanglementTeleportation2023,skinnerMeasurementInducedPhaseTransitions2019,nahumMeasurementEntanglementPhase2021,nahumEntanglementDynamicsDiffusionannihilation2020,yoshidaDecodingEntanglementStructure2021}
+
+Quantum entanglement is both a profound conceptual feature of quantum mechanics
+and a practical cornerstone of quantum computation, where it serves as a vital
+resource for tasks like error correction and quantum teleportation. Since its
+introduction by Schrödinger in 1935, entanglement has perplexed physicists by
+challenging classical intuitions, encapsulating the "spooky" correlations that
+so famously troubled Einstein. Unlike standard physical quantities,
+entanglement is a meta-descriptor of a system, describing the correlations in
+measurement outcomes across its parts rather than intrinsic properties of the
+parts themselves. Recently, the study of entanglement transitions—a striking
+phenomenon where the structure and scaling of entanglement undergo qualitative
+changes—has opened new avenues for exploring quantum systems. A wealth of
+theoretical research has investigated these transitions in diverse contexts,
+ranging from disordered systems to monitored quantum circuits, and experimental
+efforts are beginning to probe their signatures in cutting-edge quantum
+platforms. This section explores the emerging understanding of entanglement
+transitions and their broader implications.
+
+This section is a rough adaption of and largely follows Ref. \cite{skinnerLectureNotesIntroduction2023},
+if not explicitly stated otherwise.\footnote{Following the suggestion in Ref.
+  \cite{skinnerLectureNotesIntroduction2023}, we invite the interested reader
+  to consult the review papers Refs.
+\cite{fisherRandomQuantumCircuits2023,potterEntanglementDynamicsHybrid2021}}
+\subsection{Quantifying entanglement}
+A quantum state is called \emph{entangled} if we cannot specify it by
+describing the components independently. Alternatively, a more mathematical description can
+be stated as follows. Suppose that a quantum system contains two distinct parts
+$A$ and $B$. If we can write the state of the system as $\ket{\phi} =
+\ket{\phi_A} \otimes \ket{\phi_B}$, where $\ket{\phi_A}$ and $\ket{\phi_B}$ are
+the states of subsystems $A$ and $B$, respectively, the state of the system is
+called \emph{separable}. If $\ket{\phi}$ cannot be decomposed in this way, then
+$A$ and $B$ are \emph{entangled}.
+
+As an example, consider the state
+\begin{align}
+  \ket{\varphi} &= \ket{+_A} \otimes \ket{+_B}\nonumber\\&= \frac{1}{\sqrt{2}}\left( \ket{0_A} +
+  \ket{1_A} \right) \otimes \frac{1}{\sqrt{2} } \left(  \ket{0_B} +
+    \ket{1_B} \right) \label{eq:productstate}\\&= \frac{1}{2}\left( \ket{0_A 0_B} + \ket{0_A 1_B} + \ket{1_A
+0_B} + \ket{1_A 1_B}\right) \nonumber
+.\end{align}
+The state $\ket{\varphi}$ in this example is separable, since the two partitions
+of the system are in their respective $\ket{+}$ states. Conversely, we can
+consider the state
+\begin{align}\label{eq:entangledstate}
+  \ket{\phi} = \frac{1}{\sqrt{2} }\left( \ket{0_A 0_B} + \ket{1_A 1_B} \right) 
+.\end{align}
+Here, the state $\ket{\phi}$ cannot be separated as before. We therefore call
+this an entangled state.
+
+Although technically correct, this definition, along with the paradigmatic
+examples given above, can be misleading. It insinuates a sort of binary
+relation in the sense that a system is either in an entangled state or in a
+separable (product) state. It thus does not obviously lead to a quantitative
+description of the degree of entanglement between $A$ and $B$. To this end, it
+can prove useful to think of entanglement as correlations, such as from
+classical
+statistics. That is, we can equivalently consider entanglement in terms of
+possible measurement outcomes for the subsystems $A$ and $B$ for subsequent
+measurements on $B$ or $A$. The quantum nature of entanglement then arises from the
+non-locality of these correlations.
+
+For a better grasp of this intuition, we return to the examples from above.
+Suppose we perform a computational basis measurement on qubit $A$, while the
+system is in the state described by
+\cref{eq:productstate}. This measurement
+yields either $+1$ or $-1$ as outcome with equal probability and collapses the
+state of the qubit accordingly. A subsequent measurement of qubit $B$ in the computational
+basis then turns out to be unaffected by the previous measurement; $A$ and $B$
+are thus uncorrelated, i.e. unentangled. The probability of the measurement
+outcomes $+1$ or $-1$ on qubit $B$ is still the same as before.
+
+If we were to perform the same procedure on a system in the state described by
+\cref{eq:entangledstate}, this would no longer be the case. A measurement of
+qubit $A$ in the computational basis would still yield the outcomes $\pm 1$
+with equal probability. However, the wave function now collapses to one of
+$\ket{0_A 0_B}$ and $\ket{1_A 1_B}$, which yields a definitive outcome for a
+subsequent measurement of qubit $B$. For instance, if we measured $+1$,
+corresponding to $\ket{0_A}$, the state after the measurement is $\ket{\phi'} =
+\ket{0_A 0_B}$. A measurement of $B$ would therefore also yield $+1$.
+Therefore, by measuring one of the constituents of the bipartite system, we
+have eliminated the uncertainty of the measurement outcome of the other. 
+
+This uncertainty can be quantified by the entanglement entropy. Formally, it
+quantifies the reduction of the statistical entropy of measurement outcomes of
+$A$ by completely measuring subsystem $B$. We have already discussed the
+entropy of entanglement in the context of the stabilizer formalism in
+\cref{sec:stabilizergroup} with \cref{defn:entent}. Here, we motivate it
+further and convice ourselves that the previously given definition is
+reasonable.
+
+First, construct the density matrix $\rho$ of the system. For a pure state
+$\ket{\phi}$, the density matrix is the projector onto $\ket{\phi}$,
+\begin{align}
+  \rho = \dyad{\phi}
+.\end{align}
+As the density matrix is an extension of (discrete) probability distributions
+over the state space of qubits, the density matrix of a pure state is just the
+state itself with probability 1. We can now marginalize over the measurement
+outcomes of measurements on a qubit. This is done by the partial trace
+operation and defines the reduced density matrix
+\begin{align}
+  \rho_A = \Tr_B[\rho]
+.\end{align}
+For the previous example of the entangled state $\ket{\phi}$ we have a density
+matrix
+%\begin{align}
+%  \rho = \dyad{\varphi} = \frac{1}{4}\mqty(\dmat[1]{1,1,1,1})
+%\end{align}
+%and
+\begin{align}
+  \rho = \dyad{\phi} 
+  = \frac{1}{2} \mqty(1 & 0 & 0 & 1 \\
+                      0 & 0 & 0 & 0 \\
+                      0 & 0 & 0 & 0 \\
+                      1 & 0 & 0 & 1)
+\end{align}
+With the rows and columns corresponding to the two-qubit basis vectors. The
+partial trace now corresponds to a trace over the $2\times 2$ submatrices in
+the corners,
+\begin{align}
+  \rho_A = \Tr_B[\rho] = \frac{1}{2}\mqty(\imat{2})
+.\end{align}
+Note that this reduced density matrix corresponds to a mixed state. It is not a
+coherent superposition of basis states, but rather a classical mixture of
+$\ket{0_A}$ and $\ket{1_A}$, both with probability $1 /2$. The entanglement
+entropy is then the statistical entropy of this specific mixture. As already
+given in \cref{defn:entent}, it is defined as
+\begin{align}
+  S_\mathrm{E}(\ket{\phi}) = -\Tr[\rho_A \log \rho_A] 
+,\end{align}
+which is equivalent to the von Neumann entropy of the subsystem density matrix
+$\rho_A$, which is in turn equivalent to the Shannon entropy
+\cite{vonneumannMathematischeGrundlagenQuantenmechanik1968,shannonMathematicalTheoryCommunication1948}.
+
+
+\subsection{Random circuits}
 \begin{itemize}
-  \item Fisher paper, das ich mir als allererstes mal durchgelesen hab
-    (\citetitle{liMeasurementdrivenEntanglementTransition2019}):
-    \cite{liMeasurementdrivenEntanglementTransition2019}
-  \item MIPT general, war in \cref{ch:lxe}, aber leider keine ahnung mehr
-    warum\ldots (\citetitle{baoTheoryPhaseTransition2020}) \cite{baoTheoryPhaseTransition2020}
-  \item \citetitle{baoSymmetryEnrichedPhases2021}
-    \cite{baoSymmetryEnrichedPhases2021}
-  \item Why not: Measurement induced synchronization von Finn
-    (\citetitle{schmolkeMeasurementinducedQuantumSynchronization2023}):
-    \cite{schmolkeMeasurementinducedQuantumSynchronization2023}
-  \item 2017 WR for quantum state tomography (10 qubits):
-    (\citetitle{song10QubitEntanglementParallel2017})
-    \cite{song10QubitEntanglementParallel2017}
-  \item LXE: Definition: \cite{liCrossEntropyBenchmark2023}; PTIM:
-    \cite{tikhanovskayaUniversalityCrossEntropy2023}
-  \item Garratt/Altman Paper:
-    (\citetitle{garrattProbingPostmeasurementEntanglement2023}) \cite{garrattProbingPostmeasurementEntanglement2023}
-  \item self-cite for clout:
-    (\citetitle{schmolkeBoostingInformationTransfer2024})
-    \cite{schmolkeBoostingInformationTransfer2024}
+  \item approximate continuous time evolution with discrete timesteps
+  \item unitaries grow entanglement
+  \item Haar random unitaries!
 \end{itemize}
 
-more curated MIPT collection:
-\begin{itemize}
-  \item Skinner Lecture notes on MIPT
-    \cite{skinnerLectureNotesIntroduction2023}
-  \item ist zwei mal in meiner zotero library, vielleicht mal auschecken: 
-    \cite{hokeMeasurementinducedEntanglementTeleportation2023}
-  \item Titel klingt vielversprechend: \cite{baoTheoryPhaseTransition2020}
-  \item Ideen von Finn: \cite{joshiObservingQuantumMpemba2024,aresEntanglementAsymmetryProbe2023}
-  \item PRX von skinner 1: \cite{skinnerMeasurementInducedPhaseTransitions2019}
-    chronologisch das erste
-  \item PRX von skinner 2: \cite{nahumMeasurementEntanglementPhase2021}
-  \item PRX von skinner 3:
-    \cite{nahumEntanglementDynamicsDiffusionannihilation2020}
-    Das hat Felix immer auf gemacht um mir das mit den Majoranas zu zeigen
-  \item eins noch for good measure:
-    \cite{yoshidaDecodingEntanglementStructure2021}
-\end{itemize}
+%Random assortment of MIPT Paper (incomplete):
+%
+%\begin{itemize}
+%  \item Fisher paper, das ich mir als allererstes mal durchgelesen hab
+%    (\citetitle{liMeasurementdrivenEntanglementTransition2019}):
+%    \cite{liMeasurementdrivenEntanglementTransition2019}
+%  \item MIPT general, war in \cref{ch:lxe}, aber leider keine ahnung mehr
+%    warum\ldots (\citetitle{baoTheoryPhaseTransition2020}) \cite{baoTheoryPhaseTransition2020}
+%  \item \citetitle{baoSymmetryEnrichedPhases2021}
+%    \cite{baoSymmetryEnrichedPhases2021}
+%  \item Why not: Measurement induced synchronization von Finn
+%    (\citetitle{schmolkeMeasurementinducedQuantumSynchronization2023}):
+%    \cite{schmolkeMeasurementinducedQuantumSynchronization2023}
+%  \item 2017 WR for quantum state tomography (10 qubits):
+%    (\citetitle{song10QubitEntanglementParallel2017})
+%    \cite{song10QubitEntanglementParallel2017}
+%  \item LXE: Definition: \cite{liCrossEntropyBenchmark2023}; PTIM:
+%    \cite{tikhanovskayaUniversalityCrossEntropy2023}
+%  \item Garratt/Altman Paper:
+%    (\citetitle{garrattProbingPostmeasurementEntanglement2023}) \cite{garrattProbingPostmeasurementEntanglement2023}
+%  \item self-cite for clout:
+%    (\citetitle{schmolkeBoostingInformationTransfer2024})
+%    \cite{schmolkeBoostingInformationTransfer2024}
+%\end{itemize}
+%
+%more curated MIPT collection:
+%\begin{itemize}
+%  \item Skinner Lecture notes on MIPT
+%    \cite{skinnerLectureNotesIntroduction2023}
+%  \item ist zwei mal in meiner zotero library, vielleicht mal auschecken: 
+%    \cite{hokeMeasurementinducedEntanglementTeleportation2023}
+%  \item Titel klingt vielversprechend: \cite{baoTheoryPhaseTransition2020}
+%  \item PRX von skinner 1: \cite{skinnerMeasurementInducedPhaseTransitions2019}
+%    chronologisch das erste
+%  \item PRX von skinner 2: \cite{nahumMeasurementEntanglementPhase2021}
+%  \item PRX von skinner 3:
+%    \cite{nahumEntanglementDynamicsDiffusionannihilation2020}
+%    Das hat Felix immer auf gemacht um mir das mit den Majoranas zu zeigen
+%  \item eins noch for good measure:
+%    \cite{yoshidaDecodingEntanglementStructure2021}
+%\end{itemize}
 %\begin{figure}[H]
 %  \centering
 %  \input{fig/tikz/claude-hybridcircuit.tex}
@@ -808,9 +969,16 @@ diagram is adapted from Fig. 1 of Ref.
   \label{fig:hybrid-circuit}
 \end{figure}
 
-\subsection{Entanglement}
-
 \subsection{Measurement-Induced Phase Transitions}
+Unitary operators tend to increase the entanglement, while measurements tend to
+decrease it. I can entangle two qubits by applying a unitary operator, but if I
+measure the spin of either one i disentangle them again.
+\begin{itemize}
+  \item \Cref{fig:hybrid-circuit}: Measurements reduce entanglement, unitaries
+    grow entanglement
+  \item Two distinct phases: Entangling phase and Disentangling phase.
+  \item For probability parameter $p$ 
+\end{itemize}
 
 \clearpage
 \section{The Projective Transverse-Field Ising Model}\label{sec:intro-ptim}
@@ -818,24 +986,60 @@ In this section we introduce the model investigated in the main part of the
 thesis, known as the projective transverse-field Ising model (abbreviated as
 PTIM). We want to give the introduction by going backwards through each of the
 concepts constituting the name \enquote{PTIM}, starting with the Ising model.
-\subsection{The Ising model}
 
-This section follows \cite{blundellMagnetismCondensedMatter2011}.
+\subsection{The Ising model}
 %\textcolor{red}{fehlt! mach das mal!}
 %Section aus \cite{blundellMagnetismCondensedMatter2011} kann fast verbatim
 %abgeschrieben werden.
 
 %Hier nur kurz, criticality in 2d, lars onsager whatever, einfach kurz back to
 %the roots, was sind die origins von dem was folgt
+
+In this section, we briefly review the classical Ising model, following Ref.
+\cite{blundellMagnetismCondensedMatter2011}. Although it is
+often made subject in undergraduate courses on statistical mechanics, its
+importance for the paradigm of phase transitions cannot be understated. It is
+one of the simplest systems exhibiting critical behavior. Crucially this is
+\emph{not} the case in one
+dimension. We now want to specifically highlight the absence of a phase transition
+in one dimension. To this end consider a chain of $L$ classical spins.
+\enquote{Classical} in the sense that they are only allowed to point up or
+down. The Hamiltonian of the system reads\footnote{Here, $S^z_i$ is the
+$z$-component of the classical spin with $S^z_i = \pm 1 /2$.}
+\begin{align}
+  H = -2J\sum_{i=1}^{L-1} S^z_i S^z_{i+1}
+\end{align}
+with $J>0$, such that the ground state is obtained by all adjacent spins lining
+up. The energy of this state is thus $-NJ /2$, since $S^z_i = +1 /2$ for all
+$i$ in the chain. Consider now the case where a \enquote{mistake} is added to
+the system in the form of one spin flipping. This is associated with an energy
+cost of $\Delta E=J$, since we go from an energy saving $J /2$ contribution to
+$-J /2$. However, we did not specify where this defect appeared. It could have
+been on any of the $L$ sites. Thus, there is an entropy gain of $S = k_B \ln
+L$. In the thermodynamic limit ($L\to \infty$), the cost of a defect is still
+$J$, whereas the contribution from the entropy becomes infinite. For our
+considerations, we have that the properties of the system are determined by the
+free energy
+\begin{align}
+  F = E - T S
+.\end{align}
+It is clear that for finite (here, non-zero) temperatures, $F\to-\infty$ in the
+presence of defects. We therefore have that for finite temperatures, spin-flips
+will spontaneously occur, and there is no long-range order in one dimension.
+Consequently one can say that the critical temperature is $T=0$. 
+This consideration is valid for all one-dimensional lattices.
+
 \subsection{The transverse-field Ising model}
 
 The Ising model as conceived by Wilhelm Lenz is a model from classical
 statistical mechanics. The spins that constitute it can only take on discrete
 values, yes, but they cannot exist in a coherent superposition of up and down,
-but only up. For a quantum mechanical analogue to the classical Ising model, we
+but only up. Furthermore, it concerns itself with finite temperatures, $T>0$,
+and not the quantum limit $T\to 0$. 
+For a quantum mechanical analogue to the classical Ising model, we
 look towards the \emph{transverse-field} Ising model, which we briefly want to
 introduce in this section, following its introduction in ref.
-\cite{langLectureNotesTopological2021}.  The transverse-field Ising model is
+\cite{langLectureNotesTopological2021}. The transverse-field Ising model is
 especially interesting in the context of quantum phases and quantum phase
 transitions, where we examine ground states of the Hamiltonian, i.e. at $0$
 temperature. The phases and phase transitions are then with respect to
@@ -914,6 +1118,7 @@ transform one ground state into the other. Thus, the symmetry of the
 Hamiltonian is spontaneously broken. This breaking of a symmetry corresponds to
 a phase transition according to the Landau paradigm of phase transitions
 (\textcolor{orange}{landau phase transitions zitieren, findest du safe}).
+
 \subsection{The projective transverse-field Ising model}\label{sec:the-ptim}
 We now have the baseline set to introduce the \emph{projective}
 transverse-field Ising model. Our detailed introduction follows ref.
@@ -959,7 +1164,11 @@ $\ket{\phi(t)}$.
 \begin{figure}[t]
   \centering
   \input{fig/tikz/intro-ptim.tex}
-  \caption{Tikz sketch of PTIM setup with $\approx 10$ qubits}
+  \caption{Example of a PTIM circuit for $p\approx 0.5$ for a chain of $L=8$
+  spins with periodic boundary conditions. The rectangles on horizontal edges
+  of the grid, $e=(i,i+1)$, denote $ZZ$ measurements, $\mathcal{M}^{ZZ}_e$, while the circles
+  on vertical edges of the grid, $i$, denote $X$ measurements, $\mathcal{M}^X_i$.
+Figure adapted from \cite{langEntanglementTransitionProjective2020}}
   \label{fig:ptim-circuit}
 \end{figure}
 
@@ -1058,7 +1267,16 @@ simulations at home with cleverly assembled silicon.  That is, nowadays we make
 do with these bottlenecks by performing numerical experiments. This is not to
 discredit the utility of experiments as such, on the contrary! 
 
+The concept of entanglement has famously
+puzzled the greatest physicists
+\cite{schroedingerGegenwaertigeSituationQuantenmechanik1935,einsteinCanQuantumMechanicalDescription1935}.
+In a way, these confusions still percolate through physics as a whole. 
+Since
+entanglement is only a descriptor of quantum states as such, there is no direct
+observable that corresponds to entanglement. 
+
 %\textcolor{red}{fehlt! mach das mal!}
+Ideen von Finn: \cite{joshiObservingQuantumMpemba2024,aresEntanglementAsymmetryProbe2023}
 
 \subsection{Fisher: Linear Cross Entropy}
 \cite{liCrossEntropyBenchmark2023}

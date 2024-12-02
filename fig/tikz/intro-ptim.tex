@@ -14,7 +14,10 @@
 }
 
 %\draw[red, very thick, fill=red!20] (0,\timesteps+1.2) circle (.15);
-\draw[arrow, thick] (-1,-1) -- (-1,\timesteps+1.5) node[anchor=west] {\LARGE$t$}; 
+%\draw[arrow, thick] (-1,-1) -- (-1,\timesteps+1) node[anchor=west] {\LARGE$t$}; 
+\foreach \t in {1,...,\qubits} {
+  \node[] at (-1.5,\t-.8) {$t=\t$};
+}
 
 % ZZ Measurements with probability p=0.5 on the edges of the grid
 \foreach \x in {0,...,\qubits}
@@ -53,5 +56,12 @@
     }
   }
 
+  \draw[blue, very thick, fill=blue!20] (\qubits+1.1,4.35) rectangle
+  (\qubits+1.9, 4.65);
+  \node[anchor=west] at (\qubits+2,4.5) {$=\mathcal{M}^{ZZ}_e$};
 
+  \draw[red, very thick, fill=red!20] (\qubits+1.5,2.5) circle (.15);
+  \node[anchor=west] at (\qubits+1.7,2.5) {$=\mathcal{M}^X_i$};
+
+  \node[anchor=west] at (\qubits+.75,-.75) {$\ket{++\cdots+}$};
 \end{tikzpicture}

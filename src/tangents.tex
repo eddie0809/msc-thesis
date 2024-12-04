@@ -1,7 +1,7 @@
 \chapter{Fragments}
 \label{ch:fragments}
 
-\section*{On tangents -- or: what is this chapter?}
+\section*{On tangents --- or: what is this chapter?}
 While writing this thesis my thoughts have wandered off once or twice. Almost
 always while writing out something completely different. Incidentally, this is
 how the paragraph you're reading right now came to be.
@@ -14,8 +14,8 @@ main body of your thesis, no matter how ingenious or witty they are.  Come to
 think of it, they probably do not belong in the appendix either.
 
 Either way, I would have been quite distraught to delete these paragraphs
-without any of them seeing the inside of a printer. So, in order for them not
-to go to waste, I decided to collect them here for mine and my friends'
+without any of them ever seeing the inside of a printer. So, in order for them
+not to go to waste, I decided to collect them here for mine and my friends'
 amusement. These texts really are silly sometimes.
 
 \section*{On references}
@@ -41,33 +41,115 @@ referenced in the work you originally went through, and now, multiple layers
 deep in the reference rabbithole are you ultimately forced to realize that it's
 not you, it's them. 
 
-\section*{On the sampling problem}
+%\section*{On the sampling problem}
+%
+%The metaphysics of this endeavour (i.e. this thesis) can
+%be condensed in the following way; we (a) know from experiments how quantum
+%systems behave under certain conditions, and (b) predict through theoretical
+%calculations what these systems might do in another experimental setting. In
+%the latter case however, there is an uncanny regime of utility, where we either
+%(a) cannot precisely pass predictions or (b) cannot perform the experiment on
+%the grounds of hardware limitations\footnote{The Higgs particle was predicted
+%40 years before it was discovered \textcolor{orange}{citation}} or (c) try to
+%predict the behavior of quantities not directly measurable. In the case of
+%quantum computation, and especially in the field of entanglement transitions,
+%we face these bottlenecks in increasing severity. To make do with them, we
+%employ classical computer simulations. That is, we perform numerical
+%experiments. While traditional experiments still serve as the sole proprietor of claim to
+%ontology, numerical experiments can play a supporting role, 
+%
+%In the year of our
+%lord 2024, we phyisicists are thankfully able to perform experiments at home
+%with cleverly assembled silicon.  That is, nowadays we make do with these
+%bottlenecks by performing numerical experiments. This is not to discredit the
+%utility of experiments as such, on the contrary! We want to assist our
+%experimental colleagues by providing more accurate predictions for them to
+%test. 
+%
+%However, the predictions sometimes surpass even the limitations of nature
+%itself. 
 
-The metaphysics of this endeavour (i.e. this thesis) can
-be condensed in the following way; we (a) know from experiments how quantum
-systems behave under certain conditions, and (b) predict through theoretical
-calculations what these systems might do in another experimental setting. In
-the latter case however, there is an uncanny regime of utility, where we either
-(a) cannot precisely pass predictions or (b) cannot perform the experiment on
-the grounds of hardware limitations\footnote{The Higgs particle was predicted
-40 years before it was discovered \textcolor{orange}{citation}} or (c) try to
-predict the behavior of quantities not directly measurable. In the case of
-quantum computation, and especially in the field of entanglement transitions,
-we face these bottlenecks in increasing severity. To make do with them, we
-employ classical computer simulations. That is, we perform numerical
-experiments. While traditional experiments still serve as the sole proprietor of claim to
-ontology, numerical experiments can play a supporting role, 
+\section*{On the utility of simulations}
+One of my favourite video games is \emph{Cities: Skylines}. As the name
+suggests, it is a city-building game (which graciously runs natively on Linux).
+In it, you act as an almost omnipotent mayor and are tasked with developing and
+maintaining a settlement raised from scratch. Initially, one has a single plot
+of buildable area located in a vast landscape acting as a canvas for you to
+design your city as you see fit. The initial plot of land usually conveniently
+features a highway exit, where the canonical first step is the design of a road
+network with appropriate residential, commercial, and industrial zoning, for
+citizens to move in, and for industry and businesses to ship cargo in and out.
+As the game progresses your city grows, unlocking more buildings and services
+such as schools, hospitals, or public transit. (If the populace is sufficiently
+educated, one can even unlock a \enquote{Large Hadron Collider} in the later
+stages of the game.) However, one also faces the challenges of a growing city,
+such as the increasing demands for basic utilities, and most importantly,
+traffic congestion and its consequences.  All this is to say: it simulates the
+progression from a village to a metropolis. 
 
-In the year of our
-lord 2024, we phyisicists are thankfully able to perform experiments at home
-with cleverly assembled silicon.  That is, nowadays we make do with these
-bottlenecks by performing numerical experiments. This is not to discredit the
-utility of experiments as such, on the contrary! We want to assist our
-experimental colleagues by providing more accurate predictions for them to
-test. 
+At the end of the day, however, it is only an emulation of what is happening in
+the real world. While the developers made sure to accurately model behavior of
+the masses, daily routines of thousands---if not millions---of citizens, and
+their commutes constituted by about as much vehicles, they at the same time
+made sure that I can play this game on my used ThinkPad, more than 10 years of age. It is
+therefore only natural that some mechanisms of human behavior had to be
+\enquote{coarse grained} away for the game to be (a) playable and (b)
+enjoyable. (Think about walking around in Stuttgart: construction sites as far
+as the eye can see. Confer with \emph{Cities: Skylines}, where buildings just
+spawn out of nowhere as soon as you command them to be placed.)
+It would be highly absurd to suggest that every nuance of life in a city can
+be mapped one to one to a program.
 
-However, the predictions sometimes surpass even the limitations of nature
-itself. 
+Yet as it turns out, the game does a surprisingly good job of accurately
+depicting traffic flow and the dynamics of city life, now being used to teach
+urban planning and landscaping students
+\cite{khanPerceptionsStudentsGamification2021,haahtelaGamificationEducationCities2015}.
+\footnote{Educational software, now in your local steam library.}
+Picture this: Cleverly assembled instructions run on cleverly assembled
+silicon circuits teaching urban planning students that the road network they
+conceived of was not-so cleverly assembled. An almost kafkaesque sight to
+behold.
+
+Now, what can we as physicists learn from this excursion into my video game
+preferences? The daily routine of many physicists today, even at the LHC,
+consists of running simulations on (almost) the same x86 instruction set that
+allows me to build the Large Hadron Collider in my virtual city. That is, the
+hardware is completely agnostic to the simulation it is running. Matter of
+fact, within the confines of computability, we can play God with the hardware,
+making it produce any result we want.
+
+This begs the question: what results \emph{should} we want from a simulation? Remember, the truly
+remarkable thing about the game Cities: Skylines is the way it accurately
+protrays \emph{the real world}, while still being a video game. Should our demands on
+simulations of natural phenomena therefore be held to the same standard? If
+that were so, a radical conclusion one might draw is that the epistemic value
+of a simulation that models something not translateable to an experimental
+setup is nill. It implies that it tells me about as much about the phenomenon it is supposed to model as
+the following \texttt{C} code:
+%That is, we want simulations to accurately predict outcomes of experiments. A
+%radical conclusion we might draw from this is that a 
+%simulation that models something not translateable to an experimental setup
+%tells me about as much about the system it is supposed to model as the
+%following \texttt{C} code:
+\begin{verbatim}
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+  printf("Hello World!");
+  return 0;
+}
+\end{verbatim}
+Or maybe it tells me that whatever phenomenon whose existence I advocate for,
+is not \enquote{real}, whatever that means.
+
+I claim that this, albeit a strawman argument, is short-sighted. The extrapolation from
+well-established models to potentially untestable theories that only exist on
+paper and in computer simulations \emph{can} have epistemic value.
+\footnote{Maybe this is just me coping with the fact that there is no pompous
+and groundbreaking result in my thesis, but I digress}
+One might
+still be able to answer \emph{how} they are untestable, and potentially gain
+insight in the workings of nature by understanding the restrictions it shackles
+us with. 
 
 \section*{On Cargo Cult Science}
 In my time at the institute I was fortunate enough to be able to attend the
@@ -91,7 +173,8 @@ overview of critical theory's foundations.
 To set the stage, I’d like to begin with a quote from a figure we all hold in
 high esteem: Richard Feynman. In Caltech’s 1974 commencement address, he coined
 the term I used for the first half of this talk's title. It is
-a reflection that resonates suprisingly well with the theme of today’s talk. He said:
+a reflection that resonates suprisingly well with the theme of today’s talk. He
+said \cite{feynmanCargoCultScience}:
 %I wanna start this talk by giving you a quote from Richard Feynman. In
 %Caltech's 1974 commencement address he had this to say: 
 \blockquote{
@@ -128,23 +211,24 @@ contradiction, in antithesis, to UFOs or astrology.
 %speech mirrors that of a Dialectic of Enlightenment. 
 
 But here’s where it gets interesting: the story of the Enlightenment is not as
-straightforward as a simple victory of light over darkness. 
-As it turns out, two german philosophers, Max Horkheimer, who was born in
-Zuffenhausen, and Theodor W. Adorno have, decades prior, also grappled with the complexities and
-contradictions inherent in Enlightenment thought. So
-much so that, when they were forced into exile by the emergence of fascism in
-the form of national socialism, they wrote a book about it, entitled
-\emph{Dialectic of Enlightenment}.
+straightforward as a simple victory of light over darkness.  As it turns out,
+two german philosophers, Max Horkheimer (who was born in Zuffenhausen) and
+Theodor W. Adorno have decades prior also grappled with the complexities and
+contradictions inherent in Enlightenment thought. So much so that, when they
+were forced into exile by the emergence of fascism in the form of national
+socialism, they wrote a book about it, entitled \emph{Dialectic of
+Enlightenment}.
 
 In this work, Horkheimer and Adorno argue that the very rationality and
 scientific progress that emerged from the englightenment era, contain within
-them the seeds of their own undoing. Or to say it in their words:
+them the seeds of their own undoing. Or to say it in their words
+\cite{horkheimerGesammelteSchriftenBand1987,horkheimerDialecticEnlightenmentPhilosophical2002}:
 \blockquote{
-  Seit jeher hat die Aufklärung im umfassendsten Sinn fortschreitenden Denkens
+  Seit jeher hat die Aufkl\"arung im umfassendsten Sinn fortschreitenden Denkens
   das Ziel verfolgt, von den Menschen die Furcht zu nehmen und sie als Herren
-  einzusetzen. Aber die vollends aufgeklärte Erde erstrahlt im Zeichen
+  einzusetzen. Aber die vollends aufgekl\"arte Erde erstrahlt im Zeichen
   triumphalen Unheils.
-}
+} 
 \blockquote{
 Enlightenment, understood in the widest sense as the advance of
 thought, has always aimed at liberating human beings from fear and
@@ -152,11 +236,11 @@ installing them as masters. Yet the wholly enlightened earth is radiant with
 triumphant calamity. 
 }
 
-\par{enlightenment}
+\subsubsection*{Enlightenment}
 So what \emph{is} a \emph{Dialectic of Enlightenment}? Well, let us maybe begin
 with the Age of Enlightenment. If I would do this talk in german, I could refer
 to the english translation of the term \emph{Aufklärung}. It is sometimes
-referred to as the \emph{Age of Reason} [Stanford Encyclopedia], and caused
+referred to as the \emph{Age of Reason} \cite{bristowEnlightenment2023}, and caused
 quite a ruckus in 17th and 18th century europe. Think of the american and
 french revolution. The rise of the first democracies, secularism and also:
 industrialization. The invention of the steam engine and so on.
@@ -167,16 +251,18 @@ coordinate system named after him.
 
 Enlightenment at its core represented a radical shift away from the teachings
 of priests and witch doctors, explanations from religion and myth.
-Enlightenment, in Kant's words, is "the human being's emergence from
+Enlightenment, in Kant's words, is \enquote{the human being's emergence from
 self-incurred minority. Minority is inability to make use of one's own
-understanding without direction from another. " [Kant] "Understanding without
-direction from another" is understanding guided by reason. So instead of
+understanding without direction from another.}; \enquote{Understanding without
+direction from another} is understanding guided by reason
+\cite{kantBeantwortungFrageWas1784,kantKritikReinenVernunft1781}. So instead of
 relying on horror stories, the likes of Galileo, Newton or Kepler made use of
 their own understanding without direction from another.
 
 Francis Bacon, one of the intellectual architects of this movement, famously
-argued that mythical thinking stood in the way of what he called "the happy
-match between the mind of man and the nature of things." For Bacon, and indeed
+argued that mythical thinking stood in the way of what he called \enquote{the happy
+match between the mind of man and the nature of things}
+\cite{baconWorksFrancisBacon2011}. For Bacon, and indeed
 for many Enlightenment thinkers, myths and superstitions were obstacles that
 clouded human understanding. The goal was to clear these obstacles, to purify
 thought by aligning it more closely with the natural world, which could be
@@ -209,14 +295,15 @@ like Cargo Cult Science if we are truly living in a scientific age? Did the
 Enlightenment not champion ideals of liberty, progress, and rationality that
 should have eradicated such pseudo-scientific practices?
 
+\subsubsection*{Instrumental reason}
 Horkheimer and Adorno would argue that yes, the Enlightenment indeed promoted
 these ideals. It encouraged a pursuit of knowledge that liberated humanity from
 the shackles of superstition and myth, setting the stage for unprecedented
 progress in science, technology, and human understanding. However, they also
 caution that this progress came with unintended consequences. Alongside the
 liberation that Enlightenment thought provided, it also introduced new forms of
-control and domination, encapsulated in what they describe as "instrumental
-reason."
+control and domination, encapsulated in what they describe as \enquote{instrumental
+reason}.
 
 To quote the Dialectic once more, Horkheimer and Adorno write: 
 \blockquote{
@@ -225,15 +312,16 @@ beings purchase the increase in their power with estrangement from that
 over which it is exerted. Enlightenment stands in the same relationship to
 things as the dictator to human beings. He knows them to the extent that
 he can manipulate them. The man of science knows things to the extent
-that he can make them. Their “ in-itself ” becomes “for him.”
+that he can make them. Their \enquote{in-itself} becomes \enquote{for him}.
 }
 
 Instrumental reason refers to a way of thinking that prioritizes efficiency,
 utility, and control above all else. It’s a kind of reasoning that asks not
-"What is true?" but rather "What works?" or "What can we do with this?" While
-this approach can lead to remarkable technological advancements and practical
-applications, it can also reduce human thought to a mere tool for manipulating
-the world, stripping it of deeper meaning or ethical consideration.
+\enquote{What is true?} but rather \enquote{What works?} or \enquote{What can
+we do with this?} While this approach can lead to remarkable technological
+advancements and practical applications, it can also reduce human thought to a
+mere tool for manipulating the world, stripping it of deeper meaning or ethical
+consideration \cite{horkheimerZurKritikInstrumentellen2007}.
 
 A seemingly harmless manifestation of this instrumental reason might be
 familiar to many of us—think of the gut reaction from your relatives when they
@@ -245,16 +333,17 @@ utility rather than for its intrinsic worth or the deeper understanding it
 provides.
 
 And even Feynman can provide us with an example for instrumental reason: In the
-commencement address he says this while talking about scientific integrity: For
+commencement address he says this while talking about scientific integrity:
+\blockquote{ For
 example, I was a little surprised when I was talking to a friend who was going
 to go on the radio. He does work on cosmology and astronomy, and he wondered
 how he would explain what the applications of this work were. \enquote{Well,}
 I said, \enquote{there aren't any.} He said, \enquote{Yes, but then we won't
-get support for more research of this kind.} I think that's kind of dishonest.
+get support for more research of this kind.} I think that's kind of dishonest.}
 
-This instrumental mindset, while useful in many contexts --- and I cannot
+This instrumental mindset, while useful in many contexts---and I cannot
 stress this enough: Yes of course, the human condition has been immensely
-improved by modern medicine and the likes ---, also has the
+improved by modern medicine and the likes---, also has the
 potential to narrow our vision. It can lead to a world where the worth of ideas
 is measured solely by their immediate applicability, where knowledge is pursued
 not for the sake of enlightenment but for the sake of control—whether that be
@@ -275,6 +364,7 @@ name. It is the result of a long tradition of rationalization. One of my
 favourite movies, Brazil by Terry Gilliam from 1985, brings this fetishization
 of bureaucracy to its radical, fascistoid conclusion.
 
+\subsubsection*{Cargo cult science}
 This is but one of the Dialectics of Enlightenment, the thesis of liberation
 and the antithesis of control. To finish off, let us now return back to Feynman
 and his Cargo Cult Science. His idea is not too far off from the ones of
@@ -319,11 +409,12 @@ outcomes, and the bureaucratic obsession with procedures over substance can all
 contribute to a culture where Cargo Cult Science becomes increasingly
 prevalent.
 
-NNs and ML algorithms are the most recent culmination of Enlightenment
-thinking. However, every time we open the ‘For You page’ on our
-silicon-controlled block of glass and plastic, we find ourselves incapacitated
-anew.
-\par{wrapping up}
+Neural networks, machine learning algorithms, and large language models are the
+most recent culmination of Enlightenment thinking. However, every time we open
+the ‘For You page’ on our silicon-controlled block of glass and plastic, we
+find ourselves incapacitated anew.
+
+\subsubsection*{wrapping up}
 So, what does this mean for us as scientists? It means we must remain vigilant.
 The Enlightenment gave us powerful tools for understanding the world, but it
 also gave us the responsibility to use those tools wisely. We must constantly

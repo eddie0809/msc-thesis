@@ -83,17 +83,17 @@ ruleset \cite{zeeGroupTheoryNutshell2016}. This ruleset, called the group axioms
 
 \begin{defn}[Group]\label{defn:group}
   A group $G$ is a non-empty set equipped with a binary operation (here denoted
-  with $\cdot$) that satisfies
+  with $\cdot$) that satisfies the following axioms.
   \begin{description}
     \item[Associativity] The group operation is associative, i.e.
       $$\forall a,b,c \in G:\ (a\cdot b) \cdot c = a \cdot
-      (b \cdot c)$$
+      (b \cdot c).$$
     \item[Identity element] The group contains an identity element, which does
       nothing with respect to composition, i.e.
-      $$\exists I\in G \ \forall g \in G : I\cdot g = g \cdot I = g$$
+      $$\exists I\in G \ \forall g \in G : I\cdot g = g \cdot I = g.$$
     \item[Inverse element] Each group element has a unique element associated
       to it that when composed with it gives the identity. In other words,
-      $$\forall g \in G \ \exists g^{-1} \in G : g g^{-1} = g^{-1} g = I $$
+      $$\forall g \in G \ \exists g^{-1} \in G : g g^{-1} = g^{-1} g = I.$$
   \end{description}
 \end{defn}
 
@@ -557,7 +557,7 @@ respectively, and two sets of generators, which anticommute in pairs, that
 generate $AB$. The size of this last set is the one which gives the
 entanglement entropy.
 
-\subsection{Stabilizer circuits}
+\subsection{Stabilizer circuits}\label{sec:stabilizercircuits}
 
 Finally, we discuss the dynamics of stabilizer states in quantum circuits. This
 is where we can see the main advantages of the stabilizer formalism, as it will
@@ -744,10 +744,10 @@ does not constitute a universal set of quantum gates. Thus, classical computers
 \clearpage
 \section{Entanglement Transitions}\label{sec:ent-trans}
 
-Felix' lieblings skinner paper:
-\cite{nahumEntanglementDynamicsDiffusionannihilation2020}. Hier ist das mit den
-majorana modes illustriert.
-
+%Felix' lieblings skinner paper:
+%\cite{nahumEntanglementDynamicsDiffusionannihilation2020}. Hier ist das mit den
+%majorana modes illustriert.
+%
 %Quantum entanglement acts as the bedrock of quantum computational principles
 %and is the  \cite{einsteinCanQuantumMechanicalDescription1935}
 %
@@ -761,40 +761,52 @@ majorana modes illustriert.
 %\textcolor{red}{fehlt! mach das mal!}
 
 Quantum entanglement is one of the most important features of quantum
-mechanics, opening the door to quantum computation and quantum information. It
+mechanics, opening the door to quantum computation and quantum information.  It
 distinguishes quantum information from classical information, as the creation,
 manipulation, and exploitation of entanglement is what quantum information
-science is ultimately all about. 
-what distinguishes \emph{quantum} information
-theory from \emph{classical} information theory. However, entanglement is a 
+science is ultimately all about.  In the past, entanglement has famously
+perplexed even the greatest physicists
+\cite{schroedingerGegenwaertigeSituationQuantenmechanik1935,einsteinCanQuantumMechanicalDescription1935}.
+This tradition has been kept ongoing as it still, to this day, excites the
+curiosity of physicists; from the study of black holes to entanglement growth on
+a microscopic scale
+\cite{wittenNotesEntanglementProperties2018,nahumQuantumEntanglementGrowth2017},
+among other things. 
 
-Many different studies for entanglement transitions
-\cite{liMeasurementdrivenEntanglementTransition2019,baoTheoryPhaseTransition2020,baoSymmetryEnrichedPhases2021,schmolkeMeasurementinducedQuantumSynchronization2023,hokeMeasurementinducedEntanglementTeleportation2023,skinnerMeasurementInducedPhaseTransitions2019,nahumMeasurementEntanglementPhase2021,nahumEntanglementDynamicsDiffusionannihilation2020,yoshidaDecodingEntanglementStructure2021}
+One particular excitation of the curious minds specifically relevant to this
+thesis is the field of measurement-induced entanglement phase transitions, or
+entanglement transitions for short. This area in the study of entanglement,
+kickstarted by three groups independently
+\cite{liQuantumZenoEffect2018,chanUnitaryprojectiveEntanglementDynamics2019,skinnerMeasurementInducedPhaseTransitions2019},
+has since become an active field in theoretical physics
+\cite{liMeasurementdrivenEntanglementTransition2019,baoTheoryPhaseTransition2020,baoSymmetryEnrichedPhases2021,schmolkeMeasurementinducedQuantumSynchronization2023,hokeMeasurementinducedEntanglementTeleportation2023,nahumMeasurementEntanglementPhase2021,nahumEntanglementDynamicsDiffusionannihilation2020,yoshidaDecodingEntanglementStructure2021}.
+In this section we provide an overview over the key concepts of
+measurement-induced phase transitions relevant to the thesis.
 
-Quantum entanglement is both a profound conceptual feature of quantum mechanics
-and a practical cornerstone of quantum computation, where it serves as a vital
-resource for tasks like error correction and quantum teleportation. Since its
-introduction by Schrödinger in 1935, entanglement has perplexed physicists by
-challenging classical intuitions, encapsulating the "spooky" correlations that
-so famously troubled Einstein. Unlike standard physical quantities,
-entanglement is a meta-descriptor of a system, describing the correlations in
-measurement outcomes across its parts rather than intrinsic properties of the
-parts themselves. Recently, the study of entanglement transitions—a striking
-phenomenon where the structure and scaling of entanglement undergo qualitative
-changes—has opened new avenues for exploring quantum systems. A wealth of
-theoretical research has investigated these transitions in diverse contexts,
-ranging from disordered systems to monitored quantum circuits, and experimental
-efforts are beginning to probe their signatures in cutting-edge quantum
-platforms. This section explores the emerging understanding of entanglement
-transitions and their broader implications.
+%Quantum entanglement is both a profound conceptual feature of quantum mechanics
+%and a practical cornerstone of quantum computation, where it serves as a vital
+%resource for tasks like error correction and quantum teleportation. Since its
+%introduction by Schrödinger in 1935, entanglement has perplexed physicists by
+%challenging classical intuitions, encapsulating the "spooky" correlations that
+%so famously troubled Einstein. Unlike standard physical quantities,
+%entanglement is a meta-descriptor of a system, describing the correlations in
+%measurement outcomes across its parts rather than intrinsic properties of the
+%parts themselves. Recently, the study of entanglement transitions—a striking
+%phenomenon where the structure and scaling of entanglement undergo qualitative
+%changes—has opened new avenues for exploring quantum systems. A wealth of
+%theoretical research has investigated these transitions in diverse contexts,
+%ranging from disordered systems to monitored quantum circuits, and experimental
+%efforts are beginning to probe their signatures in cutting-edge quantum
+%platforms. This section explores the emerging understanding of entanglement
+%transitions and their broader implications.
 
 This section is a rough adaption of and largely follows Ref.
 \cite{skinnerLectureNotesIntroduction2023}, if not explicitly stated otherwise.
 In this spirit, we invite the interested reader to follow the suggestion in the
-aforementioned paper, and further deepen their understanding by referring to the
-review papers
-\cite{fisherRandomQuantumCircuits2023} and \cite{potterEntanglementDynamicsHybrid2021}, as
-well as the author's initial introduction to the field, Ref.
+aforementioned paper, and further deepen their understanding by referring to
+the review papers \cite{fisherRandomQuantumCircuits2023} and
+\cite{potterEntanglementDynamicsHybrid2021}, as well as the author's initial
+introduction to the field, Ref.
 \cite{liMeasurementdrivenEntanglementTransition2019}.
 %Following the suggestion in Ref.  \cite{skinnerLectureNotesIntroduction2023},
 %we invite the interested reader to consult the review papers
@@ -936,11 +948,11 @@ ambiguous, the degree of entanglement is dependent on how one slices the system
 apart. Once one fixes a choice of $A$ and $B$, the degree of entanglement
 between them is symmetric.
 
-\subsection{Random circuits}
+\subsection{Random circuits}\label{sec:randomcircuits}
 
 In the context of entanglement transitions, we often deal with unitary
-circuits, either consisting of random unitary operators, or with unitaries
-placed randomly in a circuit layout (cf. \cref{fig:random-brickwork}). This
+circuits, either consisting of randomly chosen unitary operators, or with unitaries
+randomly placed in a circuit layout (cf. \cref{fig:random-brickwork}). This
 naturally raises two questions: why unitary circuits, and why should they, in
 any way, be random? In this subsection we try to answer both of these, starting
 with the first.
@@ -979,23 +991,23 @@ arrows pointing up) we have a discrete-time dynamics to some steady state.
   \label{fig:random-brickwork}
 \end{figure}
 %
+
 Describing the time evolution of a system with a discretized time dimension can
-be motivated by a mutlitude of factors. The most straightforward reason would
-be because one might describe the time evolution of a quantum computer, which
-operates by the application of unitary gates. Another reason is the
-\emph{approximation} of continuous time dynamics. When simulating quantum
-systems on a classical computer, one only has access to a discrete set of
-timesteps. As such, a unitary circuit can function as an approximation of the
-continuous-time dynamics. An implementation of the circuit depicted in
-subfigure (b) of \cref{fig:random-brickwork} could, for instance, approximate
-the continuous-time dynamics of a one-dimensional spin chain with
-nearest-neighbor interactions.
+be motivated by a mutlitude of factors. The most straightforward motivation is
+the discrete time evolution by means of the application of unitaries inherent
+in quantum computers.  Another reason is the \emph{approximation} of continuous
+time dynamics. When simulating quantum systems on a classical computer, one
+only has access to a discrete set of timesteps. As such, a unitary circuit can
+function as an approximation of the continuous-time dynamics. An implementation
+of the circuit depicted in subfigure (b) of \cref{fig:random-brickwork} could,
+for instance, approximate the continuous-time dynamics of a one-dimensional
+spin chain with nearest-neighbor interactions.
 
 We remark that the approximation of continuous-time dynamics can not only be
 motivated from a technical standpoint, but also from a mathematical one. As a
 matter of fact, the validity of this approximation is not as simple as it may
-seem. For some Hamiltonian with nearest-neighbor interaction, we might write
-$H= \sum_j H_j$ with the local interactions $H_j$. In general, we
+seem. For some Hamiltonian with nearest-neighbor interaction, we may write
+$H= \sum_j H_j$ with local interactions $H_j$. In general, we
 have\footnote{$\hbar=1$}
 \begin{align}
   e^{-iHt} = e^{-i\sum_j H_j t} \neq \prod_j e^{-iH_jt}
@@ -1006,7 +1018,7 @@ If we now consider the limit where $t \to \Delta t \to 0$, we obtain
   \mathcal{O}\left(\left(\Delta t\right)^2\right)
 .\end{align}
 Therefore, the total time evolution of the many-body system \emph{can} be
-represented as a product of local time evolutions, as long as I choose to
+represented as a product of local time evolutions, as long as one chooses to
 discretize the time evolution with sufficiently small $\Delta t$. The error of
 discretizing the time evolution of length $T$ in steps of size $\Delta t$ is of
 order $\mathcal{O}(\Delta t / T)$. Both the error and \cref{eq:trotterization}
@@ -1032,7 +1044,7 @@ somewhat streamlined to the specific system. (In a classical simulation, we
 would simulate the circuit in subfigure (b) of \cref{fig:random-brickwork} with
 fixed unitaries given by the Hamiltonian.) The motivation of randomizing the
 unitaries---or the placement thereof in the space-time grid (subfigure (a) of
-\cref{fig:random-brickwork})---is then that one might hope to unveil some
+\cref{fig:random-brickwork})---is then that one aims to unveil
 \emph{generic} entanglement dynamics, abstracted away from any particular
 Hamiltonian.
 
@@ -1053,9 +1065,9 @@ from the set of all unitary matrices. This type of random unitary is referred
 to as \emph{Haar-random} matrix. The dynamics of random circuits with
 Haar-random unitaries is the most generic type of dynamics. However, it is in
 general exponentially hard to simulate, as the dimensionality goes with $2^N$
-for $N$ qubits. Another ensemble of unitaries, which we have already
-introduced, is the Clifford group, generated by the Clifford gate set (cf.
-\cref{defn:cliffords}). Restricting the set of operators in this way allows for
+for $N$ qubits. As previously introduced, the Clifford group---generated by the
+Clifford gate set (see \cref{defn:cliffords})---constitutes a narrower ensemble of
+Restricting the set of operators in this way then allows for
 efficient classical simulations. As the peculiarities of the Clifford gate set
 and its connection to classical simulability have been discussed in other
 sections, we refer the reader to
@@ -1086,9 +1098,10 @@ Let us now also consider the operation immediately following the second CNOT in
 merely implied in the previous discussion of the circuit, we now state
 explicitly: the measurement gate removed the third qubit from the entanglement
 cluster, thus reducing the degree of entanglement in the system. This is in
-contrast to the previous gates, which created the cluster to begin with. (The
-fact that the subsequent syndrome measurements restore the entanglement becomes
-important in the projective transverse-field Ising model.) 
+contrast to the preceeding gates, which created the cluster to begin with. (The
+fact that the syndrome measurements succeeding the local measurement restore
+the entanglement becomes important in the projective transverse-field Ising
+model.) 
 
 With these insights we can intuit the idea of the measurement-induced
 entanglement phase transition (MIPT): Unitary operators tend to increase the
@@ -1113,7 +1126,8 @@ sporadic local measurements, such as depicted in \cref{fig:hybrid-circuit}?
 \end{figure}
 
 The answer to this question is, as is so often the case, \enquote{it depends}.
-Specifically, it depends on how frequent the measurements are, that is, the
+Specifically, it depends on how frequent the measurements are, that is, it
+depends on the
 measurement rate $p$. If there are no, or only a minimal amount of measurement
 gates, $p\ll 1$, the entanglement growth remains (qualitatively) unaffected,
 since we only rarely remove a qubit from an entanglement cluster. However, if
@@ -1130,22 +1144,112 @@ the critical frequency $p_c$, the system is in the \emph{disentangling phase}
 respectively). The key features of the two phases are as follows.
 
 \begin{description}
-  \item[Entangling phase] 
-  \item[Disentangling phase]
+  \item[Entangling phase] This phase is characterized by extensive entanglement
+    when initializing the system with a (highly separable) pure state. The
+    entanglement then grows linearly in time, proportional to the size of the
+    subsystem.
+
+    Furthermore, if one has a mixed state initially, the state will most likely
+    never be purified. Only in timescales exponential in the system size does
+    the mixedness decay.
+  \item[Disentangling phase] This phase is characterized by the absence of
+    entanglement growth. A pure state will either never develop extensive
+    entanglement if it is a product state initially, or will disentangle if
+    initially entangled.
+    A mixed state will find itself purified over an $\mathcal{O}(1)$ timescale.
 \end{description}
 
-\begin{itemize}
-  \item \Cref{fig:hybrid-circuit}: Measurements reduce entanglement, unitaries
-    grow entanglement
-  \item Two distinct phases: Entangling phase and Disentangling phase.
-  \item For probability parameter $p$ 
-\end{itemize}
+The original problem of the MIPT concerned itself with the circuit of the form depicted in
+\cref{fig:hybrid-circuit}, which is known as a hybrid circuit. The basic
+layout for $L$ qubits and total time $t$
+is a brickwork pattern of Haar-random unitaries, which are followed by
+measurement gates applied on each site with a classical probability
+$p$. This probability is also referred to as the measurement rate. 
+Once the procedure has concluded we quantify entanglement between two
+partitions of the total system of $L$ qubits. The most relevant partitioning
+for the MIPT and also in the context of this thesis is the exact halving of the
+system. That is, one is primarily interested in the half-system entanglement
+entropy. (For the remainder of this thesis we refer to the half-system
+entanglement entropy, if not explicitly stated otherwise.) The
+phenomenology of the phase transition in this setup can be split in two
+limiting cases: infinite system size $L\to \infty$ with finite time $t$, and
+finite system size $L$ in the steady state $t \to \infty$. We have
+\begin{align}
+  S(t, L\to \infty) \propto \begin{cases}
+    t, & p<p_c\\
+    \log t, & p=p_c\\
+    \mathrm{const.}, & p>p_c
+  \end{cases}
+\end{align}
+for the limit of large sizes and
+\begin{align}
+  S(t\to \infty, L) \propto \begin{cases}
+    L, & p<p_c\\
+    \log L, & p=p_c\\
+    \mathrm{const.}, & p>p_c
+  \end{cases}
+\end{align}
+for the steady-state limit.
+In the weak monitoring regime, we therefore have volume-law entanglement, since
+in one dimension the volume of a chain is its lenth. We then have logarithmic
+scaling at the critical point, where entanglement grows, but much slower than
+in the weak monitoring case. In the strong monitoring phase, the entanglement
+entropy is proportional to a constant, not scaling with system size or
+timescale. This is referred to as an area-law phase. Since the area is the
+boundary of a volume, and the boundary of a partition is just a single site (or
+two, in case of periodic boundary conditions), we have a constant. 
+
+There are three concluding notes to this section we do not want to fail to
+bring up. First, although the study of hybrid circuits, such as the one shown
+in \cref{fig:hybrid-circuit} was the initially studied setup, entanglement
+transitions have also been theorized in measurement-only circuits. We can
+convince ourselves that this theorizing is reasonable by considering the second half
+of the circuit shown in \cref{fig:error-detection-circuit}. There, the initial
+entanglement \emph{structure} is restored by a two-qubit projective
+measurement, after a perturbation in the form of a single-qubit projective
+measurement disentangled the cluster. While the state is not necessarily the
+same as before, we have the same distribution of entanglement among the qubits.
+\footnote{For some nice visualizations of entanglement pairing and clustering, we refer
+to Figures 1 and 11 in Ref.
+\cite{nahumEntanglementDynamicsDiffusionannihilation2020}.}
+
+Second, the general problem of a measurement-induced phase transition is not
+\emph{entirely} quantum in its nature. Of course, we already established that
+entanglement is a quantum phenomenon. However, what we mean by that is that
+questions concerning the critical behavior of hybrid---or even
+measurement-only---circuits can oftentimes be mapped to classical problems that
+have an exact solution. For instance, one can understand the MIPT in hybrid
+circuits as minimal cut in the circuit diagram, where measurements \enquote{cut
+through} an entanglement structure generated by the application of unitaries.
+This in turn can be understood by a specific mapping to 2D percolation, which
+has already been studied with great rigor in the past (for more context on
+percolation theory, see Refs.
+\cite{cardyNumberIncipientSpanning1998,cardyCriticalPercolationFinite1992,rudnickBondPercolationFinite1986,aharonyIntroductionPercolationTheory2017}).
+These mappings allow for (a) bounds on the critical points of the phase
+transitions and (b) more substantiated predictions, supporting the ones one
+arrives at through quantum-mechanical considerations and classical simulations.
+
+This then brings us to the third and final point. Notice that in the previous
+paragraphs, as well as the entirety of the present section, we have
+meticulously avoided to use the word \enquote{experiment}. The reason behind
+this choice stems not from some grudge against experimentalists. On the
+contrary! Beyond all the beautiful theory of measurement-induced entanglement
+phase transitions hides a haunting spectre, known as the \emph{sampling
+problem}\footnote{also called the \emph{postselection problem}}. This problem
+makes it difficult (not to say impossible) to observe these transitions in an
+experimental setting. Since one of the goals of this thesis is to
+circumvent the sampling problem in a specific circuit model (the
+projective transverse-field Ising model), we dedicate \cref{sec:sampling} to the
+details behind the sampling problem and continue with the introduction of the
+model system.
 
 \clearpage
 \section{The Projective Transverse-Field Ising Model}\label{sec:intro-ptim}
+
 In this section we introduce the model investigated in the main part of the
 thesis, known as the projective transverse-field Ising model (abbreviated as
-PTIM). We want to give the introduction by going backwards through each of the
+PTIM). 
+We want to give the introduction by going backwards through each of the
 concepts constituting the name \enquote{PTIM}, starting with the Ising model.
 
 \subsection{The Ising model}
@@ -1235,7 +1339,7 @@ the product state of local ground states of $\sigma_i^x$, $\ket{G_+} =
 locally a
 unique ground state. One further feature of it is that is possesses no
 long-range order. The spin on site $i$ is completely agnostic to the happenings
-of the spin on site $j$ --- if $i$ and $j$ are sufficiently far apart ---, i.e.
+of the spin on site $j$---if $i$ and $j$ are sufficiently far apart---, i.e.
 $i$ and $j$ are on
 average not aligned (similar to the classical ising model for higher
 temperatures). Mathematically, this expresses as 

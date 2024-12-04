@@ -17,12 +17,13 @@ significant alterations (cf. Ref.
 to probe the critical point of the phase transition of a hybrid circuit. In
 particular, they make use of Klein's inequality, bounding the entanglement
 entropy from above. In the present chapter we introduce the idea behind this
-approach, translate it to our system -- the projective transverse-field Ising
-model (PTIM) --, and evaluate the quality of the resulting estimate. The
-chapter is structured as follows. In \cref{sec:upperbound-idea} we state the
-principles behind the idea and derive the upper bound. Moreover, we state and
-prove that for Clifford circuits, i.e. in the stabilizer formalism, there is
-only a limited class of cases, where the upper bound is non-trivial. In
+approach, translate it to our system---the projective transverse-field Ising
+model (PTIM)---, and evaluate the quality of the resulting estimate. 
+
+The chapter is structured as follows. In \cref{sec:upperbound-idea} we state
+the principles behind the idea and derive the upper bound. Moreover, we state
+and prove that for Clifford circuits, i.e. in the stabilizer formalism, there
+is only a limited class of cases, where the upper bound is non-trivial. In
 \cref{sec:upperbound-numerics} we introduce different numerical post-processing
 algorithms, trying to combat infinities appearing, when introducing an error
 model akin to the one in \cref{sec:errormodel}. The results of which are shown
@@ -100,7 +101,7 @@ logarithm of a diagonal matrix is just the logarithm of the entries.
 
 From this definition we can already derive some important properties, namely
 its lower and upper bound. Firstly, $S(\rho)$ is non-negative and $0$ iff.
-$\rho$ is pure. It is easy to convince oneself of that fact; for pure states we
+$\rho$ is pure. It is easy to convince oneself of that fact. For pure states we
 have $\rho = \dyad{\phi}$, which has only one non-zero eigenvalue, $\lambda =
 1$. Consequently, \cref{eq:entropy-vn-sum} reduces to $S(\rho) = - 1\cdot\log 1
 =0$.  Next, $S(\rho)$ is maximal for the maximally mixed state. In a
@@ -136,7 +137,7 @@ major importance in this chapter and is defined as follows.
   The last term in \cref{eq:rel-ent-defn}, that is, 
   \begin{align}
     S\left( \rho\mid\mid\sigma \right) + S(\rho) \equiv S_C(\rho\mid\mid\sigma) = -\Tr[\rho\log\sigma]
-  .\end{align}
+  \end{align}
   is known as \emph{cross entropy}. 
 \end{defn}
 
@@ -164,7 +165,7 @@ This condition can be interpreted in a physical way. Let
 \]
 be orthonormal eigendecompositions of $\rho$ and $\sigma$.
 Then $S(\rho\mid\mid\sigma)$ diverges iff. there are states that $\rho$
-features in its mixture that $\sigma$ doesn't. That is, $\rho$ has to be more
+features in its mixture that $\sigma$ does not. That is, $\rho$ has to be more
 mixed than, or at least as mixed as, $\sigma$. If it is as mixed as
 $\sigma$, it has to be a mixture of the same states. This means that the
 information lost under the assumption of a purer state is infinite.
@@ -314,16 +315,17 @@ entanglement entropy as well and thus try to find a signature of the phase
 transition.
 
 This idea was used in \cite{garrattProbingPostmeasurementEntanglement2023} for
-a hybrid circuit of Haar random 2-qubit unitaries and $Z$ measurements. Since
-they investigate a hybrid circuit, they take additional steps to circumvent the
-post-selection problem, such as shadow tomography. To test their approach they
-simulate their circuits with matrix product state (MPS) simulations. These
+a hybrid circuit of Haar-random 2-qubit unitaries and local $Z$ measurements.
+As discussed in \cref{sec:randomcircuits}, simulating such a system is
+computationally expensive.
+Thus, to test their approach they
+employed matrix product state (MPS) simulations. These
 allow for a broader spectrum of mixed states than stabilizers do, and it is
 computationally expensive, but feasible, to diagonalize the density matrix and
 take its logarithm, to then compute the cross entropy upper bound. In our case,
-however, we investigate a random circuit consisting of pauli measurements only
-and thus employ stabilizer simulations to run numerical experiments on a
-classical computer. As already elaborated on in \cref{sec:stab-basics},
+however, we investigate a random circuit consisting of Pauli measurements only
+and thus employ stabilizer simulations to run simulations on a
+classical computer. As elaborated in \cref{sec:stabilizercircuits,sec:tableau},
 the stabilizer formalism allows for lots of elegant computational shortcuts,
 allowing efficient quantum simulations on classical computers. Consequently,
 one might ask if there also is an efficient way to compute the cross or
@@ -1005,7 +1007,15 @@ condition.
 \subsection{Minimal Mixing}\label{sec:minimal-mixing}
 
 The first post-processing algorithm we introduce is what one could call
-\enquote{minimal mixing}. The algorithm works as follows. We start our
+\enquote{minimal mixing}. In the following, we will introduce the algorithm and
+the results. Note that the presentation of the results parallels the
+presentation shown in \cref{fig:err-vs-tra}, with the methods to obtain this
+it mirroring the ones in \cref{ch:lxe}. As such, we assume knowledge of how
+\cref{fig:err-vs-tra} is to be read.
+
+\subsubsection{The algorithm}
+
+We start our
 classical reconstruction in the same state as the initial state of the
 experiment, for us it is $\dyad{GHZ+}$ in particular. Then, we project onto the
 measurement outcomes where possible. In a noiseless circuit, this recovers the
@@ -1032,76 +1042,7 @@ to use all the tools available to us, and selectively removing stabilizer
 generators from the generating set is one of them. \emph{How} we select them is
 then judged by the performance of the selection in the numerical simulation.
 
-%\begin{itemize}
-%  \item We would like to compare $\rho$, which is the \enquote{experiment}
-%    (i.e. a quantum simulator), with $\sigma$, which is the classical
-%    simulation.
-%  \item The algorithm follows a similar structure to
-%    \cite{liCrossEntropyBenchmark2023}, wherein we project the measurement
-%    outcomes from $\rho$ onto $\sigma$ where it is possible. The difference
-%    being that we do not start with orthogonal GHZ states, but with identical
-%    GHZ states. That way, there will be no incompatible measurement as long as
-%    there are no errors
-%  \item but what if there are errors?
-%  \item consider the case that an $X$-error occurred after a $ZZ$-measurement.
-%  \item Half of the time we will get an incompatible projection, which would
-%    project onto the zero-vector.
-%  \item In those cases, we replace the stabilizer by $\mathds{1}$, where the
-%    incompatibility was detected, instead of replacing it by the measurement
-%    outcome or the projection.
-%  \item This ensures that the subgroup condition still holds \emph{and} that
-%    subsequent measurements on the same site cannot be interfered with, i.e.
-%    that this qubits stabilizer is $\mathds{1}$ until it gets measured again.
-%  %\item However, we rolled a nat20 on a sleight of hand skill check: in the
-%  %  cases, where we \emph{would} get $\infty$, we replace $\sigma$ (whatever
-%  %  it may be at this point) by $2^{-N} \mathds{1}$
-%  %\item This is also in line with the general philosophy of the density
-%  %  matrix. We do not know where the error occurred, and are therefore in a
-%  %  mixture of all possible quantum states
-%\end{itemize}
-
-\subsection{Maximal Mixing}\label{sec:maximal-mixing}
-
-The next algorithm is what we could call \enquote{maximal mixing}. It is
-similar to the previously introduced algorithm with the caveat that we are now
-not selectively removing stabilizer generators, but removing the whole
-generating set. This is the most extreme method of how one could deal with the
-noise, since now once we catch it, we in principle act as if no generator of
-our generating set is to be trusted. Also, as the trivial group is always a
-subgroup of any group (cf. \cref{sec:grouptheory}), and as the trivial group is
-generated by the empty set (cf. \cref{defn:generators}), we should most
-definitely ensure the fulfillment of the subgroup condition. The technical
-details behind the implementation of this algorithm is given in
-\cref{sec:other-dingers,alg:maximal-mixing}.
-
-Note that this approach should also saturate the upper bound perfectly in the
-noiseless case, since we only throw out generators when we encounter a mismatch
-in the projections.
-%\begin{itemize}
-%  \item the first approach is what we'd call \emph{maximal mixing}.
-%  \item The maginot line of no errors occuring is still a factor. However, each
-%    time we encounter a discrepancy for the projections, we remove \emph{all}
-%    the stabilizers in $\sigma$
-%  \item since the trivial group is always a subgroup of any group (group
-%    axioms), we still obey the subgroup rule
-%  \item the technical details are laid out in \cref{alg:maximal-mixing}
-%  \item most importantly, for a system with no errors, the bound is perfectly
-%    saturated, with equality everywhere
-%  \item when introducing errors, we lose this feature and start to become more
-%    inaccurate.
-%\end{itemize}
-
-\section{Results}\label{sec:upperbound-results}
-
-The results to the 
-\begin{itemize}
-  \item The results assume knowledge of \cref{fig:err-vs-tra} and the methods
-    used to obtain it.
-  \item Setup is the same as in \cref{ch:lxe}, in particular, the error model
-    is the same.
-  \item Now we do not have orthogonal initial states!
-\end{itemize}
-\subsection{Minimal mixing}
+\subsubsection{Results}
 
 \begin{itemize}
   \item \cref{fig:min_mix-svn_se-4x3} shows the upper bound, i.e. the cross
@@ -1269,7 +1210,80 @@ different trackings and errors are shown in the same manner as in
   \label{fig:min_mix-svn_sigma_full-4x3}
 \end{figure}
 
-\subsection{Maximal mixing}
+%\begin{itemize}
+%  \item We would like to compare $\rho$, which is the \enquote{experiment}
+%    (i.e. a quantum simulator), with $\sigma$, which is the classical
+%    simulation.
+%  \item The algorithm follows a similar structure to
+%    \cite{liCrossEntropyBenchmark2023}, wherein we project the measurement
+%    outcomes from $\rho$ onto $\sigma$ where it is possible. The difference
+%    being that we do not start with orthogonal GHZ states, but with identical
+%    GHZ states. That way, there will be no incompatible measurement as long as
+%    there are no errors
+%  \item but what if there are errors?
+%  \item consider the case that an $X$-error occurred after a $ZZ$-measurement.
+%  \item Half of the time we will get an incompatible projection, which would
+%    project onto the zero-vector.
+%  \item In those cases, we replace the stabilizer by $\mathds{1}$, where the
+%    incompatibility was detected, instead of replacing it by the measurement
+%    outcome or the projection.
+%  \item This ensures that the subgroup condition still holds \emph{and} that
+%    subsequent measurements on the same site cannot be interfered with, i.e.
+%    that this qubits stabilizer is $\mathds{1}$ until it gets measured again.
+%  %\item However, we rolled a nat20 on a sleight of hand skill check: in the
+%  %  cases, where we \emph{would} get $\infty$, we replace $\sigma$ (whatever
+%  %  it may be at this point) by $2^{-N} \mathds{1}$
+%  %\item This is also in line with the general philosophy of the density
+%  %  matrix. We do not know where the error occurred, and are therefore in a
+%  %  mixture of all possible quantum states
+%\end{itemize}
+
+\subsection{Maximal Mixing}\label{sec:maximal-mixing}
+
+The next algorithm is what we could call \enquote{maximal mixing}. We again 
+
+\subsubsection{The algorithm}
+It is
+similar to the previously introduced algorithm with the caveat that we are now
+not selectively removing stabilizer generators, but removing the whole
+generating set. This is the most extreme method of how one could deal with the
+noise, since now once we catch it, we in principle act as if no generator of
+our generating set is to be trusted. Also, as the trivial group is always a
+subgroup of any group (cf. \cref{sec:grouptheory}), and as the trivial group is
+generated by the empty set (cf. \cref{defn:generators}), we should most
+definitely ensure the fulfillment of the subgroup condition. The technical
+details behind the implementation of this algorithm is given in
+\cref{sec:other-dingers,alg:maximal-mixing}.
+
+Note that this approach should also saturate the upper bound perfectly in the
+noiseless case, since we only throw out generators when we encounter a mismatch
+in the projections.
+%\begin{itemize}
+%  \item the first approach is what we'd call \emph{maximal mixing}.
+%  \item The maginot line of no errors occuring is still a factor. However, each
+%    time we encounter a discrepancy for the projections, we remove \emph{all}
+%    the stabilizers in $\sigma$
+%  \item since the trivial group is always a subgroup of any group (group
+%    axioms), we still obey the subgroup rule
+%  \item the technical details are laid out in \cref{alg:maximal-mixing}
+%  \item most importantly, for a system with no errors, the bound is perfectly
+%    saturated, with equality everywhere
+%  \item when introducing errors, we lose this feature and start to become more
+%    inaccurate.
+%\end{itemize}
+
+%\section{Results}\label{sec:upperbound-results}
+
+%The results to the 
+%\begin{itemize}
+%  \item The results assume knowledge of \cref{fig:err-vs-tra} and the methods
+%    used to obtain it.
+%  \item Setup is the same as in \cref{ch:lxe}, in particular, the error model
+%    is the same.
+%  \item Now we do not have orthogonal initial states!
+%\end{itemize}
+
+\subsubsection{Results}
 \begin{itemize}
   \item For the maximal mixing approach, we find that the first row of
     \cref{fig:max_mix-svn_se-4x3} is almost identical to the corresponding
@@ -1367,6 +1381,8 @@ different trackings and errors are shown in the same manner as in
 \cref{fig:err-vs-tra}}
   \label{fig:max_mix-svn_sigma_full-4x3}
 \end{figure}
+
+\subsection{Discussion}
 
 \begin{itemize}
   \item Recall that both of these simulations were based on the assumption that

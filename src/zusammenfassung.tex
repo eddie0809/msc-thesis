@@ -1,19 +1,89 @@
 \chapter{Zusammenfassung}
-\begin{itemize}
-  \item 1 2 Polizei
-  \item 3 4 Grenadier
-  \item 5 6 alte Hex
-  \item 7 8 gute Nacht
-\end{itemize}
+Eine der faszinierendsten Ideen in der Quantenmechanik ist das Konzept der
+Verschränkung. Dieses ist bekannt für seine zentrale Rolle in der
+Quanteninformation sowie für seine verblüffenden
+Eigenheiten, die unsere Vorstellungen von der Natur herausfordern. Allgemein
+entsteht Verschränkung durch die Wechselwirkung von Quantensystemen mit ihrer
+Umgebung. In kontrollierten Umgebungen, wie etwa Experimenten, wird die
+Verschränkung zweier Systeme üblicherweise durch die Anwendung unitärer
+Wechselwirkungen erreicht.
 
-Diese Arbeit besteht aus vier Kapiteln, deren Struktur im Folgenden erl\"autert
-wird.
+Ein zentrales Merkmal dieser nichtlokalen Korrelationen ist die Tatsache, dass
+das Messen eines Bestandteils eines verschränkten Zustands einen Teil der
+zugrunde liegenden Verschränkungsstruktur zerstört. Daher kann das Wachstum der
+Verschränkung im Labor durch die Anwendung von unitären Operationen gehemmt
+werden, wenn Teile des Systems lokal gemessen werden. Schaltkreise, die durch
+das Zusammenspiel von unitären Operationen und lokalen Messungen gekennzeichnet
+sind, werden als hybride Schaltkreise bezeichnet.
+
+In den letzten zehn Jahren hat die Untersuchung solcher hybrider Schaltkreise
+faszinierende Muster in der Dynamik der Verschränkung offengelegt. Bei
+hinreichend häufigen Messungen zeigt sich, dass der Grad der Verschränkung
+zwischen Teilsystemen einem Flächengesetz folgt. Im Gegensatz dazu ergibt sich
+bei seltenen Messungen eine Skalierung nach einem Volumengesetz.
+Bemerkenswerterweise gibt es einen Phasenübergang zwischen diesen beiden
+Regimen, der durch eine kritische Messrate gekennzeichnet ist. Diese Übergänge
+werden als messungsinduzierte Verschränkungsphasenübergänge oder kurz
+Verschränkungsübergänge bezeichnet.
+
+Verschränkungsübergänge wurden nicht nur in hybriden Schaltkreisen
+theoretisiert, sondern auch in Konfigurationen, bei denen die (diskrete)
+Zeitentwicklung allein durch projektive Messungen bestimmt wird, wobei
+paarweise und lokale Messungen konkurrieren. Ein paradigmatisches Modell mit
+einem solchen Übergang ist das projektive transversale Ising-Modell, das einen
+Übergang zwischen zwei Flächengesetz-Phasen zeigt.
+
+Die experimentelle Detektion von Verschränkungsübergängen erweist sich jedoch
+als schwierige, scheinbare Sisyphusaufgabe, was auf das sogenannte
+Postselektionsproblem---auch als Sampling-Problem bezeichnet---zurückzuführen ist.
+Dieses Problem besagt, dass es aufgrund der probabilistischen Natur von
+Quantenmessungen exponentiell unwahrscheinlich ist, denselben Zustand zweimal
+zu erhalten, selbst wenn das identische Protokoll wiederholt angewendet wird.
+Dies verschleiert die Natur des Zustands bei der Untersuchung, deren Kenntnis
+erforderlich ist, um den Grad der Verschränkung zu quantifizieren.
+
+Kürzlich wurden einige Protokolle vorgeschlagen, um das Sampling-Problem zu
+umgehen. Insbesondere schlugen \citeauthor{liCrossEntropyBenchmark2023} eine
+Größe vor, die als Ordnungsparameter für den messungsinduzierten Phasenübergang
+in hybriden Schaltkreisen dient, die sogenannte lineare Kreuzentropie. Außerdem
+schlugen \citeauthor{garrattProbingPostmeasurementEntanglement2023} eine
+alternative Methode vor, die eine obere Schranke aus der
+Quanteninformationstheorie nutzt, bekannt als Kleinsche Ungleichung.
+
+In dieser Arbeit werden diese Protokolle im Kontext des projektiven
+transversalen Ising-Modells getestet. Die Arbeit besteht aus vier Hauptkapiteln
+und ist wie folgt aufgebaut:
 \begin{description}
-  \item[\cref{ch:basics}] In this chapter we give an introduction to the
-    concepts relevant throughout the thesis. We begin by outlining the
-    stabilizer formalism, as it is a useful representation of quantum states
-    and the foundation 
-  \item[\cref{ch:lxe}] 
-  \item[\cref{ch:rel-ent}]
-  \item[\cref{ch:mixed}]
+\item[\cref{ch:basics}] In diesem Kapitel werden die für die Arbeit relevanten
+  Konzepte eingeführt. Wir beginnen mit einer Einführung in den
+  Stabilizer-Formalismus, da dieser eine nützliche Darstellung von
+  Quantenzuständen bietet und die Grundlage für den Simulationsalgorithmus
+  bildet, der für die numerischen Ansätze in der Arbeit verwendet wird.
+  Anschließend geben wir einen Überblick über das Konzept der
+  Verschränkungsübergänge im Allgemeinen, bevor wir das projektive transversale
+  Ising-Modell speziell einführen. Dieses Modell ist das Hauptobjekt unserer
+  Untersuchungen. Abschließend wird das Postselektions- bzw. Sampling-Problem
+  erörtert, welches den weiteren Verlauf der Arbeit motiviert.
+\item[\cref{ch:lxe}] In diesem Kapitel untersuchen wir die von
+  \citeauthor{liCrossEntropyBenchmark2023} definierte Größe im Kontext des
+  projektiven transversalen Ising-Modells. Besonders wird die Motivation hinter
+  Postselektionsalgorithmen beleuchtet, und unsere Ergebnisse werden mit
+  früheren Untersuchungen ähnlicher Natur (vgl. Ref.
+  \cite{tikhanovskayaUniversalityCrossEntropy2023}) verglichen, wobei auch
+  Kritikpunkte aufgezeigt werden.
+\item[\cref{ch:rel-ent}] In diesem Kapitel untersuchen wir den Ansatz von
+  \citeauthor{garrattProbingPostmeasurementEntanglement2023} zur Detektion von
+  Verschränkungsübergängen im projektiven transversalen Ising-Modell. Zunächst
+  leiten wir einen Ausdruck für die Kreuz- und relative Entropie im
+  Stabilizer-Formalismus her, bevor wir verschiedene numerische Ansätze testen,
+  um das Postselektionsproblem zu umgehen. Abschließend werden zwei
+  Regularisierungsansätze vorgestellt, um auftretende Divergenzen zu
+  bewältigen.
+\item[\cref{ch:mixed}] In diesem Kapitel wird der Simulationsalgorithmus
+  eingeführt, der auf dem in \cref{ch:basics} beschriebenen
+  Stabilizer-Formalismus basiert. Zunächst geben wir eine kurze Zusammenfassung
+  bestehender Algorithmen. Anschließend werden die Erweiterungen erläutert, die
+  für die numerischen Simulationen in der Arbeit erforderlich sind,
+  insbesondere in Bezug auf gemischte Zustände und die in Kapitel 3
+  abgeleiteten Entropien.
 \end{description}

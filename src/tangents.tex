@@ -74,12 +74,12 @@ One of my favourite video games is \emph{Cities: Skylines}. As the name
 suggests, it is a city-building game (which graciously runs natively on Linux).
 In it, you act as an almost omnipotent mayor and are tasked with developing and
 maintaining a settlement raised from scratch. Initially, one has a single plot
-of buildable area located in a vast landscape acting as a canvas for you to
+of buildable area, located in a vast landscape, acting as a canvas for you to
 design your city as you see fit. The initial plot of land usually conveniently
 features a highway exit, where the canonical first step is the design of a road
-network with appropriate residential, commercial, and industrial zoning, for
+network with appropriate residential, commercial, and industrial zoning for
 citizens to move in, and for industry and businesses to ship cargo in and out.
-As the game progresses your city grows, unlocking more buildings and services
+As the game progresses your city grows, unlocking you more buildings and services
 such as schools, hospitals, or public transit. (If the populace is sufficiently
 educated, one can even unlock a \enquote{Large Hadron Collider} in the later
 stages of the game.) However, one also faces the challenges of a growing city,
@@ -87,7 +87,7 @@ such as the increasing demands for basic utilities, and most importantly,
 traffic congestion and its consequences.  All this is to say: it simulates the
 progression from a village to a metropolis. 
 
-At the end of the day, however, it is only an emulation of what is happening in
+At the end of the day, however, it is only a simulation of what is happening in
 the real world. While the developers made sure to accurately model behavior of
 the masses, daily routines of thousands---if not millions---of citizens, and
 their commutes constituted by about as much vehicles, they at the same time
@@ -95,42 +95,42 @@ made sure that I can play this game on my used ThinkPad, more than 10 years of a
 therefore only natural that some mechanisms of human behavior had to be
 \enquote{coarse grained} away for the game to be (a) playable and (b)
 enjoyable. (Think about walking around in Stuttgart: construction sites as far
-as the eye can see. Confer with \emph{Cities: Skylines}, where buildings just
+as the eye can see. Confer \emph{Cities: Skylines}, where buildings just
 spawn out of nowhere as soon as you command them to be placed.)
 It would be highly absurd to suggest that every nuance of life in a city can
 be mapped one to one to a program.
 
 Yet as it turns out, the game does a surprisingly good job of accurately
 depicting traffic flow and the dynamics of city life, now being used to teach
-urban planning and landscaping students
+urban planning and landscaping students\footnote{Educational software, now in
+your local steam library.}
 \cite{khanPerceptionsStudentsGamification2021,haahtelaGamificationEducationCities2015}.
-\footnote{Educational software, now in your local steam library.}
-Picture this: Cleverly assembled instructions run on cleverly assembled
-silicon circuits teaching urban planning students that the road network they
-conceived of was not-so cleverly assembled. An almost kafkaesque sight to
-behold.
+Picture this: Cleverly assembled instructions run on cleverly assembled silicon
+circuits teaching urban planning students that the road network they conceived
+of was not-so cleverly assembled. An almost kafkaesque sight to behold.
 
 Now, what can we as physicists learn from this excursion into my video game
 preferences? The daily routine of many physicists today, even at the LHC,
 consists of running simulations on (almost) the same x86 instruction set that
-allows me to build the Large Hadron Collider in my virtual city. That is, the
+allows me to build the Large Hadron Collider in my virtual city with the press
+of a button. That is, the computer
 hardware is completely agnostic to the simulation it is running. Matter of
-fact, within the confines of computability, we can play God with the hardware,
-making it produce any result we want.
+fact, within the confines of computability, we can play God with the processors,
+making them produce any result we want.
 
-This begs the question: what results \emph{should} we want from a simulation? Remember, the truly
-remarkable thing about the game Cities: Skylines is the way it accurately
-protrays \emph{the real world}, while still being a video game. Should our demands on
-simulations of natural phenomena therefore be held to the same standard? If
-that were so, a radical conclusion one might draw is that the epistemic value
-of a simulation that models something not translateable to an experimental
-setup is nill. It implies that it tells me about as much about the phenomenon it is supposed to model as
-the following \texttt{C} code:
+This begs the question: what kind of results \emph{should} we want from a
+simulation? Remember, the truly remarkable thing about the game Cities:
+Skylines is the way it accurately portrays \emph{the real world}, while still
+being a video game. Should our demands on simulations of natural phenomena
+therefore be held to the same standard? If that were strictly so, a radical conclusion
+one might draw is that the epistemic value of a simulation that models
+something not translateable to an experiment is nill. It implies that
+the simulation tells me about as much about the phenomenon it is supposed to
+model as the following \texttt{C} code:
 %That is, we want simulations to accurately predict outcomes of experiments. A
-%radical conclusion we might draw from this is that a 
-%simulation that models something not translateable to an experimental setup
-%tells me about as much about the system it is supposed to model as the
-%following \texttt{C} code:
+%radical conclusion we might draw from this is that a simulation that models
+%something not translateable to an experimental setup tells me about as much
+%about the system it is supposed to model as the following \texttt{C} code:
 \begin{verbatim}
 #include <stdio.h>
 int main(int argc, char *argv[]) {
@@ -139,17 +139,16 @@ int main(int argc, char *argv[]) {
 }
 \end{verbatim}
 Or maybe it tells me that whatever phenomenon whose existence I advocate for,
-is not \enquote{real}, whatever that means.
+is not \enquote{real}---whatever that means for you.
 
-I claim that this, albeit a strawman argument, is short-sighted. The extrapolation from
-well-established models to potentially untestable theories that only exist on
-paper and in computer simulations \emph{can} have epistemic value.
-\footnote{Maybe this is just me coping with the fact that there is no pompous
-and groundbreaking result in my thesis, but I digress}
-One might
-still be able to answer \emph{how} they are untestable, and potentially gain
-insight in the workings of nature by understanding the restrictions it shackles
-us with. 
+I claim that this, albeit a straw man argument, is short-sighted. The
+extrapolation from well-established models to potentially untestable theories
+that only exist on paper or computer simulations \emph{can} have epistemic
+value.\footnote{Maybe this is just me coping with the fact that there is no
+pompous publishable result in my thesis, but I digress.} One might
+still be able to answer \emph{how} they are untestable, potentially gaining
+insight in the workings of nature by understanding the restrictions it
+shackles us with. 
 
 \section*{On Cargo Cult Science}
 In my time at the institute I was fortunate enough to be able to attend the

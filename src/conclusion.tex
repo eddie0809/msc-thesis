@@ -1,18 +1,58 @@
 \chapter*{Conclusion and Outlook}
 
-\begin{itemize}
-  \item What we did
-  \item What is left to do
-\end{itemize}
+In this thesis we investigated different approaches to detect the
+measurement-induced entanglement phase transition in the projective
+transverse-field Ising model. In particular, the approaches employed measures
+related to cross entropy: a linearized cross entropy, and an upper bound on
+the entanglement entropy via Klein's inequality, which features the cross
+entropy.
 
+In \cref{ch:basics} we provided a broad overview of the core concepts
+pertaining to the thesis. We introduced the stabilizer formalism and its
+connection to classical simulations of quantum circuits. We then gave an
+introduction to the theory of entanglement transitions, with the projective
+transverse-field Ising model (PTIM) as the primary paradigm used throughout the rest
+of the thesis. We then explained the sampling problem in greater detail.
 
-\section*{Outlook?}
-Mutual information kann man mit \cref{thm:kleins-ineq} auch upper bounden, weil 
-\begin{align}
-  I\left( A:B \right) = S\left( \rho^{AB} \mid\mid \rho^A \otimes \rho^B \right) 
-\end{align}
-und damit
-\begin{align}
-  S(\rho^A) + S(\rho^B) \leq S(\rho^{AB})
-.\end{align}
-oder so. Hab aber, stand jetzt, keinen kopf das zusammen zu schreiben
+In \cref{ch:lxe} we discussed the first approach, the linear cross entropy. We
+gave an intuition behind the quantity and derived a method to efficiently
+compute it in Clifford circuits. We then utilized this method to investigate
+the behavior of the linear cross entropy in classical simulations of the
+projective transverse-field Ising model. Furthermore, we showed that the linear
+cross entropy factorizes elegantly into a product of two separate quantities
+dependent only on one type of measurement. Finally, we highlighted its behavior
+in noisy realizations of the PTIM by employing an error model with different
+error types. 
+
+In \cref{ch:rel-ent} we examine the approach based on bounding the entanglement
+entropy from above. In particular, we employed Klein's inequality to provide an
+upper bound with the cross entropy. We first derived the inequality in general,
+before giving an expression thereof in the stabilizer formalism. We then
+employed the derived expression in stabilizer simulations of the PTIM, exploring the
+utility of different post-processing algorithms with the previously presented
+noise protocol. We finalize the chapter by proposing two
+different regularization Ans\"atze to deal with infinities and discussing their
+utility as well.
+
+It is clear that stabilizer simulations played an important part in the scope
+of this thesis. We therefore dedicated \cref{ch:mixed} to outlining the
+simulation algorithm, as well as the introduction of new functions and
+subroutines added to the simulator, specifically relevant to the thesis. These
+most notably include the addition of mixed states to the simulator, as well as
+the adaptation of the previously existing functionalities.
+
+\section*{Outlook}
+
+While we exhaustively covered the linear cross entropy and different numerical
+approaches, one could more closely investigate the subgroup condition of the
+cross entropy. While the proof of the condition is rigorous and makes sense in
+the context of information theory, single qubits in orthogonal product states
+equally do not contribute to the entanglement entropy. One could thus try an
+approach, where one is agnostic to the signs when comparing product states on
+the same site with the cross entropy.
+
+Furthermore, one could try other approaches, which are not explicitly discussed
+in this thesis. For instance, one could employ other measures, such as the
+entanglement asymmetry, or imagine entirely new algorithms, possibly by
+combining the approaches of the upper bound and the linear cross entropy.
+

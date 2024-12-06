@@ -1,41 +1,54 @@
 \chapter{Abstract}
-\label{ch:intro}
 
-\begin{itemize}
-  \item Entanglement transitions are cool
-  \item Entanglement is backbone of quantum computing
-  \item Something something quantum error correction
-  \item Entanglement exponentially hard to measure (requires exponentially many
-    copies of state)
-  \item Classical simulations predict phase transition in many hybrid random
-    circuits
-  \item PTIM \cite{langEntanglementTransitionProjective2020} measurement only
-    circuit, that maps to majorana fermions, the colored cluster model and
-    2-dimensional percolation
-  \item 2D percolation and the CCM has been widely studied, from this we
-    predict there to be the quantum phase transition from one area law to the
-    other
-%  \item \textcolor{red}{check das mit dem area law ding auf jeden fall nochmal,
-%    ich glaub da wird schon auch wert drauf gelegt}
-  \item No way to measure entanglement in experiment, since we can only measure
-    observables
-  \item Many attempts of probing the critical point of the phase transitions
-    have been made
-  \item Fisher's LXE: \cite{liCrossEntropyBenchmark2023}
-  \item Fisher's LXE for PTIM:
-    \cite{tikhanovskayaUniversalityCrossEntropy2023}
-  \item In-House attempts also exist:
-  \item The decoder in \cite{roserDecodingProjectiveTransverse2023} lower
-    bounds the critical point (decoding threshhold)
-  \item Can we upper bound it?
-  \item In principle yes, klein's inequality (goes by \enquote{gibb's
-    inequality} and \enquote{information inequality} as well) upper bounds
-    von Neumann, and consequently entanglement entropy.
-  \item In \cite{garrattProbingPostmeasurementEntanglement2023} this is done
-    with hybrid circuits.
-\end{itemize}
+One of the most intriguing ideas in quantum theory is the concept of
+entanglement. It is well-famed in its role in quantum computation and quantum
+information, as well as for its puzzling peculiarities, challenging the way we
+think about nature. In general, entanglement emerges from the interaction of
+quantum systems with their environment. In a controlled setting, such as an
+experiment, entangling two systems is usually achieved by the application of
+unitary interactions.
 
-This thesis consists of four main chapters and is structured as follows
+A key feature of these non-local correlations is the fact that measuring a
+constituent of an entangled state erases part of the underlying entanglement
+structure. As such, the growth of entanglement in the lab by the application of
+unitaries can be stunted by locally measuring parts of the system. Circuits
+characterized by the interplay between unitaries and local measurements are
+called \emph{hybrid circuits}.
+
+In the past decade, the study of these hybrid circuits have unveiled intriguing
+patterns in the dynamics of entanglement. If measurements are sufficiently
+frequent, one finds that the degree of entanglement between subsystems follows
+an area law, while in the limit of rare measurements one has a volume law
+scaling. Remarkably, one can find that there is a phase transition between
+these two regimes, with a critical measurement rate. These transitions are
+called \emph{measurement-induced entanglement phase transition}, or
+entanglement transition for short.
+
+Entanglement transitions have not only been theorized in hybrid circuits, but also in
+setups, where the (discrete) time evolution is driven by projective measurements alone,
+where pairwise and local measurements compete. A paradigmatic measurement-only
+model with such a transition is the \emph{projective transverse-field Ising
+model}, which features an area law to area law phase transition.
+
+However, detecting entanglement transitions in an experimental setting proves
+to be a difficult, seemingly sysiphean task, due to the \emph{postselection
+problem}---also referred to as \emph{sampling problem}. It
+states that due to the probabilistic nature of quantum measurements, one is
+exponentially unlikely to obtain the same state twice when repeatedly applying
+the identical protocol. This then obfuscates the precise nature of the state,
+when probing for it, which is required to quantify the degree of entanglement.
+
+Recently, some protocols have been proposed to circumvent the sampling problem.
+In particular, \citeauthor{liCrossEntropyBenchmark2023} proposed a quantity
+which acts as order parameter for the measurement-induced phase transition in
+hybrid circuits, called the \emph{linear cross entropy}. Furthermore,
+\citeauthor{garrattProbingPostmeasurementEntanglement2023} proposed a different
+method, employing an upper bound from quantum information theory known as
+Klein's inequality.
+
+In this thesis we put these protocols to test in the projective
+transverse-field Ising model.
+It consists of four main chapters and is structured as follows
 \begin{description}
   \item[\cref{ch:basics}] In this chapter we give an introduction to the
     concepts relevant throughout the thesis. We begin by outlining the
@@ -68,4 +81,55 @@ This thesis consists of four main chapters and is structured as follows
     derived in \cref{ch:rel-ent}.
 \end{description}
 
-\lipsum[0-1]
+
+%an 
+%In the lab, entanglement emerges from the application of
+%unitary interactions
+%these non-local
+%correlations challenge the way we think about nature. 
+%
+%On the other hand, one of the most fascinating phenomena in classical theory is phase
+%transitions
+%
+%Quantum entanglement is the bedrock of quantum computation and
+%quantum information, as the non-local correlations inherent to entanglement
+%allow for a broad range of 
+%
+%In recent times however, different approaches have been suggested to circumvent the
+%postselection problem. These approaches 
+%
+%\begin{itemize}
+%  \item Entanglement transitions are cool
+%  \item Entanglement is backbone of quantum computing
+%  \item Something something quantum error correction
+%  \item Entanglement exponentially hard to measure (requires exponentially many
+%    copies of state)
+%  \item Classical simulations predict phase transition in many hybrid random
+%    circuits
+%  \item PTIM \cite{langEntanglementTransitionProjective2020} measurement only
+%    circuit, that maps to majorana fermions, the colored cluster model and
+%    2-dimensional percolation
+%  \item 2D percolation and the CCM has been widely studied, from this we
+%    predict there to be the quantum phase transition from one area law to the
+%    other
+%%  \item \textcolor{red}{check das mit dem area law ding auf jeden fall nochmal,
+%%    ich glaub da wird schon auch wert drauf gelegt}
+%  \item No way to measure entanglement in experiment, since we can only measure
+%    observables
+%  \item Many attempts of probing the critical point of the phase transitions
+%    have been made
+%  \item Fisher's LXE: \cite{liCrossEntropyBenchmark2023}
+%  \item Fisher's LXE for PTIM:
+%    \cite{tikhanovskayaUniversalityCrossEntropy2023}
+%  \item In-House attempts also exist:
+%  \item The decoder in \cite{roserDecodingProjectiveTransverse2023} lower
+%    bounds the critical point (decoding threshhold)
+%  \item Although ubiquitous in all of quantum computation, entanglement plays an
+%    important role in quantum error correction. 
+%  \item Can we upper bound it?
+%  \item In principle yes, klein's inequality (goes by \enquote{gibb's
+%    inequality} and \enquote{information inequality} as well) upper bounds
+%    von Neumann, and consequently entanglement entropy.
+%  \item In \cite{garrattProbingPostmeasurementEntanglement2023} this is done
+%    with hybrid circuits.
+%\end{itemize}
